@@ -1,0 +1,3 @@
+.brz-third-party:has([class*="now-pages-threadi-"]) {
+	min-width: 100px;
+}

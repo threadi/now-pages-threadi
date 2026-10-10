@@ -1,0 +1,9 @@
+<wpml-config>
+    <custom-types>
+        <custom-type translate="0">np_threadi_entry</custom-type>
+        <custom-type translate="0">np_threadi_source</custom-type>
+    </custom-types>
+    <taxonomies>
+        <taxonomy translate="0">now_pages_threadi_category</taxonomy>
+    </taxonomies>
+</wpml-config>

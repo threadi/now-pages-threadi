@@ -1,0 +1,21 @@
+{
+  "name": "now-pages-threadi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/main.js",
+  "scripts": {
+    "build": "brizy-scripts build",
+    "start": "brizy-scripts start",
+    "tsc": "tsc"
+  },
+  "license": "GPL-2.0-or-later",
+  "dependencies": {
+    "@brizy/core": "^1.1.1"
+  },
+  "devDependencies": {
+    "@brizy/scripts": "^1.1.5",
+    "@types/react": "^19.2.18",
+    "prettier": "^3.9.6",
+    "typescript": "^7.0.2"
+  }
+}

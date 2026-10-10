@@ -1,0 +1,217 @@
+:root {
+	--np-threadi-pro-bg: #d4af37;
+	--np-threadi-pro-font: #000;
+	--np-threadi-hint-bg: #c45602;
+	--np-threadi-hint-font: #fff;
+	--np-threadi-pro-hint-bg: #fca15b;
+	--np-threadi-pro-hint-font: #000;
+}
+
+.post-php.post-type-np_threadi_source, .post-new-php.post-type-np_threadi_source {
+	fieldset {
+		margin-bottom: 1em;
+		p:last-child { margin-bottom: 0 }
+	}
+
+	label {
+		display: block;
+		font-weight: bold;
+		margin-bottom: .4em;
+	}
+
+	input[type="number"], input[type="password"], input[type="text"], input[type="url"], select {
+		width: 100%;
+	}
+	p + .wp-editor-wrap {
+		margin-top: -1em;
+	}
+}
+
+.settings_page_now_pages_threadi_settings {
+	h1 {
+		display: inline-block;
+	}
+
+	#state {
+		width: 42px;
+	}
+
+	#category {
+		width: 120px;
+	}
+}
+
+.now-pages-threadi-preview {
+	background-color: var(--np-threadi-hint-font);
+	border: 1px solid var(--np-threadi-pro-hint-font);
+	border-radius: 8px;
+	padding: 20px;
+}
+.now-pages-threadi-diagnostics {
+	td, th {
+		text-align: left;
+		vertical-align: top;
+	}
+}
+
+body.post-type-np_threadi_entry, body.post-type-np_threadi_source, body.settings_page_now_pages_threadi_settings {
+	a.review-hint-button[target="_blank"]:after {
+		color: var(--np-threadi-pro-bg);
+		content: "\f155 \f155 \f155 \f155 \f155";
+		display: inline-block;
+		font-family: "dashicons", sans-serif;
+		margin-left: 8px;
+	}
+
+	a.now-pages-threadi-import:after {
+		content: "\f316";
+		display: inline-block;
+		font-family: "dashicons", sans-serif;
+		margin-left: 8px;
+		position: relative;
+		top: 2px;
+		z-index: 1;
+	}
+}
+
+@media (min-width: 1200px) {
+	body.settings_page_now_pages_threadi_settings-setup #easy-setup-for-wordpress {
+		width: 80%;
+	}
+}
+
+body.settings_page_now_pages_threadi_settings-setup .easy-setup-for-wordpress-main {
+	div + div {
+		margin-top: 1em
+	}
+
+	legend, .components-base-control__label {
+		font-size: 16px;
+		text-transform: none;
+		margin-bottom: 1em;
+	}
+
+	label { font-weight: 600 }
+
+	p { color: inherit }
+
+	.now-pages-threadi-setup-chosen {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 12px 16px;
+		margin-bottom: 16px;
+		border: 1px solid #dcdcde;
+		border-radius: 4px;
+		background: #f6f7f7;
+	}
+
+	.now-pages-threadi-setup-chosen__icon {
+		display: block;
+		width: 24px;
+		height: 24px;
+	}
+
+	.now-pages-threadi-setup-chosen__icon img,
+	.now-pages-threadi-setup-chosen__icon svg {
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+
+	.now-pages-threadi-setup-chosen__icon .dashicons {
+		width: 24px;
+		height: 24px;
+		font-size: 24px;
+		line-height: 1;
+	}
+
+	.now-pages-threadi-setup-chosen__label {
+		font-weight: 600;
+		font-size: 15px;
+	}
+
+	/* the entries a proposal of the advisor delivered while it was tried. */
+	.now-pages-threadi-advisor-samples {
+		list-style: disc;
+		margin: 0 0 1em;
+		padding-left: 20px;
+		color: #50575e;
+	}
+}
+
+/* shown below the setup while the advisor looks for sources. */
+.now-pages-threadi-advisor-waiting {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 90%;
+	min-width: 480px;
+	margin: 1em auto 0;
+
+	.spinner {
+		float: none;
+		margin: 0;
+	}
+}
+
+@media (min-width: 1000px) {
+	.now-pages-threadi-advisor-waiting { width: 80% }
+}
+
+@media (min-width: 1200px) {
+	.now-pages-threadi-advisor-waiting { width: 60% }
+}
+
+.nav-tab-help {
+	background-color: var(--np-threadi-pro-hint-bg);
+	float: right;
+	line-height: 1.6;
+	margin-right: 4px;
+	position: relative;
+	bottom: -1px;
+	z-index: 1;
+}
+
+.nav-tab-help:not(.components-button):before {
+	content: "\f125";
+	display: inline-block;
+	font-family: "dashicons", sans-serif;
+	font-size: 12px;
+	margin-right: 8px;
+}
+
+.nav-tab-help.components-button {
+	margin-left: auto;
+	.esfw-tab-title:before {
+		content: "\f125";
+		display: inline-block;
+		font-family: "dashicons", sans-serif;
+		font-size: 12px;
+		margin-right: 8px;
+	}
+}
+
+.now-pages-threadi-warning {
+	background-color: var(--np-threadi-hint-bg);
+	color: var(--np-threadi-hint-font);
+	padding: 4px 8px;
+	a {
+		color: inherit;
+	}
+}
+
+.components-tab-panel__tabs .errors { position: relative;z-index: 1 }
+
+.components-tab-panel__tabs .errors:before {
+	content: '!';
+	display: inline-block;
+	background-color: #d63638;
+	color: #fff;
+	border-radius: 16px;
+	margin-left: .4em;
+	padding: 0 8px;
+	font-size: .9em;
+	position: static;
+	order: 20;
+}

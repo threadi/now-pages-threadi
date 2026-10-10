@@ -1,0 +1,49 @@
+parameters:
+  level: 8
+  reportUnmatchedIgnoredErrors: false
+  ignoreErrors:
+    - "#^Unsafe usage of new static#"
+    - "#of function absint expects#"
+    - "#WPINC#"
+    - "#tick#"
+    - "#finish#"
+    - "#IN_SECONDS#"
+    - "#ARRAY_A#"
+    - "#Elementor#"
+    - "#Fusion_Element#"
+    - "#fusion_builder_#"
+    - "#Breakdance#"
+    - "#Brizy_Editor_ThirdParty_Extension#"
+    - "#Brizy_Content_Providers_AbstractProvider#"
+    - "#PackageBuildManager#"
+    - "#Bricks#"
+    - "#WP_PLUGIN_DIR#"
+    - "#bb_now_pages_threadi_digest#"
+    - "#fsn_map#"
+    - "#Themify_Builder_Model#"
+    - "#pagelayer_#"
+  earlyTerminatingFunctionCalls:
+    - wp_send_json
+  paths:
+    - app
+    - now-pages-threadi.php
+    - uninstall.php
+  excludePaths:
+    - app/Dependencies/*
+    - app/PageBuilder/Avada/Fusion_Elements/Digest.php
+    - app/PageBuilder/Elementor/Digest.php
+    - app/PageBuilder/Beaver/*
+    - app/PageBuilder/SiteOrigin/Digest/*
+    - app/PageBuilder/WpBakery/Digest.php
+    - app/PageBuilder/Divi4/*
+    - app/PageBuilder/Divi5/*
+    - app/PageBuilder/Divi5.php
+    - app/PageBuilder/Brizy/*
+    - app/PageBuilder/Bricks/Digest.php
+    - app/PageBuilder/ZionBuilder/Digest.php
+  scanFiles:
+    - %rootDir%/../../php-stubs/wordpress-stubs/wordpress-stubs.php
+    - %rootDir%/../../php-stubs/wp-cli-stubs/wp-cli-stubs.php
+    - %rootDir%/../../php-stubs/wp-cli-stubs/wp-cli-commands-stubs.php
+    - %rootDir%/../../php-stubs/wp-cli-stubs/wp-cli-i18n-stubs.php
+    - %rootDir%/../../php-stubs/wp-cli-stubs/wp-cli-tools-stubs.php

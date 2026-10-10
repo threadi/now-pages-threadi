@@ -1,0 +1,9 @@
+/.idea
+*.zip
+/vendor/
+/build/build.properties
+/blocks/*/build/
+/app/Dependencies
+/admin/driver/
+/test-results/
+/playwright-report/

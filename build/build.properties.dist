@@ -1,0 +1,17 @@
+# Plugin-Slug
+plugin.slug=now-pages-threadi
+
+# version number to use
+plugin.version=
+
+# set path to npm-binary
+npm.path=
+
+# set path to nvm-binary
+nvm.path=
+
+# set path to composer-binary
+composer.path=
+
+# set path to yarn-binary
+yarn.path=

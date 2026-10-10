@@ -1,0 +1,93 @@
+<?php
+/**
+ * File for handling dashboard tasks in this plugin.
+ *
+ * @package now-pages-threadi
+ */
+
+declare(strict_types=1);
+
+namespace NowPagesThreadi\Plugin\Admin;
+
+// prevent direct access.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Helper-function for Dashboard options of this plugin.
+ */
+class Dashboard {
+	/**
+	 * Instance of this object.
+	 *
+	 * @var ?Dashboard
+	 */
+	private static ?Dashboard $instance = null;
+
+	/**
+	 * Constructor for this object.
+	 */
+	private function __construct() {}
+
+	/**
+	 * Prevent cloning of this object.
+	 *
+	 * @return void
+	 */
+	private function __clone() {}
+
+	/**
+	 * Return the instance of this Singleton object.
+	 */
+	public static function get_instance(): Dashboard {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
+
+	/**
+	 * Initialize the site health support.
+	 *
+	 * @return void
+	 */
+	public function init(): void {
+		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );
+	}
+
+	/**
+	 * Add the dashboard widgets.
+	 *
+	 * @return void
+	 */
+	public function add_dashboard_widgets(): void {
+		foreach ( $this->get_dashboard_widgets() as $dashboard_widget ) {
+			wp_add_dashboard_widget(
+				$dashboard_widget['id'],
+				$dashboard_widget['label'],
+				$dashboard_widget['callback'],
+				null,
+				array(),
+				'side',
+				'high'
+			);
+		}
+	}
+
+	/**
+	 * Return the dashboard-widgets.
+	 *
+	 * @return array<string,array<string,mixed>>
+	 */
+	private function get_dashboard_widgets(): array {
+		$dashboard_widgets = array();
+
+		/**
+		 * Filter the dashboard-widgets used by this plugin.
+		 *
+		 * @since 1.0.0 Available since 1.0.0.
+		 * @param array<string,array<string,mixed>> $dashboard_widgets List of widgets.
+		 */
+		return apply_filters( 'now_pages_threadi_dashboard_widgets', $dashboard_widgets );
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"$schema": "https://json.schemastore.org/block.json",
+	"apiVersion": 3,
+	"name": "now-pages-threadi/digest",
+	"title": "Now entries",
+	"category": "now-pages-threadi",
+	"description": "Lists what you are now doing.",
+	"supports": {
+        "html": false,
+        "align": [ "wide", "full" ]
+	},
+	"textdomain": "now-pages-threadi",
+	"editorScript": "file:build/index.js",
+	"style": "file:build/style-index.css",
+    "attributes": {
+        "period": { "type": "string", "default": "" },
+        "format": { "type": "string", "default": "" },
+        "override_display": { "type": "boolean", "default": false },
+        "show_time": { "type": "boolean", "default": false },
+        "show_source": { "type": "boolean", "default": false },
+        "link_source": { "type": "boolean", "default": false },
+        "show_period": { "type": "boolean", "default": false },
+        "group_by_category": { "type": "boolean", "default": true }
+    }
+}

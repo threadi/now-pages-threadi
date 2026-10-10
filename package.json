@@ -1,0 +1,31 @@
+{
+    "name": "@now-pages-threadi/now-pages-threadi",
+    "version": "1.0.0",
+    "description": "Provides Blocks for Now Pages.",
+    "author": "Thomas Zwirner",
+    "license": "GPL-2.0-or-later",
+    "scripts": {
+        "build": "concurrently --kill-others-on-fail \"npm run build:digest\" \"npm run copy:driver\"",
+        "format": "wp-scripts format",
+        "start": "concurrently --kill-others-on-fail \"npm run start:digest\" \"npm run copy:driver\"",
+        "packages-update": "wp-scripts packages-update",
+        "start:digest": "wp-scripts start blocks/digest/src/index.js --output-path=blocks/digest/build/",
+        "build:digest": "wp-scripts build blocks/digest/src/index.js --output-path=blocks/digest/build/",
+        "make-pot": "wp i18n make-pot . languages/now-pages-threadi.pot --exclude=blocks/digest/src/,svn/",
+        "make-json": "wp i18n make-json languages",
+        "copy:driver": "mkdir -p admin/driver && cp node_modules/driver.js/dist/driver.js.iife.js node_modules/driver.js/dist/driver.css admin/driver/ && cp node_modules/driver.js/license admin/driver/"
+    },
+    "devDependencies": {
+        "@wordpress/scripts": "~34.2",
+        "npm-pack-zip": "^1.3.0",
+        "@playwright/test": "^1.62.1",
+        "@wp-playground/cli": "^3.1.48"
+    },
+    "dependencies": {
+        "@babel/core": "^7.28.5",
+        "@babel/runtime": "^7.28.4",
+        "@wordpress/i18n": "^6.2.0",
+        "concurrently": "^9.2.3",
+        "driver.js": "^1.8.0"
+    }
+}

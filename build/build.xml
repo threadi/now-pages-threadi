@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="now-pages-threadi" basedir="." default="help">
+
+    <!-- Include config file containing  -->
+    <loadproperties srcFile="build.properties" />
+
+    <!-- Sets variables which can later be used. -->
+    <property name="src.dir" location="../" />
+    <property name="build.dir" location="../releases" />
+    <property name="log.dir" location="./" />
+
+    <!-- check for necessary vars -->
+    <fail unless="plugin.slug" />
+    <fail unless="plugin.version" />
+    <fail unless="npm.path" />
+    <fail unless="nvm.path" />
+    <fail unless="yarn.path" />
+	<fail unless="composer.path" />
+    <fail message="Do not run as root!">
+        <condition>
+            <equals arg1="root" arg2="${user.name}"/>
+        </condition>
+    </fail>
+
+    <!-- install npm -->
+    <target name="npm-install">
+        <delete file="${log.dir}/npm-install1.txt"/>
+        <delete file="${log.dir}/npm-install2.txt"/>
+		<delete file="${log.dir}/npm-install3.txt"/>
+		<delete file="${log.dir}/npm-install4.txt"/>
+        <delete file="${log.dir}/npm-install5.txt"/>
+		<exec dir="${src.dir}" failonerror="true" executable="${nvm.path}" output="${log.dir}/nvm-install1.txt">
+			<arg line="install latest"/>
+		</exec>
+		<exec dir="${src.dir}" failonerror="true" executable="${nvm.path}" output="${log.dir}/nvm-install2.txt">
+			<arg line="use node"/>
+		</exec>
+		<exec dir="${src.dir}" failonerror="true" executable="${npm.path}" output="${log.dir}/npm-install3.txt">
+			<arg line="install"/>
+		</exec>
+        <exec dir="${src.dir}/brizy/" failonerror="true" executable="${npm.path}" output="${log.dir}/npm-install4.txt">
+            <arg line="install"/>
+        </exec>
+		<exec dir="${src.dir}/divi5/" failonerror="true" executable="${npm.path}" output="${log.dir}/npm-install5.txt">
+			<arg line="install"/>
+		</exec>
+    </target>
+
+    <!-- build the Blocks via npm -->
+    <target name="npm-build" depends="npm-install">
+        <delete file="${log.dir}/npm-build1.txt"/>
+        <delete file="${log.dir}/npm-build2.txt"/>
+        <delete file="${log.dir}/npm-build3.txt"/>
+        <exec dir="${src.dir}" failonerror="true" executable="${npm.path}" output="${log.dir}/npm-build1.txt">
+            <arg line="run build"/>
+        </exec>
+        <exec dir="${src.dir}/brizy/" failonerror="true" executable="${npm.path}" output="${log.dir}/npm-build2.txt">
+            <arg line="run build"/>
+        </exec>
+		<exec dir="${src.dir}/divi5/" failonerror="true" executable="${npm.path}" output="${log.dir}/npm-build3.txt">
+			<arg line="run build"/>
+		</exec>
+    </target>
+
+	<!-- initialize and build Divi 4 -->
+	<target name="divi4">
+		<delete file="${log.dir}/divi1.txt"/>
+		<delete file="${log.dir}/divi2.txt"/>
+        <delete file="${log.dir}/divi3.txt"/>
+        <exec dir="${src.dir}/legacy-classes/Divi4/" failonerror="true" executable="${yarn.path}" output="${log.dir}/divi1.txt">
+            <arg line="set version 1.22.22"/>
+        </exec>
+        <exec dir="${src.dir}/legacy-classes/Divi4/" failonerror="true" executable="${yarn.path}" output="${log.dir}/divi2.txt" />
+        <exec dir="${src.dir}/legacy-classes/Divi4/" failonerror="true" executable="${yarn.path}" output="${log.dir}/divi3.txt">
+            <arg line="run build"/>
+        </exec>
+	</target>
+
+	<!-- install composer -->
+	<target name="composer-install">
+		<delete file="${log.dir}/composer-install.txt"/>
+		<exec dir="${src.dir}" failonerror="true" executable="${composer.path}" output="${log.dir}/composer-install.txt">
+			<arg line="install"/>
+		</exec>
+	</target>
+
+	<!-- generate autoloader for release -->
+	<target name="autoloader-generation">
+		<delete file="${log.dir}/autoloader-generation.txt"/>
+		<exec dir="${src.dir}" failonerror="true" executable="${composer.path}" output="${log.dir}/autoloader-generation.txt">
+			<arg line="dump-autoload -oa --no-dev"/>
+		</exec>
+	</target>
+
+	<!-- generate autoloader for dev -->
+	<target name="autoloader-generation-dev">
+		<delete file="${log.dir}/autoloader-generation-dev.txt"/>
+		<exec dir="${src.dir}" failonerror="true" executable="${composer.path}" output="${log.dir}/autoloader-generation-dev.txt">
+			<arg line="dump-autoload -oa"/>
+		</exec>
+	</target>
+
+    <!-- set version number in plugin-file for the release -->
+    <target name="setVersionNumber">
+        <!-- delete leftovers of an aborted build first, the copies are created in src.dir -->
+        <delete file="${src.dir}/${plugin.slug}-release.php"/>
+        <copy file="${src.dir}/${plugin.slug}.php" tofile="${src.dir}/${plugin.slug}-release.php" overwrite="true"/>
+        <replace file="${src.dir}/${plugin.slug}-release.php">
+            <replacefilter token="@@VersionNumber@@" value="${plugin.version}" />
+        </replace>
+
+        <delete file="${src.dir}/uninstall-release.php"/>
+        <copy file="${src.dir}/uninstall.php" tofile="${src.dir}/uninstall-release.php" overwrite="true"/>
+        <replace file="${src.dir}/uninstall-release.php">
+            <replacefilter token="@@VersionNumber@@" value="${plugin.version}" />
+        </replace>
+
+		<delete file="${src.dir}/readme-release.txt"/>
+		<copy file="${src.dir}/readme.txt" tofile="${src.dir}/readme-release.txt" overwrite="true"/>
+		<replace file="${src.dir}/readme-release.txt">
+			<replacefilter token="@@VersionNumber@@" value="${plugin.version}" />
+		</replace>
+    </target>
+
+	<!-- check WCS compatibility -->
+	<target name="check-wcs" depends="composer-install">
+		<exec dir="${src.dir}" failonerror="false" executable="vendor/bin/phpcbf">
+			<arg line="."/>
+		</exec>
+		<exec dir="${src.dir}" failonerror="true" executable="vendor/bin/phpcs">
+			<arg line="."/>
+		</exec>
+	</target>
+
+	<!-- generate documentation -->
+	<target name="generate-documentation" depends="composer-install">
+		<exec dir="${src.dir}" failonerror="false" executable="vendor/bin/wp-documentor">
+			<arg line="parse app --format=markdown --output=docs/hooks.md --prefix=now_pages_threadi --exclude=Crypt.php --exclude=Transients.php"/>
+		</exec>
+	</target>
+
+	<!-- audit-->
+	<target name="audit" depends="composer-install">
+		<delete file="${log.dir}/composer-audit.txt"/>
+		<exec dir="${src.dir}" failonerror="true" executable="${composer.path}" output="${log.dir}/composer-audit.txt">
+			<arg line="audit --abandoned=ignore"/>
+		</exec>
+	</target>
+
+	<!-- check PHPStan -->
+	<!-- must run before "autoloader-generation": without the dev autoloader PHPStan does not find its extensions (phpstan-wordpress) -->
+	<target name="check-phpstan" depends="composer-install">
+		<exec dir="${src.dir}" failonerror="true" executable="vendor/bin/phpstan">
+			<arg line="analyse"/>
+		</exec>
+	</target>
+
+	<!-- PHP Unit Tests -->
+	<target name="php-unit-tests" depends="composer-install">
+		<delete file="${log.dir}/php-unit-tests-1.txt"/>
+		<delete file="${log.dir}/php-unit-tests-2.txt"/>
+		<exec dir="${src.dir}" failonerror="true" executable="${composer.path}" output="${log.dir}/php-unit-tests-1.txt">
+			<arg line="test-install-during-build"/>
+		</exec>
+		<exec dir="${src.dir}" failonerror="true" executable="${composer.path}" output="${log.dir}/php-unit-tests-2.txt">
+			<arg line="test"/>
+		</exec>
+	</target>
+
+	<!-- prepare -->
+	<target name="prepare" description="prepare the project" depends="composer-install,npm-build,divi4" />
+
+    <!-- init project -->
+    <target name="init" description="initialize the project" depends="prepare,autoloader-generation-dev" />
+
+    <!-- create release-zip -->
+    <target name="build" description="builds a new release" depends="prepare,audit,generate-documentation,check-phpstan,php-unit-tests,autoloader-generation,check-wcs,setVersionNumber">
+        <delete file="${build.dir}/${plugin.slug}_${plugin.version}.zip"/>
+        <zip destfile="${build.dir}/${plugin.slug}_${plugin.version}.zip">
+            <zipfileset dir="${src.dir}/admin" prefix="${plugin.slug}/admin" />
+			<zipfileset dir="${src.dir}/app" prefix="${plugin.slug}/app" />
+            <zipfileset dir="${src.dir}/blocks/" prefix="${plugin.slug}/blocks/">
+				<exclude name="**/**/src/**" />
+			</zipfileset>
+			<zipfileset dir="${src.dir}/brizy" prefix="${plugin.slug}/brizy">
+				<exclude name="**/node_modules/**" />
+				<exclude name="**/src/**" />
+				<exclude name="**/package.json" />
+				<exclude name="**/package-lock.json" />
+				<exclude name="**/prettier.config.js" />
+				<exclude name="**/tsconfig.json" />
+			</zipfileset>
+			<zipfileset dir="${src.dir}/css" prefix="${plugin.slug}/css" />
+			<zipfileset dir="${src.dir}/divi5" prefix="${plugin.slug}/divi5">
+				<exclude name="**/node_modules/**" />
+				<exclude name="**/webpack.config.js" />
+			</zipfileset>
+			<zipfileset dir="${src.dir}/legacy-classes" prefix="${plugin.slug}/legacy-classes">
+				<exclude name="**/Divi4/.yarn/**" />
+				<exclude name="**/Divi4/package-lock.json" />
+				<exclude name="**/Divi4/node_modules/**" />
+				<exclude name="**/Divi4/.env" />
+				<exclude name="**/Divi4/.yarnrc" />
+				<exclude name="**/Divi4/yarn.lock" />
+				<exclude name="**/Divi4/package.json" />
+				<exclude name="**/Divi4/*/.gitkeep" />
+			</zipfileset>
+			<zipfileset dir="${src.dir}/pagelayer" prefix="${plugin.slug}/pagelayer" />
+			<zipfileset dir="${src.dir}/templates" prefix="${plugin.slug}/templates" />
+			<zipfileset dir="${src.dir}/vendor" includes="autoload.php" prefix="${plugin.slug}/vendor" />
+			<zipfileset dir="${src.dir}/vendor/composer" prefix="${plugin.slug}/vendor/composer" />
+            <zipfileset dir="${src.dir}/vendor/threadi/easy-dialog-for-wordpress/build/" prefix="${plugin.slug}/vendor/threadi/easy-dialog-for-wordpress/build/" />
+            <zipfileset dir="${src.dir}/vendor/threadi/easy-setup-for-wordpress/build/" prefix="${plugin.slug}/vendor/threadi/easy-setup-for-wordpress/build/" />
+            <zipfileset dir="${src.dir}/vendor/threadi/easy-setup-for-wordpress/lib/" prefix="${plugin.slug}/vendor/threadi/easy-setup-for-wordpress/lib/" />
+            <zipfileset dir="${src.dir}/vendor/threadi/easy-settings-for-wordpress/" prefix="${plugin.slug}/vendor/threadi/easy-settings-for-wordpress/" />
+            <zipfileset dir="${src.dir}/vendor/threadi/crypt-for-wordpress/src/" prefix="${plugin.slug}/vendor/threadi/crypt-for-wordpress/src/" />
+            <zipfileset dir="${src.dir}/vendor/threadi/tcp-analyzer/src/" prefix="${plugin.slug}/vendor/threadi/tcp-analyzer/src/" />
+			<zipfileset dir="${src.dir}" includes="composer.json" fullpath="${plugin.slug}/composer.json" />
+			<zipfileset dir="${src.dir}" includes="LICENSE" fullpath="${plugin.slug}/LICENSE" />
+            <zipfileset dir="${src.dir}" includes="wpml-config.xml" fullpath="${plugin.slug}/wpml-config.xml" />
+			<zipfileset dir="${src.dir}" includes="readme-release.txt" fullpath="${plugin.slug}/readme.txt" />
+            <zipfileset dir="${src.dir}" includes="uninstall-release.php" fullpath="${plugin.slug}/uninstall.php" />
+            <zipfileset dir="${src.dir}" includes="${plugin.slug}-release.php" fullpath="${plugin.slug}/${plugin.slug}.php" />
+        </zip>
+		<antcall target="autoloader-generation-dev" />
+        <delete file="${src.dir}/${plugin.slug}-release.php"/>
+		<delete file="${src.dir}/uninstall-release.php"/>
+		<delete file="${src.dir}/readme-release.txt"/>
+    </target>
+
+	<!-- show help for ant commands -->
+    <target name="help">
+        <java classname="org.apache.tools.ant.Main">
+            <arg value="-projecthelp" />
+            <arg value="-buildfile" />
+            <arg value="build.xml" />
+        </java>
+    </target>
+
+</project>

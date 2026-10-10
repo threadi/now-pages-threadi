@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="NowPagesThreadi" namespace="NowPagesThreadiCS\NowPages" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
+
+    <description>Now Pages Coding Standards</description>
+
+    <!--
+        Only scan files with .php extension.
+    -->
+    <arg name="extensions" value="php" />
+
+    <!--
+        Directories to exclude.
+    -->
+    <exclude-pattern>*/app/Dependencies/*</exclude-pattern>
+    <exclude-pattern>*/blocks/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/legacy-classes/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/svn/*</exclude-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
+
+    <!-- Use additional rulesets -->
+    <rule ref="WordPress-Docs"/>
+    <rule ref="WordPress-Extra"/>
+
+    <!-- Require declare(strict_types=1) in every file. -->
+    <rule ref="Generic.PHP.RequireStrictTypes"/>
+
+    <!-- Add excludes -->
+    <rule ref="WordPress">
+        <!-- Excluded in favor to match PSR-4-namings of classes. -->
+        <exclude name="WordPress.Files.FileName"/>
+
+        <!-- Exclude override of globals -->
+        <exclude name="WordPress.WP.GlobalVariablesOverride"/>
+        <exclude name="Squiz.Commenting.FunctionComment.IncorrectTypeHint"/>
+
+        <!-- Bug: https://github.com/WordPress/WordPress-Coding-Standards/issues/1865 -->
+        <exclude name="WordPress.WP.CronInterval" />
+
+        <!-- ignores inheritDoc -->
+        <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingReturn"/>
+    </rule>
+</ruleset>

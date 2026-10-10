@@ -1,0 +1,36 @@
+{
+  "name": "now-pags-divi",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "divi-scripts": "1.0.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "scripts": {
+    "start": "divi-scripts start",
+    "build": "divi-scripts build",
+    "zip": "divi-scripts build && divi-scripts zip",
+    "eject": "divi-scripts eject"
+  },
+  "resolutions": {
+      "node-sass": "npm:sass@^1.69.5"
+  },
+  "browserslist": {
+    "development": [
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 edge versions"
+    ],
+    "production": [
+      ">1%",
+      "last 4 versions",
+      "Firefox ESR",
+      "not ie < 11"
+    ]
+  },
+  "cde": {
+    "gettext": "now-pages-threadi",
+    "prefix": "now-pages-threadi"
+  }
+}

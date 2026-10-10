@@ -1,0 +1,24 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "landingPage": "/wp-admin/index.php",
+  "steps": [
+    {
+      "step": "login",
+      "username": "admin",
+      "password": "password"
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "url",
+        "url": "https://github.com/threadi/now-pages-threadi/releases/latest/download/now-pages-threadi.zip"
+      },
+      "options": { "activate": true }
+    }
+  ],
+  "preferredVersions": {
+    "wp": "latest",
+    "php": "latest"
+  },
+  "features": {}
+}
