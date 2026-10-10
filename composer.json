@@ -1,6 +1,9 @@
 {
     "name": "threadi/now-pages-threadi",
     "version": "1.0.0",
+    "type": "wordpress-plugin",
+    "homepage": "https://plugins.thomaszwirner.de",
+    "license": "GPL-2.0-or-later",
     "scripts": {
         "post-install-cmd": [
             "\"vendor/bin/mozart\" compose",
