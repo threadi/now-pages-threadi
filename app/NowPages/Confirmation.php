@@ -275,7 +275,7 @@ class Confirmation implements Singleton_Interface {
 
 		foreach ( (array) $query->posts as $entry_id ) {
 			// the entry which stays.
-			if ( $keep === absint( $entry_id ) ) {
+			if ( absint( $entry_id ) === $keep ) {
 				continue;
 			}
 
