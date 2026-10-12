@@ -216,6 +216,12 @@ No. AI is optional and only used if you connected an AI service under Settings â
 
 = @@VersionNumber@@ =
 
+Renamed the plugin to "threadi Now Pages". An installation of 1.0.0 is not
+updated in place because the plugin folder changed. Remove the old version
+before installing this one. Entries collected with 1.0.0 are not carried over.
+
+= 1.0.0 =
+
 Initial release
 
 [older changes](https://github.com/threadi/threadi-now-pages/blob/master/changelog.md)
