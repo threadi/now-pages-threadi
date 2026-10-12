@@ -5,7 +5,7 @@
  * @param string $subject The email subject.
  * @param string $body The email body.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  * @version: 1.0.0
  */
 

@@ -5,22 +5,22 @@
  * Definition:
  * Fields are used to manage settings on providers which are assigned to sources.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Sources;
+namespace ThreadiNowPages\Sources;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Instance_Registry;
-use NowPagesThreadi\Helper\Singleton_Interface;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\Sources\Fields\Number;
-use NowPagesThreadi\Sources\Fields\Text;
-use NowPagesThreadi\Sources\Fields\Url;
+use ThreadiNowPages\Helper\Instance_Registry;
+use ThreadiNowPages\Helper\Singleton_Interface;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\Sources\Fields\Number;
+use ThreadiNowPages\Sources\Fields\Text;
+use ThreadiNowPages\Sources\Fields\Url;
 
 /**
  * Object to initialize the fields.
@@ -66,13 +66,13 @@ class Fields implements Singleton_Interface {
 	 */
 	private function get_fields(): array {
 		$fields = array(
-			'\NowPagesThreadi\Sources\Fields\Checkbox',
-			'\NowPagesThreadi\Sources\Fields\MultiSelect',
-			'\NowPagesThreadi\Sources\Fields\Number',
-			'\NowPagesThreadi\Sources\Fields\Password',
-			'\NowPagesThreadi\Sources\Fields\Select',
-			'\NowPagesThreadi\Sources\Fields\Text',
-			'\NowPagesThreadi\Sources\Fields\Url',
+			'\ThreadiNowPages\Sources\Fields\Checkbox',
+			'\ThreadiNowPages\Sources\Fields\MultiSelect',
+			'\ThreadiNowPages\Sources\Fields\Number',
+			'\ThreadiNowPages\Sources\Fields\Password',
+			'\ThreadiNowPages\Sources\Fields\Select',
+			'\ThreadiNowPages\Sources\Fields\Text',
+			'\ThreadiNowPages\Sources\Fields\Url',
 		);
 		/**
 		 * Filter the fields for providers on settings for sources.
@@ -81,6 +81,6 @@ class Fields implements Singleton_Interface {
 		 *
 		 * @param array<int,class-string<Field_Base>> $fields List of field-types.
 		 */
-		return apply_filters( 'now_pages_threadi_source_fields', $fields );
+		return apply_filters( 'threadi_now_pages_source_fields', $fields );
 	}
 }

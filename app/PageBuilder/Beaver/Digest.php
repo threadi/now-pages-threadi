@@ -2,19 +2,19 @@
 /**
  * File to provide a Beaver Builder widget.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder\Beaver;
+namespace ThreadiNowPages\PageBuilder\Beaver;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use FLBuilder;
 use FLBuilderModule;
-use NowPagesThreadi\Digests\Digests;
+use ThreadiNowPages\Digests\Digests;
 
 /**
  * Provides a modul for Beaver Builder widget.
@@ -26,10 +26,10 @@ class Digest extends FLBuilderModule {
 	public function __construct() {
 		parent::__construct(
 			array(
-				'name'        => __( 'Digest', 'now-pages-threadi' ),
-				'description' => __( 'Provides a Beaver Block to show the digest for now pages.', 'now-pages-threadi' ),
-				'group'       => __( 'Now Pages', 'now-pages-threadi' ),
-				'category'    => __( 'Now Pages', 'now-pages-threadi' ),
+				'name'        => __( 'Digest', 'threadi-now-pages' ),
+				'description' => __( 'Provides a Beaver Block to show the digest for now pages.', 'threadi-now-pages' ),
+				'group'       => __( 'Now Pages', 'threadi-now-pages' ),
+				'category'    => __( 'Now Pages', 'threadi-now-pages' ),
 				'dir'         => __DIR__ . '/digest/',
 				'url'         => __DIR__ . '/digest/',
 			)
@@ -48,92 +48,92 @@ class Digest extends FLBuilderModule {
 }
 
 // collect the formats.
-$now_pages_threadi_formats = array();
-foreach ( Digests::get_instance()->get_formats() as $now_pages_threadi_format ) {
-	$now_pages_threadi_formats[ $now_pages_threadi_format->get_slug() ] = $now_pages_threadi_format->get_label();
+$threadi_now_pages_formats = array();
+foreach ( Digests::get_instance()->get_formats() as $threadi_now_pages_format ) {
+	$threadi_now_pages_formats[ $threadi_now_pages_format->get_slug() ] = $threadi_now_pages_format->get_label();
 }
 
 // collect the periods.
-$now_pages_threadi_periods = array();
-foreach ( Digests::get_instance()->get_periods() as $now_pages_threadi_period_slug => $now_pages_threadi_period_label ) {
-	$now_pages_threadi_periods[ $now_pages_threadi_period_slug ] = $now_pages_threadi_period_label;
+$threadi_now_pages_periods = array();
+foreach ( Digests::get_instance()->get_periods() as $threadi_now_pages_period_slug => $threadi_now_pages_period_label ) {
+	$threadi_now_pages_periods[ $threadi_now_pages_period_slug ] = $threadi_now_pages_period_label;
 }
 
 /**
  * Register the module and its form settings.
  */
 FLBuilder::register_module(
-	'NowPagesThreadi\PageBuilder\Beaver\Digest',
+	'ThreadiNowPages\PageBuilder\Beaver\Digest',
 	array(
-		'now-pages-threadi-tab' => array(
-			'title'    => __( 'Settings', 'now-pages-threadi' ),
+		'threadi-now-pages-tab' => array(
+			'title'    => __( 'Settings', 'threadi-now-pages' ),
 			'sections' => array(
 				'settings' => array(
-					'title'  => __( 'Settings', 'now-pages-threadi' ),
+					'title'  => __( 'Settings', 'threadi-now-pages' ),
 					'fields' => array(
 						'period'            => array(
 							'type'    => 'select',
-							'label'   => __( 'Period', 'now-pages-threadi' ),
+							'label'   => __( 'Period', 'threadi-now-pages' ),
 							'default' => Digests::get_instance()->get_default_period(),
-							'options' => $now_pages_threadi_periods,
+							'options' => $threadi_now_pages_periods,
 						),
 						'format'            => array(
 							'type'    => 'select',
-							'label'   => __( 'Format', 'now-pages-threadi' ),
+							'label'   => __( 'Format', 'threadi-now-pages' ),
 							'default' => Digests::get_instance()->get_default_format(),
-							'options' => $now_pages_threadi_formats,
+							'options' => $threadi_now_pages_formats,
 						),
 						'override_display'  => array(
 							'type'    => 'select',
-							'label'   => __( 'Use own display settings', 'now-pages-threadi' ),
+							'label'   => __( 'Use own display settings', 'threadi-now-pages' ),
 							'options' => array(
-								'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-								'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+								'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+								'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 							),
 							'default' => 'no',
 						),
 						'show_time'         => array(
 							'type'    => 'select',
-							'label'   => __( 'Show times', 'now-pages-threadi' ),
+							'label'   => __( 'Show times', 'threadi-now-pages' ),
 							'options' => array(
-								'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-								'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+								'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+								'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 							),
 							'default' => 'no',
 						),
 						'show_source'       => array(
 							'type'    => 'select',
-							'label'   => __( 'Show data source', 'now-pages-threadi' ),
+							'label'   => __( 'Show data source', 'threadi-now-pages' ),
 							'options' => array(
-								'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-								'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+								'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+								'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 							),
 							'default' => 'no',
 						),
 						'link_source'       => array(
 							'type'    => 'select',
-							'label'   => __( 'Link the data source', 'now-pages-threadi' ),
+							'label'   => __( 'Link the data source', 'threadi-now-pages' ),
 							'options' => array(
-								'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-								'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+								'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+								'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 							),
 							'default' => 'no',
 						),
 						'show_period'       => array(
 							'type'    => 'select',
-							'label'   => __( 'Show period of entries', 'now-pages-threadi' ),
+							'label'   => __( 'Show period of entries', 'threadi-now-pages' ),
 							'options' => array(
-								'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-								'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+								'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+								'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 							),
 							'default' => 'yes',
 						),
 						'group_by_category' => array(
 							'type'    => 'select',
-							'label'   => __( 'Group by category', 'now-pages-threadi' ),
+							'label'   => __( 'Group by category', 'threadi-now-pages' ),
 							'options' => array(
-								'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-								'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+								'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+								'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 							),
 							'default' => 'yes',
 						),

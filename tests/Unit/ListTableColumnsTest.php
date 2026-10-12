@@ -7,19 +7,19 @@
  * With declare(strict_types=1) a narrowed parameter type would fatal
  * here — and only here, which is why they deserve their own tests.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\NowPages\Categories;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\Providers\Providers;
-use NowPagesThreadi\Sources\Sources;
-use NowPagesThreadi\Tests\NowPagesTestCase;
-use NowPagesThreadi\Tests\Unit\Stubs\Stub_Provider;
+use ThreadiNowPages\NowPages\Categories;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\Providers\Providers;
+use ThreadiNowPages\Sources\Sources;
+use ThreadiNowPages\Tests\NowPagesTestCase;
+use ThreadiNowPages\Tests\Unit\Stubs\Stub_Provider;
 
 /**
  * Object to test the column callbacks.
@@ -47,7 +47,7 @@ class ListTableColumnsTest extends NowPagesTestCase {
 	private function create_source( string $provider_slug = 'stub', string $language = 'de_DE' ): int {
 		$source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'Test source',
 			)
@@ -74,7 +74,7 @@ class ListTableColumnsTest extends NowPagesTestCase {
 	private function create_entry( int $source_id = 0 ): int {
 		return self::factory()->post->create(
 			array(
-				'post_type'    => 'np_threadi_entry',
+				'post_type'    => 'threadi_np_entry',
 				'post_status'  => 'publish',
 				'post_title'   => '',
 				'post_content' => 'An entry',
@@ -127,7 +127,7 @@ class ListTableColumnsTest extends NowPagesTestCase {
 	public function test_provider_column_shows_the_label(): void {
 		$source_id = $this->create_source();
 
-		$this->assertStringContainsString( 'Stub provider', $this->render_provider_column( 'now_pages_threadi_provider', $source_id ) );
+		$this->assertStringContainsString( 'Stub provider', $this->render_provider_column( 'threadi_now_pages_provider', $source_id ) );
 	}
 
 	/**
@@ -138,7 +138,7 @@ class ListTableColumnsTest extends NowPagesTestCase {
 	public function test_provider_column_without_a_provider_shows_a_dash(): void {
 		$source_id = $this->create_source( '' );
 
-		$this->assertStringContainsString( '—', html_entity_decode( $this->render_provider_column( 'now_pages_threadi_provider', $source_id ) ) );
+		$this->assertStringContainsString( '—', html_entity_decode( $this->render_provider_column( 'threadi_now_pages_provider', $source_id ) ) );
 	}
 
 	/**
@@ -151,7 +151,7 @@ class ListTableColumnsTest extends NowPagesTestCase {
 	public function test_provider_column_falls_back_to_the_slug(): void {
 		$source_id = $this->create_source( 'gone-with-its-plugin' );
 
-		$this->assertStringContainsString( 'gone-with-its-plugin', $this->render_provider_column( 'now_pages_threadi_provider', $source_id ) );
+		$this->assertStringContainsString( 'gone-with-its-plugin', $this->render_provider_column( 'threadi_now_pages_provider', $source_id ) );
 	}
 
 	/**
@@ -172,7 +172,7 @@ class ListTableColumnsTest extends NowPagesTestCase {
 
 		update_post_meta( $source_id, Categories::SOURCE_DEFAULT_META, $term_id );
 
-		$output = $this->render_provider_column( 'now_pages_threadi_category', $source_id );
+		$output = $this->render_provider_column( 'threadi_now_pages_category', $source_id );
 
 		$this->assertStringContainsString( '>Forum</a>', $output );
 		$this->assertStringContainsString( 'term.php?taxonomy=' . Categories::TAXONOMY, $output );
@@ -197,7 +197,7 @@ class ListTableColumnsTest extends NowPagesTestCase {
 
 		update_post_meta( $source_id, Categories::SOURCE_DEFAULT_META, $term_id );
 
-		$this->assertSame( 'Forum', $this->render_provider_column( 'now_pages_threadi_category', $source_id ) );
+		$this->assertSame( 'Forum', $this->render_provider_column( 'threadi_now_pages_category', $source_id ) );
 	}
 
 	/**
@@ -208,11 +208,11 @@ class ListTableColumnsTest extends NowPagesTestCase {
 	public function test_category_column_without_a_category_shows_a_dash(): void {
 		$source_id = $this->create_source();
 
-		$this->assertStringContainsString( '—', html_entity_decode( $this->render_provider_column( 'now_pages_threadi_category', $source_id ) ) );
+		$this->assertStringContainsString( '—', html_entity_decode( $this->render_provider_column( 'threadi_now_pages_category', $source_id ) ) );
 
 		update_post_meta( $source_id, Categories::SOURCE_DEFAULT_META, 999999 );
 
-		$this->assertStringContainsString( '—', html_entity_decode( $this->render_provider_column( 'now_pages_threadi_category', $source_id ) ) );
+		$this->assertStringContainsString( '—', html_entity_decode( $this->render_provider_column( 'threadi_now_pages_category', $source_id ) ) );
 	}
 
 	/**
@@ -230,7 +230,7 @@ class ListTableColumnsTest extends NowPagesTestCase {
 		);
 
 		$this->assertSame(
-			array( 'cb', 'title', 'now_pages_threadi_provider', 'now_pages_threadi_category', 'now_pages_threadi_language', 'now_pages_threadi_entries', 'date' ),
+			array( 'cb', 'title', 'threadi_now_pages_provider', 'threadi_now_pages_category', 'threadi_now_pages_language', 'threadi_now_pages_entries', 'date' ),
 			array_keys( $columns )
 		);
 	}
@@ -243,7 +243,7 @@ class ListTableColumnsTest extends NowPagesTestCase {
 	public function test_language_column_shows_a_readable_name(): void {
 		$source_id = $this->create_source( 'stub', 'de_DE' );
 
-		$output = $this->render_provider_column( 'now_pages_threadi_language', $source_id );
+		$output = $this->render_provider_column( 'threadi_now_pages_language', $source_id );
 
 		$this->assertNotSame( '', trim( $output ) );
 		$this->assertStringNotContainsString( 'de_DE', $output );
@@ -257,7 +257,7 @@ class ListTableColumnsTest extends NowPagesTestCase {
 	public function test_language_column_without_a_language_shows_a_dash(): void {
 		$source_id = $this->create_source( 'stub', '' );
 
-		$this->assertStringContainsString( '—', html_entity_decode( $this->render_provider_column( 'now_pages_threadi_language', $source_id ) ) );
+		$this->assertStringContainsString( '—', html_entity_decode( $this->render_provider_column( 'threadi_now_pages_language', $source_id ) ) );
 	}
 
 	/**
@@ -280,7 +280,7 @@ class ListTableColumnsTest extends NowPagesTestCase {
 		$source_id = $this->create_source();
 		$entry_id  = $this->create_entry( $source_id );
 
-		$this->assertStringContainsString( 'Test source', $this->render_source_column( 'np_threadi_source', $entry_id ) );
+		$this->assertStringContainsString( 'Test source', $this->render_source_column( 'threadi_np_source', $entry_id ) );
 	}
 
 	/**
@@ -291,7 +291,7 @@ class ListTableColumnsTest extends NowPagesTestCase {
 	public function test_source_column_of_a_manual_entry_does_not_fail(): void {
 		$entry_id = $this->create_entry();
 
-		$output = $this->render_source_column( 'np_threadi_source', $entry_id );
+		$output = $this->render_source_column( 'threadi_np_source', $entry_id );
 
 		$this->assertStringNotContainsString( 'Test source', $output );
 	}
@@ -306,8 +306,8 @@ class ListTableColumnsTest extends NowPagesTestCase {
 
 		// the real columns may print a dash, they must not fatal. reaching
 		// the end is the check, the assertion above keeps the test from being risky.
-		$this->render_provider_column( 'now_pages_threadi_provider', 0 );
-		$this->render_source_column( 'np_threadi_source', 0 );
+		$this->render_provider_column( 'threadi_now_pages_provider', 0 );
+		$this->render_source_column( 'threadi_np_source', 0 );
 	}
 
 	/**
@@ -318,12 +318,12 @@ class ListTableColumnsTest extends NowPagesTestCase {
 	public function test_the_columns_are_registered(): void {
 		$source_columns = Sources::get_instance()->add_columns( array( 'title' => 'Title' ) );
 
-		$this->assertArrayHasKey( 'now_pages_threadi_provider', $source_columns );
-		$this->assertArrayHasKey( 'now_pages_threadi_language', $source_columns );
+		$this->assertArrayHasKey( 'threadi_now_pages_provider', $source_columns );
+		$this->assertArrayHasKey( 'threadi_now_pages_language', $source_columns );
 
 		$entry_columns = Entries::get_instance()->add_source_column( array( 'title' => 'Title' ) );
 
-		$this->assertArrayHasKey( 'np_threadi_source', $entry_columns );
+		$this->assertArrayHasKey( 'threadi_np_source', $entry_columns );
 	}
 
 	/**
@@ -339,7 +339,7 @@ class ListTableColumnsTest extends NowPagesTestCase {
 
 		ob_start();
 
-		do_action( 'manage_np_threadi_source_posts_custom_column', 'now_pages_threadi_provider', (string) $source_id );
+		do_action( 'manage_threadi_np_source_posts_custom_column', 'threadi_now_pages_provider', (string) $source_id );
 
 		$output = (string) ob_get_clean();
 

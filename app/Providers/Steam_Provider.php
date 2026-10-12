@@ -7,18 +7,18 @@
  * entry is created from the difference to the previous run. The counters
  * are kept in the provider context.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Providers;
+namespace ThreadiNowPages\Providers;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use DateTimeImmutable;
-use NowPagesThreadi\NowPages\Entry;
+use ThreadiNowPages\NowPages\Entry;
 use WP_Error;
 
 /**
@@ -61,7 +61,7 @@ class Steam_Provider extends HTTP_Provider_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Steam', 'now-pages-threadi' );
+		return __( 'Steam', 'threadi-now-pages' );
 	}
 
 	/**
@@ -70,7 +70,7 @@ class Steam_Provider extends HTTP_Provider_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'Reads what you played on Steam. Needs a free API key and a public profile.', 'now-pages-threadi' );
+		return __( 'Reads what you played on Steam. Needs a free API key and a public profile.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -81,29 +81,29 @@ class Steam_Provider extends HTTP_Provider_Base {
 	public function get_config_fields(): array {
 		return array(
 			'steam_id'          => array(
-				'label'       => __( 'SteamID64', 'now-pages-threadi' ),
+				'label'       => __( 'SteamID64', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => true,
-				'description' => __( 'The 17 digit ID of your account, not the display name. You can look it up at steamid.io. Your profile and its game details have to be set to public.', 'now-pages-threadi' ),
+				'description' => __( 'The 17 digit ID of your account, not the display name. You can look it up at steamid.io. Your profile and its game details have to be set to public.', 'threadi-now-pages' ),
 				'placeholder' => '76561197960287930',
 			),
 			'steam_api_key'     => array(
-				'label'       => __( 'API key', 'now-pages-threadi' ),
+				'label'       => __( 'API key', 'threadi-now-pages' ),
 				'type'        => 'password',
 				'required'    => true,
-				'description' => __( 'Create one at <a href="https://www.steamcommunity.com/dev/apikey" target="_blank">steamcommunity.com/dev/apikey</a>. It is bound to your account, so keep it to yourself.', 'now-pages-threadi' ),
+				'description' => __( 'Create one at <a href="https://www.steamcommunity.com/dev/apikey" target="_blank">steamcommunity.com/dev/apikey</a>. It is bound to your account, so keep it to yourself.', 'threadi-now-pages' ),
 			),
 			'steam_min_minutes' => array(
-				'label'       => __( 'Minimum minutes', 'now-pages-threadi' ),
+				'label'       => __( 'Minimum minutes', 'threadi-now-pages' ),
 				'type'        => 'number',
 				'default'     => 15,
 				'min'         => 1,
 				'max'         => 600,
 				'step'        => 1,
-				'description' => __( 'How long a session has to be before it becomes an entry. Prevents an entry for every short look into a game.', 'now-pages-threadi' ),
+				'description' => __( 'How long a session has to be before it becomes an entry. Prevents an entry for every short look into a game.', 'threadi-now-pages' ),
 			),
 			'steam_max_items'   => array(
-				'label'   => __( 'Max. items per run', 'now-pages-threadi' ),
+				'label'   => __( 'Max. items per run', 'threadi-now-pages' ),
 				'type'    => 'number',
 				'default' => 5,
 				'min'     => 1,
@@ -310,8 +310,8 @@ class Steam_Provider extends HTTP_Provider_Base {
 
 		$this->report_error(
 			new WP_Error(
-				'now_pages_threadi_steam_empty',
-				__( 'Steam returned no games. Set your profile and its game details to public, otherwise the API stays silent.', 'now-pages-threadi' )
+				'threadi_now_pages_steam_empty',
+				__( 'Steam returned no games. Set your profile and its game details to public, otherwise the API stays silent.', 'threadi-now-pages' )
 			)
 		);
 	}
@@ -329,7 +329,7 @@ class Steam_Provider extends HTTP_Provider_Base {
 		if ( '' === $name ) {
 			$name = sprintf(
 			/* translators: %1$d will be replaced by a Steam application ID. */
-				__( 'App %1$d', 'now-pages-threadi' ),
+				__( 'App %1$d', 'threadi-now-pages' ),
 				absint( $session['app_id'] )
 			);
 		}
@@ -363,7 +363,7 @@ class Steam_Provider extends HTTP_Provider_Base {
 		if ( $minutes < 60 ) {
 			return sprintf(
 			/* translators: %1$d will be replaced by a number of minutes, %2$s by the name of a game. */
-				_n( 'Played %2$s for %1$d minute', 'Played %2$s for %1$d minutes', $minutes, 'now-pages-threadi' ),
+				_n( 'Played %2$s for %1$d minute', 'Played %2$s for %1$d minutes', $minutes, 'threadi-now-pages' ),
 				$minutes,
 				$name
 			);
@@ -373,7 +373,7 @@ class Steam_Provider extends HTTP_Provider_Base {
 
 		return sprintf(
 		/* translators: %1$s will be replaced by a number of hours, %2$s by the name of a game. */
-			__( 'Played %2$s for %1$s hours', 'now-pages-threadi' ),
+			__( 'Played %2$s for %1$s hours', 'threadi-now-pages' ),
 			number_format_i18n( $hours, 1 ),
 			$name
 		);

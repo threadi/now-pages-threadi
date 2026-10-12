@@ -24,9 +24,9 @@ import './style.scss';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
-registerBlockType( 'now-pages-threadi/digest', {
-	title: __( 'Now entries', 'now-pages-threadi' ),
-	description: __('Lists what you are currently doing.', 'now-pages-threadi'),
+registerBlockType( 'threadi-now-pages/digest', {
+	title: __( 'Now entries', 'threadi-now-pages' ),
+	description: __('Lists what you are currently doing.', 'threadi-now-pages'),
 
 	/**
 	 * @see ./edit.js

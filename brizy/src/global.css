@@ -1,3 +1,3 @@
-.brz-third-party:has([class*="now-pages-threadi-"]) {
+.brz-third-party:has([class*="threadi-now-pages-"]) {
 	min-width: 100px;
 }

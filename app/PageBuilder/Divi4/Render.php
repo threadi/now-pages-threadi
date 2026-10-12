@@ -2,16 +2,16 @@
 /**
  * File for initialize the Divi Renderer.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder\Divi4;
+namespace ThreadiNowPages\PageBuilder\Divi4;
 
 // prevent direct access.
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -23,15 +23,15 @@ import { __ } from '@wordpress/i18n';
  * @return {Array|Object} The list, empty if PHP delivered none.
  */
 const getList = ( name ) => {
-  if ( typeof nowPagesThreadiDigestBlock === 'undefined' ) {
+  if ( typeof threadiNowPagesDigestBlock === 'undefined' ) {
     return [];
   }
 
-  if ( ! nowPagesThreadiDigestBlock[ name ] ) {
+  if ( ! threadiNowPagesDigestBlock[ name ] ) {
     return [];
   }
 
-  return nowPagesThreadiDigestBlock[ name ];
+  return threadiNowPagesDigestBlock[ name ];
 };
 
 /**
@@ -44,7 +44,7 @@ const getList = ( name ) => {
  */
 const getOptions = ( name ) => {
   return [
-    { label: __( '- Use the default of the website -', 'now-pages-threadi' ), value: '' },
+    { label: __( '- Use the default of the website -', 'threadi-now-pages' ), value: '' },
     ...getList( name )
   ];
 };
@@ -65,10 +65,10 @@ export default function Edit( object ) {
    *
    * @type {string}
    */
-  let format_help = __( 'Lists every entry on its own line.', 'now-pages-threadi' );
+  let format_help = __( 'Lists every entry on its own line.', 'threadi-now-pages' );
 
   if ( 'narrative' === object.attributes.format ) {
-    format_help = __( 'Turns the entries into a continuous text. Times and sources are not shown in this format.', 'now-pages-threadi' );
+    format_help = __( 'Turns the entries into a continuous text. Times and sources are not shown in this format.', 'threadi-now-pages' );
   }
 
   /**
@@ -100,10 +100,10 @@ export default function Edit( object ) {
   return (
     <>
       <InspectorControls>
-        <PanelBody title={ __( 'Settings', 'now-pages-threadi' ) }>
+        <PanelBody title={ __( 'Settings', 'threadi-now-pages' ) }>
           <SelectControl
-            label={ __( 'Period', 'now-pages-threadi' ) }
-            help={ __( 'Which period the shown entries are from.', 'now-pages-threadi' ) }
+            label={ __( 'Period', 'threadi-now-pages' ) }
+            help={ __( 'Which period the shown entries are from.', 'threadi-now-pages' ) }
             value={ object.attributes.period }
             options={ getOptions( 'periods' ) }
             onChange={ ( value ) => object.setAttributes( { period: value } ) }
@@ -111,7 +111,7 @@ export default function Edit( object ) {
             __nextHasNoMarginBottom
           />
           <SelectControl
-            label={ __( 'Format', 'now-pages-threadi' ) }
+            label={ __( 'Format', 'threadi-now-pages' ) }
             help={ format_help }
             value={ object.attributes.format }
             options={ getOptions( 'formats' ) }
@@ -120,10 +120,10 @@ export default function Edit( object ) {
             __nextHasNoMarginBottom
           />
         </PanelBody>
-        <PanelBody title={ __( 'Display', 'now-pages-threadi' ) } initialOpen={ false }>
+        <PanelBody title={ __( 'Display', 'threadi-now-pages' ) } initialOpen={ false }>
           <ToggleControl
-            label={ __( 'Use own display settings', 'now-pages-threadi' ) }
-            help={ __( 'Without this the block follows the settings of your website, and follows them when you change them later.', 'now-pages-threadi' ) }
+            label={ __( 'Use own display settings', 'threadi-now-pages' ) }
+            help={ __( 'Without this the block follows the settings of your website, and follows them when you change them later.', 'threadi-now-pages' ) }
             checked={ !! object.attributes.override_display }
             onChange={ onOverrideChange }
             __nextHasNoMarginBottom
@@ -131,34 +131,34 @@ export default function Edit( object ) {
           { object.attributes.override_display && (
             <>
               <ToggleControl
-                label={ __( 'Show times', 'now-pages-threadi' ) }
+                label={ __( 'Show times', 'threadi-now-pages' ) }
                 checked={ !! object.attributes.show_time }
                 onChange={ ( value ) => object.setAttributes( { show_time: value } ) }
                 __nextHasNoMarginBottom
               />
               <ToggleControl
-                label={ __( 'Show data source', 'now-pages-threadi' ) }
+                label={ __( 'Show data source', 'threadi-now-pages' ) }
                 checked={ !! object.attributes.show_source }
                 onChange={ ( value ) => object.setAttributes( { show_source: value } ) }
                 __nextHasNoMarginBottom
               />
               { object.attributes.show_source && (
                 <ToggleControl
-                  label={ __( 'Link the data source', 'now-pages-threadi' ) }
-                  help={ __( 'Links each source to the original entry, if the source delivered a URL.', 'now-pages-threadi' ) }
+                  label={ __( 'Link the data source', 'threadi-now-pages' ) }
+                  help={ __( 'Links each source to the original entry, if the source delivered a URL.', 'threadi-now-pages' ) }
                   checked={ !! object.attributes.link_source }
                   onChange={ ( value ) => object.setAttributes( { link_source: value } ) }
                   __nextHasNoMarginBottom
                 />
               ) }
               <ToggleControl
-                label={ __( 'Show period of entries', 'now-pages-threadi' ) }
+                label={ __( 'Show period of entries', 'threadi-now-pages' ) }
                 checked={ !! object.attributes.show_period }
                 onChange={ ( value ) => object.setAttributes( { show_period: value } ) }
                 __nextHasNoMarginBottom
               />
               <ToggleControl
-                label={ __( 'Group by category', 'now-pages-threadi' ) }
+                label={ __( 'Group by category', 'threadi-now-pages' ) }
                 checked={ !! object.attributes.group_by_category }
                 onChange={ ( value ) => object.setAttributes( { group_by_category: value } ) }
                 __nextHasNoMarginBottom
@@ -169,7 +169,7 @@ export default function Edit( object ) {
       </InspectorControls>
       <div { ...useBlockProps() }>
         <ServerSideRender
-          block="now-pages-threadi/digest"
+          block="threadi-now-pages/digest"
           attributes={ object.attributes }
           httpMethod="POST"
         />

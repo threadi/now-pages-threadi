@@ -15,28 +15,28 @@
  * Values given to resolve() are never trusted: only fields the provider
  * declares are used, and each one is cleaned up by its own field type.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Sources;
+namespace ThreadiNowPages\Sources;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Format;
-use NowPagesThreadi\Helper\Languages;
-use NowPagesThreadi\Helper\Singleton_Interface;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\Helper\Url;
-use NowPagesThreadi\NowPages\Categories;
-use NowPagesThreadi\Plugin\Crypt;
-use NowPagesThreadi\Presets\Preset_Interface;
-use NowPagesThreadi\Presets\Presets;
-use NowPagesThreadi\Providers\Provider_Context;
-use NowPagesThreadi\Providers\Provider_Interface;
-use NowPagesThreadi\Providers\Providers;
+use ThreadiNowPages\Helper\Format;
+use ThreadiNowPages\Helper\Languages;
+use ThreadiNowPages\Helper\Singleton_Interface;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\Helper\Url;
+use ThreadiNowPages\NowPages\Categories;
+use ThreadiNowPages\Plugin\Crypt;
+use ThreadiNowPages\Presets\Preset_Interface;
+use ThreadiNowPages\Presets\Presets;
+use ThreadiNowPages\Providers\Provider_Context;
+use ThreadiNowPages\Providers\Provider_Interface;
+use ThreadiNowPages\Providers\Providers;
 use Throwable;
 use WP_Error;
 
@@ -205,7 +205,7 @@ class Source_Builder implements Singleton_Interface {
 		 * @param array{presets:array<int,array<string,mixed>>,providers:array<int,array<string,mixed>>} $catalog      The presets and providers.
 		 * @param bool                                                                                  $with_options Whether choices of select fields are listed.
 		 */
-		return apply_filters( 'now_pages_threadi_source_catalog', $catalog, $with_options );
+		return apply_filters( 'threadi_now_pages_source_catalog', $catalog, $with_options );
 	}
 
 	/**
@@ -235,9 +235,9 @@ class Source_Builder implements Singleton_Interface {
 			// bail if this preset is unknown or its provider is switched off.
 			if ( ! $preset instanceof Preset_Interface || ! $preset->is_available() ) {
 				return new WP_Error(
-					'now_pages_threadi_unknown_preset',
+					'threadi_now_pages_unknown_preset',
 					/* translators: %1$s will be replaced by a slug, %2$s by a list of slugs. */
-					sprintf( __( 'The preset "%1$s" is not available on this website. Available presets: %2$s', 'now-pages-threadi' ), $preset_slug, implode( ', ', array_keys( Presets::get_instance()->get_available_presets() ) ) ),
+					sprintf( __( 'The preset "%1$s" is not available on this website. Available presets: %2$s', 'threadi-now-pages' ), $preset_slug, implode( ', ', array_keys( Presets::get_instance()->get_available_presets() ) ) ),
 					array( 'status' => 400 )
 				);
 			}
@@ -267,9 +267,9 @@ class Source_Builder implements Singleton_Interface {
 				// bail if the preset could not use its answers.
 				if ( empty( $config ) && ! empty( $preset->get_setup_fields() ) ) {
 					return new WP_Error(
-						'now_pages_threadi_invalid_values',
+						'threadi_now_pages_invalid_values',
 						/* translators: %1$s will be replaced by the name of a service. */
-						sprintf( __( 'The given details cannot be used for %1$s.', 'now-pages-threadi' ), $preset->get_label() ),
+						sprintf( __( 'The given details cannot be used for %1$s.', 'threadi-now-pages' ), $preset->get_label() ),
 						array( 'status' => 400 )
 					);
 				}
@@ -281,9 +281,9 @@ class Source_Builder implements Singleton_Interface {
 		// bail if this provider is unknown.
 		if ( ! $provider instanceof Provider_Interface ) {
 			return new WP_Error(
-				'now_pages_threadi_unknown_provider',
+				'threadi_now_pages_unknown_provider',
 				/* translators: %1$s will be replaced by a slug, %2$s by a list of slugs. */
-				sprintf( __( 'The provider "%1$s" does not exist. Available providers: %2$s', 'now-pages-threadi' ), $provider_slug, implode( ', ', array_keys( Providers::get_instance()->get_enabled_providers() ) ) ),
+				sprintf( __( 'The provider "%1$s" does not exist. Available providers: %2$s', 'threadi-now-pages' ), $provider_slug, implode( ', ', array_keys( Providers::get_instance()->get_enabled_providers() ) ) ),
 				array( 'status' => 400 )
 			);
 		}
@@ -291,9 +291,9 @@ class Source_Builder implements Singleton_Interface {
 		// bail if the administrator switched this provider off.
 		if ( ! $provider->is_enabled() ) {
 			return new WP_Error(
-				'now_pages_threadi_provider_disabled',
+				'threadi_now_pages_provider_disabled',
 				/* translators: %1$s will be replaced by the name of a provider. */
-				sprintf( __( 'The provider %1$s is disabled in the settings of this website.', 'now-pages-threadi' ), $provider->get_label() ),
+				sprintf( __( 'The provider %1$s is disabled in the settings of this website.', 'threadi-now-pages' ), $provider->get_label() ),
 				array( 'status' => 400 )
 			);
 		}
@@ -303,8 +303,8 @@ class Source_Builder implements Singleton_Interface {
 			$reason = $provider->get_unavailable_reason();
 
 			return new WP_Error(
-				'now_pages_threadi_provider_unavailable',
-				'' !== $reason ? $this->get_plain_text( $reason ) : __( 'This provider cannot be used on this website.', 'now-pages-threadi' ),
+				'threadi_now_pages_provider_unavailable',
+				'' !== $reason ? $this->get_plain_text( $reason ) : __( 'This provider cannot be used on this website.', 'threadi-now-pages' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -424,7 +424,7 @@ class Source_Builder implements Singleton_Interface {
 
 		// a provider which receives its entries has nothing to fetch.
 		if ( $provider->is_push() ) {
-			$result['message'] = __( 'This source receives its entries, it does not fetch anything. So there is nothing to check.', 'now-pages-threadi' );
+			$result['message'] = __( 'This source receives its entries, it does not fetch anything. So there is nothing to check.', 'threadi-now-pages' );
 
 			return $result;
 		}
@@ -441,7 +441,7 @@ class Source_Builder implements Singleton_Interface {
 		if ( ! empty( $open ) ) {
 			$result['status'] = self::CHECK_INCOMPLETE;
 			/* translators: %1$s will be replaced by a list of field names. */
-			$result['message'] = sprintf( __( 'Not checked, these details are still missing: %1$s', 'now-pages-threadi' ), implode( ', ', $open ) );
+			$result['message'] = sprintf( __( 'Not checked, these details are still missing: %1$s', 'threadi-now-pages' ), implode( ', ', $open ) );
 
 			return $result;
 		}
@@ -457,7 +457,7 @@ class Source_Builder implements Singleton_Interface {
 			// bail if the address points to a local or private network.
 			if ( 'unsafe' === $problem ) {
 				$result['status']  = self::CHECK_UNSAFE;
-				$result['message'] = __( 'This address points to a local or private network or uses a port that is not allowed. For security reasons it is neither checked nor imported.', 'now-pages-threadi' );
+				$result['message'] = __( 'This address points to a local or private network or uses a port that is not allowed. For security reasons it is neither checked nor imported.', 'threadi-now-pages' );
 
 				return $result;
 			}
@@ -470,7 +470,7 @@ class Source_Builder implements Singleton_Interface {
 		try {
 			$entries = $provider->fetch( $config, new Provider_Context( 0 ) );
 		} catch ( Throwable $e ) {
-			$errors->add( 'now_pages_threadi_check_exception', $e->getMessage() );
+			$errors->add( 'threadi_now_pages_check_exception', $e->getMessage() );
 		} finally {
 			$this->restore_provider_errors();
 		}
@@ -488,7 +488,7 @@ class Source_Builder implements Singleton_Interface {
 		if ( $result['entries'] > 0 ) {
 			$result['status'] = self::CHECK_OK;
 			/* translators: %1$d will be replaced by a number. */
-			$result['message'] = sprintf( _n( 'Checked: %1$d entry found.', 'Checked: %1$d entries found.', $result['entries'], 'now-pages-threadi' ), $result['entries'] );
+			$result['message'] = sprintf( _n( 'Checked: %1$d entry found.', 'Checked: %1$d entries found.', $result['entries'], 'threadi-now-pages' ), $result['entries'] );
 
 			return $result;
 		}
@@ -499,14 +499,14 @@ class Source_Builder implements Singleton_Interface {
 
 			// an address nobody answers under is the most likely reason, and the one worth naming.
 			if ( 'unresolvable' === $problem ) {
-				$result['message'] = __( 'The address of this service could not be resolved. It probably does not exist, check it for a typo.', 'now-pages-threadi' );
+				$result['message'] = __( 'The address of this service could not be resolved. It probably does not exist, check it for a typo.', 'threadi-now-pages' );
 			}
 
 			return $result;
 		}
 
 		$result['status']  = self::CHECK_EMPTY;
-		$result['message'] = __( 'Checked: the service answered, but it has no entries right now.', 'now-pages-threadi' );
+		$result['message'] = __( 'Checked: the service answered, but it has no entries right now.', 'threadi-now-pages' );
 
 		return $result;
 	}
@@ -561,9 +561,9 @@ class Source_Builder implements Singleton_Interface {
 		// bail if required details are missing.
 		if ( ! empty( $resolved['missing'] ) ) {
 			return new WP_Error(
-				'now_pages_threadi_missing_values',
+				'threadi_now_pages_missing_values',
 				/* translators: %1$s will be replaced by a list of field names. */
-				sprintf( __( 'These details are missing: %1$s', 'now-pages-threadi' ), implode( ', ', wp_list_pluck( $resolved['missing'], 'name' ) ) ),
+				sprintf( __( 'These details are missing: %1$s', 'threadi-now-pages' ), implode( ', ', wp_list_pluck( $resolved['missing'], 'name' ) ) ),
 				array(
 					'status'  => 400,
 					'missing' => $resolved['missing'],
@@ -574,9 +574,9 @@ class Source_Builder implements Singleton_Interface {
 		// bail if a source with exactly this configuration already exists.
 		if ( $resolved['duplicate_of'] > 0 ) {
 			return new WP_Error(
-				'now_pages_threadi_duplicate_source',
+				'threadi_now_pages_duplicate_source',
 				/* translators: %1$s will be replaced by the title of a source. */
-				sprintf( __( 'A source with these settings already exists: %1$s', 'now-pages-threadi' ), get_the_title( $resolved['duplicate_of'] ) ),
+				sprintf( __( 'A source with these settings already exists: %1$s', 'threadi-now-pages' ), get_the_title( $resolved['duplicate_of'] ) ),
 				array(
 					'status'       => 409,
 					'duplicate_of' => $resolved['duplicate_of'],
@@ -588,7 +588,7 @@ class Source_Builder implements Singleton_Interface {
 
 		// an address in a private network is never stored.
 		if ( self::CHECK_UNSAFE === $check['status'] ) {
-			return new WP_Error( 'now_pages_threadi_unsafe_address', $check['message'], array( 'status' => 400 ) );
+			return new WP_Error( 'threadi_now_pages_unsafe_address', $check['message'], array( 'status' => 400 ) );
 		}
 
 		$failed = self::CHECK_FAILED === $check['status'];
@@ -596,9 +596,9 @@ class Source_Builder implements Singleton_Interface {
 		// bail if the provider could not deliver and the caller wants nothing in that case.
 		if ( $failed && empty( $args['draft_on_failure'] ) ) {
 			return new WP_Error(
-				'now_pages_threadi_check_failed',
+				'threadi_now_pages_check_failed',
 				/* translators: %1$s will be replaced by an error message. */
-				sprintf( __( 'The source was not created, because the check failed: %1$s', 'now-pages-threadi' ), $check['message'] ),
+				sprintf( __( 'The source was not created, because the check failed: %1$s', 'threadi-now-pages' ), $check['message'] ),
 				array(
 					'status' => 422,
 					'check'  => $check,
@@ -669,7 +669,7 @@ class Source_Builder implements Singleton_Interface {
 
 				// bail if the encryption failed: better no value than a readable one.
 				if ( '' === $encrypted ) {
-					return new WP_Error( 'now_pages_threadi_encryption_failed', __( 'A secret value could not be encrypted, so the source was not created.', 'now-pages-threadi' ), array( 'status' => 500 ) );
+					return new WP_Error( 'threadi_now_pages_encryption_failed', __( 'A secret value could not be encrypted, so the source was not created.', 'threadi-now-pages' ), array( 'status' => 500 ) );
 				}
 
 				$value = $encrypted;
@@ -703,7 +703,7 @@ class Source_Builder implements Singleton_Interface {
 		 * @param string              $provider_slug The slug of its provider.
 		 * @param array<string,mixed> $args          The arguments it was created with.
 		 */
-		do_action( 'now_pages_threadi_source_created', absint( $post_id ), $provider_slug, $args );
+		do_action( 'threadi_now_pages_source_created', absint( $post_id ), $provider_slug, $args );
 
 		return absint( $post_id );
 	}
@@ -821,7 +821,7 @@ class Source_Builder implements Singleton_Interface {
 			 * @param string|null $problem Return "", "unresolvable" or "unsafe" to skip the lookup, null to run it.
 			 * @param string      $url     The address.
 			 */
-			$pre = apply_filters( 'now_pages_threadi_pre_address_problem', null, $url );
+			$pre = apply_filters( 'threadi_now_pages_pre_address_problem', null, $url );
 			if ( is_string( $pre ) ) {
 				return $pre;
 			}
@@ -894,11 +894,11 @@ class Source_Builder implements Singleton_Interface {
 		$errors = new WP_Error();
 
 		// take every handler away for the moment, they are restored afterwards.
-		$this->error_handlers = $wp_filter['now_pages_threadi_provider_error'] ?? null;
-		unset( $wp_filter['now_pages_threadi_provider_error'] );
+		$this->error_handlers = $wp_filter['threadi_now_pages_provider_error'] ?? null;
+		unset( $wp_filter['threadi_now_pages_provider_error'] );
 
 		add_action(
-			'now_pages_threadi_provider_error',
+			'threadi_now_pages_provider_error',
 			static function ( mixed $slug, mixed $error ) use ( $errors ): void {
 				if ( $error instanceof WP_Error ) {
 					$errors->add( (string) $error->get_error_code(), $error->get_error_message() );
@@ -919,10 +919,10 @@ class Source_Builder implements Singleton_Interface {
 	private function restore_provider_errors(): void {
 		global $wp_filter;
 
-		unset( $wp_filter['now_pages_threadi_provider_error'] );
+		unset( $wp_filter['threadi_now_pages_provider_error'] );
 
 		if ( null !== $this->error_handlers ) {
-			$wp_filter['now_pages_threadi_provider_error'] = $this->error_handlers; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- restores what silence_provider_errors() took away.
+			$wp_filter['threadi_now_pages_provider_error'] = $this->error_handlers; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- restores what silence_provider_errors() took away.
 		}
 
 		$this->error_handlers = null;

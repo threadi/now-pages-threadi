@@ -2,17 +2,17 @@
 /**
  * This file contains the week period.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests\Periods;
+namespace ThreadiNowPages\Digests\Periods;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Period_Base;
+use ThreadiNowPages\Digests\Period_Base;
 
 /**
  * Object for the week period.
@@ -31,7 +31,7 @@ class Week extends Period_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Week', 'now-pages-threadi' );
+		return __( 'Week', 'threadi-now-pages' );
 	}
 
 	/**
@@ -40,7 +40,7 @@ class Week extends Period_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'From monday to sunday of the week a date falls into.', 'now-pages-threadi' );
+		return __( 'From monday to sunday of the week a date falls into.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -71,12 +71,12 @@ class Week extends Period_Base {
 	public function get_note( array $args, array $range ): string {
 		// name the week unless it is today.
 		if ( gmdate( 'Y-m-d', $this->get_timestamp( $args ) ) === current_time( 'Y-m-d' ) ) {
-			return __( 'From this week', 'now-pages-threadi' );
+			return __( 'From this week', 'threadi-now-pages' );
 		}
 
 		return sprintf(
 		/* translators: %1$s will be replaced by a date. */
-			__( 'From %1$s', 'now-pages-threadi' ),
+			__( 'From %1$s', 'threadi-now-pages' ),
 			mysql2date( (string) get_option( 'date_format' ), $range['after'] )
 		);
 	}

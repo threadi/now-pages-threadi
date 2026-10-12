@@ -12,18 +12,18 @@
  * answers requests of other servers by the ID of the post, which does not
  * depend on any of that. Everybody else is pointed to the now page.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Fediverse;
+namespace ThreadiNowPages\Fediverse;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\Plugin\Post_Type_Base;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\Plugin\Post_Type_Base;
 use WP_Post;
 
 /**
@@ -35,12 +35,12 @@ class Updates extends Post_Type_Base {
 	 *
 	 * @var string
 	 */
-	protected string $slug = 'np_threadi_update';
+	protected string $slug = 'threadi_np_update';
 
 	/**
 	 * The column which shows what was shared.
 	 */
-	private const COLUMN = 'now_pages_threadi_update';
+	private const COLUMN = 'threadi_now_pages_update';
 
 	/**
 	 * Initialize this object.
@@ -68,7 +68,7 @@ class Updates extends Post_Type_Base {
 
 		foreach ( $columns as $name => $label ) {
 			if ( 'title' === $name ) {
-				$new[ self::COLUMN ] = __( 'Shared post', 'now-pages-threadi' );
+				$new[ self::COLUMN ] = __( 'Shared post', 'threadi-now-pages' );
 				continue;
 			}
 
@@ -77,7 +77,7 @@ class Updates extends Post_Type_Base {
 
 		// add it if there was no title to replace.
 		if ( ! isset( $new[ self::COLUMN ] ) ) {
-			$new[ self::COLUMN ] = __( 'Shared post', 'now-pages-threadi' );
+			$new[ self::COLUMN ] = __( 'Shared post', 'threadi-now-pages' );
 		}
 
 		return $new;
@@ -105,7 +105,7 @@ class Updates extends Post_Type_Base {
 		}
 
 		$text = wp_trim_words( wp_strip_all_tags( str_replace( array( '</p>', '</li>', '<br>' ), ' ', $post->post_content ) ), 30 );
-		$kind = absint( get_post_meta( $post_id, Fediverse::META_ENTRY, true ) ) > 0 ? __( 'Single entry', 'now-pages-threadi' ) : __( 'Summary', 'now-pages-threadi' );
+		$kind = absint( get_post_meta( $post_id, Fediverse::META_ENTRY, true ) ) > 0 ? __( 'Single entry', 'threadi-now-pages' ) : __( 'Summary', 'threadi-now-pages' );
 
 		echo '<strong>' . esc_html( $kind ) . '</strong><br>' . esc_html( $text );
 	}
@@ -134,13 +134,13 @@ class Updates extends Post_Type_Base {
 	 */
 	protected function get_labels(): array {
 		return array(
-			'name'          => __( 'Fediverse Updates', 'now-pages-threadi' ),
-			'singular_name' => __( 'Fediverse Update', 'now-pages-threadi' ),
-			'menu_name'     => __( 'Fediverse Updates', 'now-pages-threadi' ),
-			'all_items'     => __( 'Fediverse Updates', 'now-pages-threadi' ),
-			'edit_item'     => __( 'Edit Fediverse Update', 'now-pages-threadi' ),
-			'search_items'  => __( 'Search Fediverse Updates', 'now-pages-threadi' ),
-			'not_found'     => __( 'Nothing has been shared in the Fediverse yet.', 'now-pages-threadi' ),
+			'name'          => __( 'Fediverse Updates', 'threadi-now-pages' ),
+			'singular_name' => __( 'Fediverse Update', 'threadi-now-pages' ),
+			'menu_name'     => __( 'Fediverse Updates', 'threadi-now-pages' ),
+			'all_items'     => __( 'Fediverse Updates', 'threadi-now-pages' ),
+			'edit_item'     => __( 'Edit Fediverse Update', 'threadi-now-pages' ),
+			'search_items'  => __( 'Search Fediverse Updates', 'threadi-now-pages' ),
+			'not_found'     => __( 'Nothing has been shared in the Fediverse yet.', 'threadi-now-pages' ),
 		);
 	}
 

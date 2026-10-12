@@ -3,23 +3,23 @@
  * File to test the complete import run.
  *
  * Covers the whole way from Sources::import() through the provider, the
- * now_pages_threadi_entry_received action and Entries::add_entry() down to the
+ * threadi_now_pages_entry_received action and Entries::add_entry() down to the
  * stored post — without any network access.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
 use DateTimeImmutable;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Providers\Providers;
-use NowPagesThreadi\Sources\Sources;
-use NowPagesThreadi\Tests\NowPagesTestCase;
-use NowPagesThreadi\Tests\Unit\Stubs\Stub_Provider;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Providers\Providers;
+use ThreadiNowPages\Sources\Sources;
+use ThreadiNowPages\Tests\NowPagesTestCase;
+use ThreadiNowPages\Tests\Unit\Stubs\Stub_Provider;
 use WP_Query;
 
 /**
@@ -37,7 +37,7 @@ class ImportRunTest extends NowPagesTestCase {
 		Stub_Provider::reset();
 
 		Providers::get_instance()->register_provider( new Stub_Provider() );
-		update_option( 'now_pages_threadi_provider_stub_enabled', 1 );
+		update_option( 'threadi_now_pages_provider_stub_enabled', 1 );
 
 		delete_option( Entries::OPTION_DELETED );
 	}
@@ -54,7 +54,7 @@ class ImportRunTest extends NowPagesTestCase {
 		$source_id = self::factory()->post->create(
 			array_merge(
 				array(
-					'post_type'   => 'np_threadi_source',
+					'post_type'   => 'threadi_np_source',
 					'post_status' => 'publish',
 					'post_title'  => 'Stub source',
 				),
@@ -102,7 +102,7 @@ class ImportRunTest extends NowPagesTestCase {
 	private function get_stored_entries( int $source_id ): array {
 		$query = new WP_Query(
 			array(
-				'post_type'      => 'np_threadi_entry',
+				'post_type'      => 'threadi_np_entry',
 				'post_status'    => array( 'any', 'trash' ),
 				'post_parent'    => $source_id,
 				'posts_per_page' => -1,
@@ -164,7 +164,7 @@ class ImportRunTest extends NowPagesTestCase {
 		$errors = 0;
 
 		add_action(
-			'now_pages_threadi_provider_error',
+			'threadi_now_pages_provider_error',
 			static function () use ( &$errors ): void {
 				++$errors;
 			}
@@ -172,7 +172,7 @@ class ImportRunTest extends NowPagesTestCase {
 
 		Sources::get_instance()->import();
 
-		remove_all_actions( 'now_pages_threadi_provider_error' );
+		remove_all_actions( 'threadi_now_pages_provider_error' );
 
 		$this->assertSame( 1, $errors );
 		$this->assertCount( 0, $this->get_stored_entries( $source_id ) );
@@ -193,7 +193,7 @@ class ImportRunTest extends NowPagesTestCase {
 		$errors = 0;
 
 		add_action(
-			'now_pages_threadi_provider_error',
+			'threadi_now_pages_provider_error',
 			static function () use ( &$errors ): void {
 				++$errors;
 			}
@@ -201,7 +201,7 @@ class ImportRunTest extends NowPagesTestCase {
 
 		Sources::get_instance()->get_configured_sources();
 
-		remove_all_actions( 'now_pages_threadi_provider_error' );
+		remove_all_actions( 'threadi_now_pages_provider_error' );
 
 		$this->assertSame( 0, $errors );
 	}
@@ -215,7 +215,7 @@ class ImportRunTest extends NowPagesTestCase {
 	 */
 	public function test_disabled_provider_is_not_imported(): void {
 		$source_id = $this->create_source();
-		update_option( 'now_pages_threadi_provider_stub_enabled', 0 );
+		update_option( 'threadi_now_pages_provider_stub_enabled', 0 );
 
 		Stub_Provider::$entries = array( $this->make_entry( 'Darf nicht importiert werden.' ) );
 
@@ -377,7 +377,7 @@ class ImportRunTest extends NowPagesTestCase {
 
 		Sources::get_instance()->import();
 
-		$digest = ( new \NowPagesThreadi\Digests\Digest_Builder() )->build(
+		$digest = ( new \ThreadiNowPages\Digests\Digest_Builder() )->build(
 			array(
 				'period'      => 'live',
 				'format'      => 'verbatim',

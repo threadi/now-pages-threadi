@@ -62,7 +62,7 @@ export const test = base.extend<{ visitor: Page }, { cli: CliServer }>({
                 mount: [
                     {
                         hostPath: './',
-                        vfsPath: '/wordpress/wp-content/plugins/now-pages-threadi',
+                        vfsPath: '/wordpress/wp-content/plugins/threadi-now-pages',
                     },
                 ],
                 blueprint: {
@@ -71,7 +71,7 @@ export const test = base.extend<{ visitor: Page }, { cli: CliServer }>({
                     steps: [
                         {
                             step: 'activatePlugin',
-                            pluginPath: 'now-pages-threadi/now-pages-threadi.php',
+                            pluginPath: 'threadi-now-pages/threadi-now-pages.php',
                         },
                     ],
                 },

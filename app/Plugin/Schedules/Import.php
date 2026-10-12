@@ -2,20 +2,20 @@
 /**
  * This file contains the scheduler for pull-based providers.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin\Schedules;
+namespace ThreadiNowPages\Plugin\Schedules;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Plugin\Intervals;
-use NowPagesThreadi\Plugin\Log;
-use NowPagesThreadi\Plugin\Schedules_Base;
-use NowPagesThreadi\Sources\Sources;
+use ThreadiNowPages\Plugin\Intervals;
+use ThreadiNowPages\Plugin\Log;
+use ThreadiNowPages\Plugin\Schedules_Base;
+use ThreadiNowPages\Sources\Sources;
 
 /**
  * Schedules and runs the periodic fetch of all configured providers.
@@ -26,28 +26,28 @@ class Import extends Schedules_Base {
 	 *
 	 * @var string
 	 */
-	protected string $name = 'now_pages_threadi_schedule_import';
+	protected string $name = 'threadi_now_pages_schedule_import';
 
 	/**
 	 * Name of the option used to enable this event.
 	 *
 	 * @var string
 	 */
-	protected string $option_name = 'now_pages_threadi_schedule_import_status';
+	protected string $option_name = 'threadi_now_pages_schedule_import_status';
 
 	/**
 	 * Name of the option used to define the interval for this event.
 	 *
 	 * @var string
 	 */
-	protected string $interval_option_name = 'now_pages_threadi_schedule_interval';
+	protected string $interval_option_name = 'threadi_now_pages_schedule_interval';
 
 	/**
 	 * Define the default interval.
 	 *
 	 * @var string
 	 */
-	protected string $default_interval = 'now_pages_threadi_hourly';
+	protected string $default_interval = 'threadi_now_pages_hourly';
 
 	/**
 	 * Name of the log category.
@@ -92,11 +92,11 @@ class Import extends Schedules_Base {
 	 */
 	public function run(): void {
 		// log this event.
-		Log::get_instance()->add( __( 'Import has been started.', 'now-pages-threadi' ), 'info', 'import' );
+		Log::get_instance()->add( __( 'Import has been started.', 'threadi-now-pages' ), 'info', 'import' );
 
 		Sources::get_instance()->import();
 
 		// log this event.
-		Log::get_instance()->add( __( 'Import has been ended.', 'now-pages-threadi' ), 'info', 'import' );
+		Log::get_instance()->add( __( 'Import has been ended.', 'threadi-now-pages' ), 'info', 'import' );
 	}
 }

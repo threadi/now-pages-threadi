@@ -2,19 +2,19 @@
 /**
  * This file contains the registry for all periods.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests;
+namespace ThreadiNowPages\Digests;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Instance_Registry;
-use NowPagesThreadi\Helper\Singleton_Interface;
-use NowPagesThreadi\Helper\Singleton_Trait;
+use ThreadiNowPages\Helper\Instance_Registry;
+use ThreadiNowPages\Helper\Singleton_Interface;
+use ThreadiNowPages\Helper\Singleton_Trait;
 
 /**
  * Object which holds all known periods.
@@ -60,7 +60,7 @@ class Periods implements Singleton_Interface {
 		 *
 		 * @param array<int,class-string<Period_Base>> $list List of our period objects.
 		 */
-		return apply_filters( 'now_pages_threadi_periods', $list );
+		return apply_filters( 'threadi_now_pages_periods', $list );
 	}
 
 	/**

@@ -2,19 +2,19 @@
 /**
  * File for a classic widget to show now page entries.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder\WpWidgets;
+namespace ThreadiNowPages\PageBuilder\WpWidgets;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Display_Settings;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Display_Settings;
 use WP_Widget;
 
 /**
@@ -27,10 +27,10 @@ class Digest extends WP_Widget {
 	 */
 	public function __construct() {
 		parent::__construct(
-			'nowPagesThreadiDigest',
-			__( 'Digest', 'now-pages-threadi' ),
+			'threadiNowPagesDigest',
+			__( 'Digest', 'threadi-now-pages' ),
 			array(
-				'description' => __( 'Provides a widget to show the entries of your now page.', 'now-pages-threadi' ),
+				'description' => __( 'Provides a widget to show the entries of your now page.', 'threadi-now-pages' ),
 			)
 		);
 	}
@@ -63,68 +63,68 @@ class Digest extends WP_Widget {
 		return array(
 			'period'            => array(
 				'type'   => 'select',
-				'title'  => __( 'Period', 'now-pages-threadi' ),
+				'title'  => __( 'Period', 'threadi-now-pages' ),
 				'std'    => Digests::get_instance()->get_default_period(),
 				'values' => $periods,
 			),
 			'format'            => array(
 				'type'   => 'select',
-				'title'  => __( 'Format', 'now-pages-threadi' ),
+				'title'  => __( 'Format', 'threadi-now-pages' ),
 				'std'    => Digests::get_instance()->get_default_format(),
 				'values' => $formats,
 			),
 			'override_display'  => array(
 				'type'   => 'select',
-				'title'  => __( 'Use own display settings', 'now-pages-threadi' ),
+				'title'  => __( 'Use own display settings', 'threadi-now-pages' ),
 				'std'    => 'no',
 				'values' => array(
-					'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-					'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+					'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+					'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 				),
 			),
 			'show_time'         => array(
 				'type'   => 'select',
-				'title'  => __( 'Show times', 'now-pages-threadi' ),
+				'title'  => __( 'Show times', 'threadi-now-pages' ),
 				'std'    => 'no',
 				'values' => array(
-					'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-					'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+					'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+					'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 				),
 			),
 			'show_source'       => array(
 				'type'   => 'select',
-				'title'  => __( 'Show data source', 'now-pages-threadi' ),
+				'title'  => __( 'Show data source', 'threadi-now-pages' ),
 				'std'    => 'no',
 				'values' => array(
-					'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-					'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+					'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+					'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 				),
 			),
 			'link_source'       => array(
 				'type'   => 'select',
-				'title'  => __( 'Link the data source', 'now-pages-threadi' ),
+				'title'  => __( 'Link the data source', 'threadi-now-pages' ),
 				'std'    => 'no',
 				'values' => array(
-					'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-					'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+					'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+					'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 				),
 			),
 			'show_period'       => array(
 				'type'   => 'select',
-				'title'  => __( 'Show period of entries', 'now-pages-threadi' ),
+				'title'  => __( 'Show period of entries', 'threadi-now-pages' ),
 				'std'    => 'yes',
 				'values' => array(
-					'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-					'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+					'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+					'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 				),
 			),
 			'group_by_category' => array(
 				'type'   => 'select',
-				'title'  => __( 'Group by category', 'now-pages-threadi' ),
+				'title'  => __( 'Group by category', 'threadi-now-pages' ),
 				'std'    => 'yes',
 				'values' => array(
-					'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-					'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+					'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+					'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 				),
 			),
 		);

@@ -18,28 +18,28 @@
  * This class never names a specific AI provider or model. The site owner
  * connects one under Settings > Connectors, the AI Client routes to it.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Sources;
+namespace ThreadiNowPages\Sources;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use easySettingsForWordPress\Fields\Checkbox;
 use easySettingsForWordPress\Tab;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Interface;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\NowPages\Abilities;
-use NowPagesThreadi\Plugin\Log;
-use NowPagesThreadi\Plugin\Settings;
-use NowPagesThreadi\Presets\Preset_Interface;
-use NowPagesThreadi\Presets\Presets;
-use NowPagesThreadi\Providers\Provider_Interface;
-use NowPagesThreadi\Providers\Providers;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Interface;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\NowPages\Abilities;
+use ThreadiNowPages\Plugin\Log;
+use ThreadiNowPages\Plugin\Settings;
+use ThreadiNowPages\Presets\Preset_Interface;
+use ThreadiNowPages\Presets\Presets;
+use ThreadiNowPages\Providers\Provider_Interface;
+use ThreadiNowPages\Providers\Providers;
 use WP_Error;
 
 /**
@@ -60,7 +60,7 @@ class Advisor implements Singleton_Interface {
 	 *
 	 * @var string
 	 */
-	public const OPTION_ENABLED = 'now_pages_threadi_advisor_enabled';
+	public const OPTION_ENABLED = 'threadi_now_pages_advisor_enabled';
 
 	/**
 	 * The kind of question which comes with an answer: the user may replace it, or leave it.
@@ -149,7 +149,7 @@ class Advisor implements Singleton_Interface {
 		 *
 		 * @param bool $available True if it is enabled and an AI service for text is connected.
 		 */
-		return (bool) apply_filters( 'now_pages_threadi_advisor_is_available', $this->is_enabled() && $this->has_ai_client() );
+		return (bool) apply_filters( 'threadi_now_pages_advisor_is_available', $this->is_enabled() && $this->has_ai_client() );
 	}
 
 	/**
@@ -200,12 +200,12 @@ class Advisor implements Singleton_Interface {
 		}
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return __( 'You could describe what you would like to show and get matching sources proposed, as soon as an administrator connects an AI service to this website.', 'now-pages-threadi' );
+			return __( 'You could describe what you would like to show and get matching sources proposed, as soon as an administrator connects an AI service to this website.', 'threadi-now-pages' );
 		}
 
 		return sprintf(
 			/* translators: %1$s will be replaced by a URL. */
-			__( 'You could describe what you would like to show and get matching sources proposed. Connect an AI service under <a href="%1$s">Settings &rarr; Connectors</a> to use this.', 'now-pages-threadi' ),
+			__( 'You could describe what you would like to show and get matching sources proposed. Connect an AI service under <a href="%1$s">Settings &rarr; Connectors</a> to use this.', 'threadi-now-pages' ),
 			esc_url( admin_url( 'options-connectors.php' ) )
 		);
 	}
@@ -231,8 +231,8 @@ class Advisor implements Singleton_Interface {
 			return;
 		}
 
-		$section = $tab->add_section( 'now_pages_threadi_advisor_settings', 5 );
-		$section->set_title( __( 'Advice for new sources', 'now-pages-threadi' ) );
+		$section = $tab->add_section( 'threadi_now_pages_advisor_settings', 5 );
+		$section->set_title( __( 'Advice for new sources', 'threadi-now-pages' ) );
 		$section->set_callback( array( $this, 'show_intro' ) );
 
 		// add setting.
@@ -240,8 +240,8 @@ class Advisor implements Singleton_Interface {
 		$setting->set_section( $section );
 		$setting->set_default( 1 );
 		$field = new Checkbox( $settings_obj );
-		$field->set_title( __( 'Offer advice', 'now-pages-threadi' ) );
-		$field->set_description( __( 'Adds "Get advice" to the choice of a new source. Your description and the list of source types this website offers are sent to the AI service connected to this website. No keys, no entries and no existing sources are sent.', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Offer advice', 'threadi-now-pages' ) );
+		$field->set_description( __( 'Adds "Get advice" to the choice of a new source. Your description and the list of source types this website offers are sent to the AI service connected to this website. No keys, no entries and no existing sources are sent.', 'threadi-now-pages' ) );
 		$setting->set_field( $field );
 	}
 
@@ -251,7 +251,7 @@ class Advisor implements Singleton_Interface {
 	 * @return void
 	 */
 	public function show_intro(): void {
-		echo '<p>' . esc_html__( 'When you add a source, you can describe in your own words what you would like to show on your now page. An AI model proposes matching sources, and each proposal is tried against the real service before it is offered to you.', 'now-pages-threadi' ) . '</p>';
+		echo '<p>' . esc_html__( 'When you add a source, you can describe in your own words what you would like to show on your now page. An AI model proposes matching sources, and each proposal is tried against the real service before it is offered to you.', 'threadi-now-pages' ) . '</p>';
 
 		$reason = $this->get_unavailable_reason();
 
@@ -285,7 +285,7 @@ class Advisor implements Singleton_Interface {
 		}
 
 		wp_enqueue_script(
-			'now-pages-threadi-advisor',
+			'threadi-now-pages-advisor',
 			Plugin::get_plugin_url() . 'admin/advisor.js',
 			array(),
 			Plugin::get_file_version( Plugin::get_plugin_path() . 'admin/advisor.js' ),
@@ -293,10 +293,10 @@ class Advisor implements Singleton_Interface {
 		);
 
 		wp_localize_script(
-			'now-pages-threadi-advisor',
-			'nowPagesThreadiAdvisorVars',
+			'threadi-now-pages-advisor',
+			'threadiNowPagesAdvisorVars',
 			array(
-				'waiting' => __( 'Looking for matching sources and trying them out. This can take up to a minute …', 'now-pages-threadi' ),
+				'waiting' => __( 'Looking for matching sources and trying them out. This can take up to a minute …', 'threadi-now-pages' ),
 			)
 		);
 	}
@@ -351,12 +351,12 @@ class Advisor implements Singleton_Interface {
 
 		// bail without a wish.
 		if ( '' === $wish ) {
-			return new WP_Error( 'now_pages_threadi_advisor_no_wish', __( 'Please describe what you would like to show.', 'now-pages-threadi' ), array( 'status' => 400 ) );
+			return new WP_Error( 'threadi_now_pages_advisor_no_wish', __( 'Please describe what you would like to show.', 'threadi-now-pages' ), array( 'status' => 400 ) );
 		}
 
 		// bail if the advisor cannot be used.
 		if ( ! $this->is_available() ) {
-			return new WP_Error( 'now_pages_threadi_advisor_unavailable', __( 'No AI service which can write texts is connected to this website.', 'now-pages-threadi' ), array( 'status' => 503 ) );
+			return new WP_Error( 'threadi_now_pages_advisor_unavailable', __( 'No AI service which can write texts is connected to this website.', 'threadi-now-pages' ), array( 'status' => 503 ) );
 		}
 
 		// use what has been found for this wish before.
@@ -369,7 +369,7 @@ class Advisor implements Singleton_Interface {
 
 		// bail if the model could not be asked.
 		if ( is_wp_error( $response ) ) {
-			Log::get_instance()->add( __( 'The advice for a new source could not be requested:', 'now-pages-threadi' ) . ' <code>' . esc_html( $response->get_error_message() ) . '</code>', 'error', 'system' );
+			Log::get_instance()->add( __( 'The advice for a new source could not be requested:', 'threadi-now-pages' ) . ' <code>' . esc_html( $response->get_error_message() ) . '</code>', 'error', 'system' );
 
 			return $response;
 		}
@@ -378,7 +378,7 @@ class Advisor implements Singleton_Interface {
 
 		// bail if the answer could not be read.
 		if ( is_wp_error( $data ) ) {
-			Log::get_instance()->add( __( 'The advice for a new source could not be read, the AI service did not answer in the expected format.', 'now-pages-threadi' ), 'error', 'system' );
+			Log::get_instance()->add( __( 'The advice for a new source could not be read, the AI service did not answer in the expected format.', 'threadi-now-pages' ), 'error', 'system' );
 
 			return $data;
 		}
@@ -443,7 +443,7 @@ class Advisor implements Singleton_Interface {
 		 * @param string              $wish   The wish of the user.
 		 * @param array<string,mixed> $data   The decoded answer of the model.
 		 */
-		$filtered = apply_filters( 'now_pages_threadi_advice', $advice, $wish, $data );
+		$filtered = apply_filters( 'threadi_now_pages_advice', $advice, $wish, $data );
 
 		// a filter which returns something else must not break the setup.
 		return isset( $filtered['proposals'], $filtered['message'], $filtered['rejected'] ) ? $filtered : $advice;
@@ -522,7 +522,7 @@ class Advisor implements Singleton_Interface {
 			$suggestions[ $name ] = array(
 				'kind'        => self::QUESTION_SUGGESTION,
 				'label'       => (string) ( $definition['label'] ?? $name ),
-				'help'        => __( 'This sentence is a proposal of the AI. Leave the field empty to use it, or write it in your own words.', 'now-pages-threadi' ),
+				'help'        => __( 'This sentence is a proposal of the AI. Leave the field empty to use it, or write it in your own words.', 'threadi-now-pages' ),
 				'placeholder' => $value,
 				'value'       => $value,
 			);
@@ -538,7 +538,7 @@ class Advisor implements Singleton_Interface {
 		// bail if this source only receives entries: nothing can be tried, and without a tool
 		// which sends them the user would end up with a source that stays empty.
 		if ( $resolved['provider']->is_push() ) {
-			return new WP_Error( 'now_pages_threadi_advisor_push', __( 'This would only work with a tool of your own which sends the entries to this website. Nothing can be fetched from the service itself.', 'now-pages-threadi' ) );
+			return new WP_Error( 'threadi_now_pages_advisor_push', __( 'This would only work with a tool of your own which sends the entries to this website. Nothing can be fetched from the service itself.', 'threadi-now-pages' ) );
 		}
 
 		// a required field without any value is asked as it would be in the source.
@@ -579,9 +579,9 @@ class Advisor implements Singleton_Interface {
 		// bail if this source exists already.
 		if ( $resolved['duplicate_of'] > 0 ) {
 			return new WP_Error(
-				'now_pages_threadi_duplicate_source',
+				'threadi_now_pages_duplicate_source',
 				/* translators: %1$s will be replaced by the title of a source. */
-				sprintf( __( 'You already have this source: %1$s', 'now-pages-threadi' ), get_the_title( $resolved['duplicate_of'] ) )
+				sprintf( __( 'You already have this source: %1$s', 'threadi-now-pages' ), get_the_title( $resolved['duplicate_of'] ) )
 			);
 		}
 
@@ -590,7 +590,7 @@ class Advisor implements Singleton_Interface {
 
 		// bail if it does not work: a proposal which cannot deliver is none.
 		if ( in_array( $check['status'], array( Source_Builder::CHECK_FAILED, Source_Builder::CHECK_UNSAFE ), true ) ) {
-			return new WP_Error( 'now_pages_threadi_check_failed', $check['message'] );
+			return new WP_Error( 'threadi_now_pages_check_failed', $check['message'] );
 		}
 
 		$proposal['check'] = $check;
@@ -641,7 +641,7 @@ class Advisor implements Singleton_Interface {
 		 * @param array<string,mixed> $proposal  The proposal it was created from.
 		 * @param string              $status    publish or draft.
 		 */
-		do_action( 'now_pages_threadi_advisor_source_created', $created['source_id'], $proposal, $created['status'] );
+		do_action( 'threadi_now_pages_advisor_source_created', $created['source_id'], $proposal, $created['status'] );
 
 		return $created;
 	}
@@ -681,9 +681,9 @@ class Advisor implements Singleton_Interface {
 			// bail if a question has not been answered.
 			if ( '' === $answer ) {
 				return new WP_Error(
-					'now_pages_threadi_advisor_missing_answer',
+					'threadi_now_pages_advisor_missing_answer',
 					/* translators: %1$s will be replaced by the label of a field. */
-					sprintf( __( 'This detail is missing: %1$s', 'now-pages-threadi' ), (string) ( $question['label'] ?? $name ) ),
+					sprintf( __( 'This detail is missing: %1$s', 'threadi-now-pages' ), (string) ( $question['label'] ?? $name ) ),
 					array( 'status' => 400 )
 				);
 			}
@@ -1019,7 +1019,7 @@ class Advisor implements Singleton_Interface {
 	 * @return string
 	 */
 	private function get_cache_key( string $wish ): string {
-		return 'now_pages_threadi_advice_' . md5( get_current_user_id() . '|' . get_user_locale() . '|' . $wish );
+		return 'threadi_now_pages_advice_' . md5( get_current_user_id() . '|' . get_user_locale() . '|' . $wish );
 	}
 
 	/**
@@ -1184,7 +1184,7 @@ class Advisor implements Singleton_Interface {
 		 * @param bool   $with_search Whether the model can search the web.
 		 * @param bool   $with_schema Whether the form of the answer is enforced by a schema.
 		 */
-		return (string) apply_filters( 'now_pages_threadi_advisor_instruction', implode( "\n", $lines ), $with_search, $with_schema );
+		return (string) apply_filters( 'threadi_now_pages_advisor_instruction', implode( "\n", $lines ), $with_search, $with_schema );
 	}
 
 	/**
@@ -1210,7 +1210,7 @@ class Advisor implements Singleton_Interface {
 		 * @param string|WP_Error|null $response Null to ask the connected AI service.
 		 * @param string               $wish     The wish of the user.
 		 */
-		$response = apply_filters( 'now_pages_threadi_advisor_pre_request', null, $wish );
+		$response = apply_filters( 'threadi_now_pages_advisor_pre_request', null, $wish );
 
 		if ( is_string( $response ) || is_wp_error( $response ) ) {
 			return $response;
@@ -1218,7 +1218,7 @@ class Advisor implements Singleton_Interface {
 
 		// bail if the AI Client is missing.
 		if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
-			return new WP_Error( 'now_pages_threadi_advisor_unavailable', __( 'The WordPress AI Client requires WordPress 7.0 or later.', 'now-pages-threadi' ), array( 'status' => 503 ) );
+			return new WP_Error( 'threadi_now_pages_advisor_unavailable', __( 'The WordPress AI Client requires WordPress 7.0 or later.', 'threadi-now-pages' ), array( 'status' => 503 ) );
 		}
 
 		/**
@@ -1231,7 +1231,7 @@ class Advisor implements Singleton_Interface {
 		 *
 		 * @param bool $use_web_search True to use the web search.
 		 */
-		$use_web_search = (bool) apply_filters( 'now_pages_threadi_advisor_use_web_search', true ) && class_exists( '\WordPress\AiClient\Tools\DTO\WebSearch' );
+		$use_web_search = (bool) apply_filters( 'threadi_now_pages_advisor_use_web_search', true ) && class_exists( '\WordPress\AiClient\Tools\DTO\WebSearch' );
 
 		$variants = array(
 			array(
@@ -1306,7 +1306,7 @@ class Advisor implements Singleton_Interface {
 			return $error;
 		}
 
-		return new WP_Error( 'now_pages_threadi_advisor_unavailable', __( 'No AI service which can write texts is connected to this website.', 'now-pages-threadi' ), array( 'status' => 503 ) );
+		return new WP_Error( 'threadi_now_pages_advisor_unavailable', __( 'No AI service which can write texts is connected to this website.', 'threadi-now-pages' ), array( 'status' => 503 ) );
 	}
 
 	/**
@@ -1331,7 +1331,7 @@ class Advisor implements Singleton_Interface {
 
 		// bail if this is not what we asked for.
 		if ( ! is_array( $data ) || ! isset( $data['proposals'] ) || ! is_array( $data['proposals'] ) ) {
-			return new WP_Error( 'now_pages_threadi_advisor_unreadable', __( 'The AI service did not answer in the expected format. Please try again.', 'now-pages-threadi' ), array( 'status' => 502 ) );
+			return new WP_Error( 'threadi_now_pages_advisor_unreadable', __( 'The AI service did not answer in the expected format. Please try again.', 'threadi-now-pages' ), array( 'status' => 502 ) );
 		}
 
 		return $data;

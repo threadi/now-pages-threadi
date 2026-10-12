@@ -2,12 +2,12 @@
 /**
  * File to handle basic functions for each configuration field for providers.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Sources;
+namespace ThreadiNowPages\Sources;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;

@@ -2,22 +2,22 @@
 /**
  * This file contains the support for Divi 5.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use ET\Builder\Framework\DependencyManagement\DependencyTree;
 use ET\Builder\Framework\Route\RESTRoute;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\PageBuilder\Divi5\Digest\Digest;
-use NowPagesThreadi\PageBuilder\Divi5\Digest\Rest;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\PageBuilder\Divi5\Digest\Digest;
+use ThreadiNowPages\PageBuilder\Divi5\Digest\Rest;
 
 /**
  * Registers and handles the support for Divi 5.
@@ -71,7 +71,7 @@ class Divi5 extends PageBuilder_Base {
 
 		\ET\Builder\VisualBuilder\Assets\PackageBuildManager::register_package_build(
 			array(
-				'name'    => 'now-pages-threadi-divi5',
+				'name'    => 'threadi-now-pages-divi5',
 				'version' => '1.0.0',
 				'script'  => array(
 					'src'                => Plugin::get_plugin_url() . 'divi5/build/index.js',
@@ -101,7 +101,7 @@ class Divi5 extends PageBuilder_Base {
 			return;
 		}
 
-		$route = new RESTRoute( 'now-pages-threadi-divi5/v1' );
+		$route = new RESTRoute( 'threadi-now-pages-divi5/v1' );
 
 		// add the route for each module.
 		$route->prefix( '/module-data' )->get( '/digest', Rest::class );
@@ -126,7 +126,7 @@ class Divi5 extends PageBuilder_Base {
 		return '<!-- wp:divi/placeholder --><!-- wp:divi/section {"builderVersion":"' . $version . '"} -->
 <!-- wp:divi/row {"module":{"advanced":{"columnStructure":{"desktop":{"value":"4_4"}},"flexColumnStructure":{"desktop":{"value":"equal-columns_1"}}},"decoration":{"layout":{"desktop":{"value":{"flexWrap":"nowrap"}}}}},"builderVersion":"' . $version . '"} -->
 <!-- wp:divi/column {"module":{"advanced":{"type":{"desktop":{"value":"4_4"}}},"decoration":{"sizing":{"desktop":{"value":{"flexType":"24_24"}}}}},"builderVersion":"' . $version . '"} -->
-<!-- wp:now-pages-threadi-divi5/digest {"digest":{"advanced":{"overrideDisplay":{"desktop":{"value":"off"}},"showPeriod":{"desktop":{"value":"off"}},"groupByCategory":{"desktop":{"value":"off"}},"period":{"desktop":{"value":"' . get_option( 'now_pages_threadi_frontend_period', 'live' ) . '"}},"format":{"desktop":{"value":"verbatim"}}}},"builderVersion":"' . $version . '"} /-->
+<!-- wp:threadi-now-pages-divi5/digest {"digest":{"advanced":{"overrideDisplay":{"desktop":{"value":"off"}},"showPeriod":{"desktop":{"value":"off"}},"groupByCategory":{"desktop":{"value":"off"}},"period":{"desktop":{"value":"' . get_option( 'threadi_now_pages_frontend_period', 'live' ) . '"}},"format":{"desktop":{"value":"verbatim"}}}},"builderVersion":"' . $version . '"} /-->
 <!-- /wp:divi/column -->
 <!-- /wp:divi/row -->
 <!-- /wp:divi/section --><!-- /wp:divi/placeholder -->';
@@ -210,7 +210,7 @@ class Divi5 extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Divi 5', 'now-pages-threadi' );
+		return __( 'Divi 5', 'threadi-now-pages' );
 	}
 
 	/**

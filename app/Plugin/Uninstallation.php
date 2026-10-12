@@ -2,25 +2,25 @@
 /**
  * This file defines tasks during the deactivation of this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Digests\Summarizer_Stats;
-use NowPagesThreadi\Fediverse\Fediverse;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\NowPages\Categories;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\NowPages\Now_Page;
-use NowPagesThreadi\Providers\Webhook_Controller;
-use NowPagesThreadi\Sources\Sources;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Digests\Summarizer_Stats;
+use ThreadiNowPages\Fediverse\Fediverse;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\NowPages\Categories;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\NowPages\Now_Page;
+use ThreadiNowPages\Providers\Webhook_Controller;
+use ThreadiNowPages\Sources\Sources;
 use WP_Query;
 
 /**
@@ -173,21 +173,21 @@ class Uninstallation {
 
 		// delete custom options.
 		delete_option( Summarizer_Stats::OPTION );
-		delete_option( 'now_pages_threadi_email_report_last_run' );
+		delete_option( 'threadi_now_pages_email_report_last_run' );
 		delete_option( Entries::OPTION_DELETED );
 		// the hook on deleting the option does not fire if it was never saved: forget the pending ones, too.
 		Entries::get_instance()->forget_pending_deletions();
 		delete_option( Entries::OPTION_CLEANED_BEFORE );
 		delete_option( Now_Page::OPTION );
 		delete_option( Webhook_Controller::OPTION_TOKEN );
-		delete_option( 'now_pages_threadi_provider_webhook_enabled' );
-		delete_option( 'now_pages_threadi_slug' );
-		delete_option( 'now_pages_threadi_update_slugs' );
-		delete_option( 'now_pages_threadi_rewrite_version' );
-		delete_option( 'now_pages_threadi_log_error_count' );
-		delete_option( 'now_pages_threadi_process_values' );
+		delete_option( 'threadi_now_pages_provider_webhook_enabled' );
+		delete_option( 'threadi_now_pages_slug' );
+		delete_option( 'threadi_now_pages_update_slugs' );
+		delete_option( 'threadi_now_pages_rewrite_version' );
+		delete_option( 'threadi_now_pages_log_error_count' );
+		delete_option( 'threadi_now_pages_process_values' );
 		delete_option( Sources::IMPORT_LOCK_OPTION );
-		delete_option( 'now_pages_threadi_schedules' );
+		delete_option( 'threadi_now_pages_schedules' );
 		delete_option( Fediverse::OPTION_SINCE );
 		delete_option( Fediverse::OPTION_LAST_DIGEST );
 		delete_option( Fediverse::OPTION_AUTHOR );
@@ -199,19 +199,19 @@ class Uninstallation {
 		$wpdb->query(
 			$wpdb->prepare(
 				'DELETE FROM ' . $wpdb->options . ' WHERE option_name LIKE %s OR option_name LIKE %s OR option_name LIKE %s OR option_name LIKE %s OR option_name LIKE %s',
-				$wpdb->esc_like( '_transient_now_pages_threadi_summary_' ) . '%',
-				$wpdb->esc_like( '_transient_timeout_now_pages_threadi_summary_' ) . '%',
-				$wpdb->esc_like( '_transient_now_pages_threadi_' ) . '%',
-				$wpdb->esc_like( '_transient_timeout_now_pages_threadi_' ) . '%',
-				$wpdb->esc_like( 'now_pages_threadi_summary_' ) . '%',
+				$wpdb->esc_like( '_transient_threadi_now_pages_summary_' ) . '%',
+				$wpdb->esc_like( '_transient_timeout_threadi_now_pages_summary_' ) . '%',
+				$wpdb->esc_like( '_transient_threadi_now_pages_' ) . '%',
+				$wpdb->esc_like( '_transient_timeout_threadi_now_pages_' ) . '%',
+				$wpdb->esc_like( 'threadi_now_pages_summary_' ) . '%',
 			)
 		);
 
 		// this covers the summaries, the locks of running summaries, the sitemap cache, the settings errors and the process states.
 		// delete the ones with fixed names also via API, to reach an external object cache.
-		delete_transient( 'now_pages_threadi_sitemap_entries' );
-		delete_transient( 'now_pages_threadi_wp_users' );
-		delete_transient( 'now_pages_threadi_wp_pages' );
+		delete_transient( 'threadi_now_pages_sitemap_entries' );
+		delete_transient( 'threadi_now_pages_wp_users' );
+		delete_transient( 'threadi_now_pages_wp_pages' );
 
 		// remove the terms in our category.
 		// get all terms with direct db access, as the taxonomy may not be registered.
@@ -292,11 +292,11 @@ class Uninstallation {
 		$wpdb->query(
 			$wpdb->prepare(
 				'DELETE FROM ' . $wpdb->options . ' WHERE option_name LIKE %s',
-				$wpdb->esc_like( 'now-pages-threadi_' ) . '%'
+				$wpdb->esc_like( 'threadi-now-pages_' ) . '%'
 			)
 		);
-		delete_site_option( 'now-pages-threadi_crypt_key_id_openssl' );
-		delete_site_option( 'now-pages-threadi_crypt_key_id_sodium' );
+		delete_site_option( 'threadi-now-pages_crypt_key_id_openssl' );
+		delete_site_option( 'threadi-now-pages_crypt_key_id_sodium' );
 
 		// remove every option of this plugin, also those which are registered late
 		// and are therefore unknown to the settings object during the uninstallation.
@@ -304,7 +304,7 @@ class Uninstallation {
 		$option_names = $wpdb->get_col(
 			$wpdb->prepare(
 				'SELECT option_name FROM ' . $wpdb->options . ' WHERE option_name LIKE %s',
-				$wpdb->esc_like( 'now_pages_threadi_' ) . '%'
+				$wpdb->esc_like( 'threadi_now_pages_' ) . '%'
 			)
 		);
 		foreach ( $option_names as $option_name ) {
@@ -328,7 +328,7 @@ class Uninstallation {
 		global $wpdb;
 
 		// the slug used for our notices, see Admin::init().
-		$slug = 'now-pages-threadi';
+		$slug = 'threadi-now-pages';
 
 		// remove our entry from the list of notices.
 		$notices = get_option( 'etfw_transients', array() );
@@ -365,7 +365,7 @@ class Uninstallation {
 	private function delete_user_meta( bool $network_wide ): void {
 		$keys   = Display_Settings::user_meta_keys();
 		$keys[] = 'esfw_values_' . Setup::get_instance()->get_setup_name();
-		$keys[] = \NowPagesThreadi\Plugin\Emails\EmptyNowPages::USER_META_SENT;
+		$keys[] = \ThreadiNowPages\Plugin\Emails\EmptyNowPages::USER_META_SENT;
 
 		// on a single site or a network-wide uninstall: remove it for every user.
 		if ( $network_wide || ! is_multisite() ) {

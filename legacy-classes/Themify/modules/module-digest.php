@@ -2,7 +2,7 @@
 /**
  * This file contains a Themify widget.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
@@ -10,7 +10,7 @@ declare(strict_types=1);
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
+use ThreadiNowPages\Helper\Plugin;
 
 /**
  * Object to handle a Themify widget.
@@ -26,7 +26,7 @@ class TB_Digest_Module extends Themify_Builder_Component_Module {
 	public static function get_module_name(): string {
 		add_filter( 'themify_builder_active_vars', array( __CLASS__, 'builder_active_enqueue' ) );
 
-		return __( 'Digest', 'now-pages-threadi' );
+		return __( 'Digest', 'threadi-now-pages' );
 	}
 
 	/**

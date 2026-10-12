@@ -2,17 +2,17 @@
 /**
  * This file contains the Mastodon preset.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Presets\Preset;
+namespace ThreadiNowPages\Presets\Preset;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Presets\Preset_Base;
+use ThreadiNowPages\Presets\Preset_Base;
 
 /**
  * Object for the Mastodon preset.
@@ -33,7 +33,7 @@ class Mastodon extends Preset_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Mastodon', 'now-pages-threadi' );
+		return __( 'Mastodon', 'threadi-now-pages' );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Mastodon extends Preset_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'Your public posts. Every Mastodon account has a feed, no account connection needed.', 'now-pages-threadi' );
+		return __( 'Your public posts. Every Mastodon account has a feed, no account connection needed.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -71,17 +71,17 @@ class Mastodon extends Preset_Base {
 	public function get_setup_fields(): array {
 		return array(
 			'mastodon_instance' => array(
-				'label'       => __( 'Instance', 'now-pages-threadi' ),
+				'label'       => __( 'Instance', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => true,
-				'description' => __( 'The server your account lives on, without https://', 'now-pages-threadi' ),
+				'description' => __( 'The server your account lives on, without https://', 'threadi-now-pages' ),
 				'placeholder' => 'mastodon.social',
 			),
 			'mastodon_handle'   => array(
-				'label'       => __( 'Username', 'now-pages-threadi' ),
+				'label'       => __( 'Username', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => true,
-				'description' => __( 'Without the leading @ and without the server.', 'now-pages-threadi' ),
+				'description' => __( 'Without the leading @ and without the server.', 'threadi-now-pages' ),
 				'placeholder' => 'tz',
 			),
 		);

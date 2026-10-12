@@ -5,7 +5,7 @@
  * Must be used in legacy-classes as the class name is used as shortcode for the builder,
  * and it is not compatible wie PSR-4.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare( strict_types=1 );
@@ -13,14 +13,14 @@ declare( strict_types=1 );
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
 
 /**
  * Object to handle a widget.
  */
 // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound -- Bold Builder derives the element from this exact class name, a prefix of ours would break the registration.
-class bb_now_pages_threadi_digest extends BT_BB_Element {
+class bb_threadi_now_pages_digest extends BT_BB_Element {
 
 	/**
 	 * Render the content used by this shortcode.
@@ -81,8 +81,8 @@ class bb_now_pages_threadi_digest extends BT_BB_Element {
 		// configure the mapping.
 		bt_bb_map( $this->shortcode,
 			array(
-				'name'                    => esc_html__( 'Digest', 'now-pages-threadi' ),
-				'description'             => esc_html__( 'Show your Now Page entries.', 'now-pages-threadi' ),
+				'name'                    => esc_html__( 'Digest', 'threadi-now-pages' ),
+				'description'             => esc_html__( 'Show your Now Page entries.', 'threadi-now-pages' ),
 				'icon'                    => $this->prefix_backend . 'icon' . '_' . $this->shortcode,
 				'container'               => 'vertical',
 				'accept'                  => array( 'bt_bb_row' => true ),
@@ -92,58 +92,58 @@ class bb_now_pages_threadi_digest extends BT_BB_Element {
 					array(
 						'param_name' => 'period',
 				       'type' => 'dropdown',
-				       'heading' => esc_html__( 'Period', 'now-pages-threadi' ),
+				       'heading' => esc_html__( 'Period', 'threadi-now-pages' ),
 				       'preview' => true,
 				       'value' => $periods,
 					),
 					array(
 						'param_name' => 'format',
 						'type' => 'dropdown',
-						'heading' => esc_html__( 'Format', 'now-pages-threadi' ),
+						'heading' => esc_html__( 'Format', 'threadi-now-pages' ),
 						'preview' => true,
 						'value' => $formats,
 					),
 					array(
 						'param_name' => 'override_display',
 						'type' => 'checkbox',
-						'heading' => esc_html__( 'Use own display settings', 'now-pages-threadi' ),
-						'value' => array( esc_html__( 'Yes', 'now-pages-threadi' ) => 'yes' ),
+						'heading' => esc_html__( 'Use own display settings', 'threadi-now-pages' ),
+						'value' => array( esc_html__( 'Yes', 'threadi-now-pages' ) => 'yes' ),
 						'default' => '',
 					),
 
 					array(
 						'param_name' => 'show_time',
 						'type' => 'checkbox',
-						'heading' => esc_html__( 'Show times', 'now-pages-threadi' ),
-						'value' => array( esc_html__( 'Yes', 'now-pages-threadi' ) => 'yes' ),
+						'heading' => esc_html__( 'Show times', 'threadi-now-pages' ),
+						'value' => array( esc_html__( 'Yes', 'threadi-now-pages' ) => 'yes' ),
 						'default' => '',
 					),
 					array(
 						'param_name' => 'show_source',
 						'type' => 'checkbox',
-						'heading' => esc_html__( 'Show data source', 'now-pages-threadi' ),
-						'value' => array( esc_html__( 'Yes', 'now-pages-threadi' ) => 'yes' ),
+						'heading' => esc_html__( 'Show data source', 'threadi-now-pages' ),
+						'value' => array( esc_html__( 'Yes', 'threadi-now-pages' ) => 'yes' ),
 						'default' => '',
 					),
 					array(
 						'param_name' => 'link_source',
 						'type' => 'checkbox',
-						'heading' => esc_html__( 'Link the data source', 'now-pages-threadi' ),
-						'value' => array( esc_html__( 'Yes', 'now-pages-threadi' ) => 'yes' ),
+						'heading' => esc_html__( 'Link the data source', 'threadi-now-pages' ),
+						'value' => array( esc_html__( 'Yes', 'threadi-now-pages' ) => 'yes' ),
 						'default' => '',
 					),
 					array(
 						'param_name' => 'show_period',
 						'type' => 'checkbox',
-						'heading' => esc_html__( 'Show period of entries', 'now-pages-threadi' ),
-						'value' => array( esc_html__( 'Yes', 'now-pages-threadi' ) => 'yes' ),
+						'heading' => esc_html__( 'Show period of entries', 'threadi-now-pages' ),
+						'value' => array( esc_html__( 'Yes', 'threadi-now-pages' ) => 'yes' ),
 						'default' => 'yes',
 					),
 					array(
 						'param_name' => 'group_by_category',
 						'type' => 'checkbox',
-						'heading' => esc_html__( 'Group by category', 'now-pages-threadi' ),
-						'value' => array( esc_html__( 'Yes', 'now-pages-threadi' ) => 'yes' ),
+						'heading' => esc_html__( 'Group by category', 'threadi-now-pages' ),
+						'value' => array( esc_html__( 'Yes', 'threadi-now-pages' ) => 'yes' ),
 						'default' => 'yes',
 					),
 				),

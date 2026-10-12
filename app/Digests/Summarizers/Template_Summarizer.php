@@ -2,20 +2,20 @@
 /**
  * This file contains the template-based (offline) narrative summarizer.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests\Summarizers;
+namespace ThreadiNowPages\Digests\Summarizers;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Summarizer_Interface;
-use NowPagesThreadi\Helper\Format;
-use NowPagesThreadi\NowPages\Categories;
-use NowPagesThreadi\NowPages\Entries;
+use ThreadiNowPages\Digests\Summarizer_Interface;
+use ThreadiNowPages\Helper\Format;
+use ThreadiNowPages\NowPages\Categories;
+use ThreadiNowPages\NowPages\Entries;
 use WP_Error;
 use WP_Post;
 
@@ -41,13 +41,13 @@ class Template_Summarizer implements Summarizer_Interface {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Template-based (offline, no external service)', 'now-pages-threadi' );
+		return __( 'Template-based (offline, no external service)', 'threadi-now-pages' );
 	}
 
 	/**
 	 * Turn the given entries into a narrative summary.
 	 *
-	 * @param array<int,WP_Post> $entries  Chronologically sorted np_threadi_entry posts.
+	 * @param array<int,WP_Post> $entries  Chronologically sorted threadi_np_entry posts.
 	 * @param string             $language Language code the summary should be written in.
 	 *
 	 * @return string|WP_Error
@@ -141,7 +141,7 @@ class Template_Summarizer implements Summarizer_Interface {
 		 * @param WP_Post           $entry    The entry being rendered.
 		 * @param array<int,string> $slugs    Category slugs assigned to the entry.
 		 */
-		$template = apply_filters( 'now_pages_threadi_narrative_sentence_template', $template, $entry, $slugs );
+		$template = apply_filters( 'threadi_now_pages_narrative_sentence_template', $template, $entry, $slugs );
 
 		// guard against filters returning non-strings (strict_types).
 		$template = is_string( $template ) ? $template : ''; // @phpstan-ignore function.alreadyNarrowedType
@@ -169,11 +169,11 @@ class Template_Summarizer implements Summarizer_Interface {
 		 * @param string[] $connectors The default connector phrases.
 		 */
 		$connectors = apply_filters(
-			'now_pages_threadi_narrative_connectors',
+			'threadi_now_pages_narrative_connectors',
 			array(
-				__( 'I also', 'now-pages-threadi' ),
-				__( 'Besides that, I', 'now-pages-threadi' ),
-				__( 'On top of that, I', 'now-pages-threadi' ),
+				__( 'I also', 'threadi-now-pages' ),
+				__( 'Besides that, I', 'threadi-now-pages' ),
+				__( 'On top of that, I', 'threadi-now-pages' ),
 			)
 		);
 
@@ -200,7 +200,7 @@ class Template_Summarizer implements Summarizer_Interface {
 		 * @param bool   $soften Default true.
 		 * @param string $text   The text about to be softened.
 		 */
-		if ( ! apply_filters( 'now_pages_threadi_narrative_soften_start', true, $text ) ) {
+		if ( ! apply_filters( 'threadi_now_pages_narrative_soften_start', true, $text ) ) {
 			return $text;
 		}
 

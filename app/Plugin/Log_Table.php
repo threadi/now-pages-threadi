@@ -2,18 +2,18 @@
 /**
  * File for handling the table of logs in this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\DateTime;
-use NowPagesThreadi\Helper\Format;
+use ThreadiNowPages\Helper\DateTime;
+use ThreadiNowPages\Helper\Format;
 use WP_List_Table;
 
 /**
@@ -27,10 +27,10 @@ class Log_Table extends WP_List_Table {
 	 */
 	public function get_columns(): array {
 		return array(
-			'state'    => __( 'State', 'now-pages-threadi' ),
-			'date'     => __( 'Date', 'now-pages-threadi' ),
-			'log'      => __( 'Log', 'now-pages-threadi' ),
-			'category' => __( 'Category', 'now-pages-threadi' ),
+			'state'    => __( 'State', 'threadi-now-pages' ),
+			'date'     => __( 'Date', 'threadi-now-pages' ),
+			'log'      => __( 'Log', 'threadi-now-pages' ),
+			'category' => __( 'Category', 'threadi-now-pages' ),
 		);
 	}
 
@@ -103,7 +103,7 @@ class Log_Table extends WP_List_Table {
 			'date' => DateTime::get_format_date_time( $item[ $column_name ] ),
 			'state' => $this->get_status_icon( $item[ $column_name ] ),
 			'log' => nl2br( wp_kses_post( $item[ $column_name ] ) ),
-			'category' => empty( $item[ $column_name ] ) ? '<i>' . esc_html__( 'not defined', 'now-pages-threadi' ) . '</i>' : esc_html( $this->get_category( $item[ $column_name ] ) ),
+			'category' => empty( $item[ $column_name ] ) ? '<i>' . esc_html__( 'not defined', 'threadi-now-pages' ) . '</i>' : esc_html( $this->get_category( $item[ $column_name ] ) ),
 			default => '',
 		};
 	}
@@ -121,7 +121,7 @@ class Log_Table extends WP_List_Table {
 
 		// bail if the searched category is not found.
 		if ( empty( $categories[ $category ] ) ) {
-			return '<i>' . esc_html__( 'Unknown', 'now-pages-threadi' ) . '</i>';
+			return '<i>' . esc_html__( 'Unknown', 'threadi-now-pages' ) . '</i>';
 		}
 
 		// return the category-label.
@@ -137,13 +137,13 @@ class Log_Table extends WP_List_Table {
 	public function extra_tablenav( $which ): void {
 		if ( 'top' === $which ) {
 			// define hint text.
-			$contains = '<p>' . __( 'The file will contain ALL entries. Be aware of this before you send this file to someone.', 'now-pages-threadi' ) . '</p>';
+			$contains = '<p>' . __( 'The file will contain ALL entries. Be aware of this before you send this file to someone.', 'threadi-now-pages' ) . '</p>';
 
 			// define export-URL.
 			$download_url = add_query_arg(
 				array(
-					'action' => 'now_pages_threadi_log_export',
-					'nonce'  => wp_create_nonce( 'now-pages-threadi-log-export' ),
+					'action' => 'threadi_now_pages_log_export',
+					'nonce'  => wp_create_nonce( 'threadi-now-pages-log-export' ),
 				),
 				get_admin_url() . 'admin.php'
 			);
@@ -152,33 +152,33 @@ class Log_Table extends WP_List_Table {
 			$category = $this->get_category_filter();
 			if ( ! empty( $category ) ) {
 				$download_url = add_query_arg( array( 'category' => $category ), $download_url );
-				$contains     = '<p>' . __( 'The file will contain ALL entries of the chosen filter. Be aware of this before you send this file to someone.', 'now-pages-threadi' ) . '</p>';
+				$contains     = '<p>' . __( 'The file will contain ALL entries of the chosen filter. Be aware of this before you send this file to someone.', 'threadi-now-pages' ) . '</p>';
 			}
 
 			// get md5.
 			$md5 = $this->get_md5_filter();
 			if ( ! empty( $md5 ) ) {
 				$download_url = add_query_arg( array( 'md5' => $md5 ), $download_url );
-				$contains     = '<p>' . __( 'The file will contain ALL entries of the chosen filter. Be aware of this before you send this file to someone.', 'now-pages-threadi' ) . '</p>';
+				$contains     = '<p>' . __( 'The file will contain ALL entries of the chosen filter. Be aware of this before you send this file to someone.', 'threadi-now-pages' ) . '</p>';
 			}
 
 			// create download-dialog.
 			$download_dialog = array(
-				'title'   => __( 'Export log entries', 'now-pages-threadi' ),
+				'title'   => __( 'Export log entries', 'threadi-now-pages' ),
 				'texts'   => array(
-					'<p>' . __( 'Click on the button below to download the log entries as CSV.', 'now-pages-threadi' ) . '</p>',
+					'<p>' . __( 'Click on the button below to download the log entries as CSV.', 'threadi-now-pages' ) . '</p>',
 					$contains,
 				),
 				'buttons' => array(
 					array(
 						'action'  => 'location.href="' . esc_url( $download_url ) . '";closeDialog();',
 						'variant' => 'primary',
-						'text'    => __( 'Export log entries', 'now-pages-threadi' ),
+						'text'    => __( 'Export log entries', 'threadi-now-pages' ),
 					),
 					array(
 						'action'  => 'closeDialog();',
 						'variant' => 'secondary',
-						'text'    => __( 'Cancel', 'now-pages-threadi' ),
+						'text'    => __( 'Cancel', 'threadi-now-pages' ),
 					),
 				),
 			);
@@ -186,75 +186,75 @@ class Log_Table extends WP_List_Table {
 			// define empty-URL.
 			$empty_url = add_query_arg(
 				array(
-					'action' => 'now_pages_threadi_log_empty',
-					'nonce'  => wp_create_nonce( 'now-pages-threadi-log-empty' ),
+					'action' => 'threadi_now_pages_log_empty',
+					'nonce'  => wp_create_nonce( 'threadi-now-pages-log-empty' ),
 				),
 				get_admin_url() . 'admin.php'
 			);
 
 			// create empty-log-dialog.
 			$empty_dialog = array(
-				'title'   => __( 'Empty log entries', 'now-pages-threadi' ),
+				'title'   => __( 'Empty log entries', 'threadi-now-pages' ),
 				'texts'   => array(
-					'<p><strong>' . __( 'Are you sure you want to empty the log?', 'now-pages-threadi' ) . '</strong></p>',
-					'<p>' . __( 'You will lose any log until now.', 'now-pages-threadi' ) . '</p>',
+					'<p><strong>' . __( 'Are you sure you want to empty the log?', 'threadi-now-pages' ) . '</strong></p>',
+					'<p>' . __( 'You will lose any log until now.', 'threadi-now-pages' ) . '</p>',
 				),
 				'buttons' => array(
 					array(
 						'action'  => 'location.href="' . esc_url( $empty_url ) . '";',
 						'variant' => 'primary',
-						'text'    => __( 'Yes, empty the log', 'now-pages-threadi' ),
+						'text'    => __( 'Yes, empty the log', 'threadi-now-pages' ),
 					),
 					array(
 						'action'  => 'closeDialog();',
 						'variant' => 'secondary',
-						'text'    => __( 'Cancel', 'now-pages-threadi' ),
+						'text'    => __( 'Cancel', 'threadi-now-pages' ),
 					),
 				),
 			);
 
 			?>
-			<a href="<?php echo esc_url( $download_url ); ?>" class="button button-secondary easy-dialog-for-wordpress<?php echo ( 0 === count( $this->items ) ? ' disabled' : '' ); ?>" data-dialog="<?php echo esc_attr( Format::get_json( $download_dialog ) ); ?>"><?php echo esc_html__( 'Export as CSV', 'now-pages-threadi' ); ?></a>
-			<a href="<?php echo esc_url( $empty_url ); ?>" class="button button-secondary easy-dialog-for-wordpress<?php echo ( 0 === count( $this->items ) ? ' disabled' : '' ); ?>" data-dialog="<?php echo esc_attr( Format::get_json( $empty_dialog ) ); ?>"><?php echo esc_html__( 'Empty the log', 'now-pages-threadi' ); ?></a>
+			<a href="<?php echo esc_url( $download_url ); ?>" class="button button-secondary easy-dialog-for-wordpress<?php echo ( 0 === count( $this->items ) ? ' disabled' : '' ); ?>" data-dialog="<?php echo esc_attr( Format::get_json( $download_dialog ) ); ?>"><?php echo esc_html__( 'Export as CSV', 'threadi-now-pages' ); ?></a>
+			<a href="<?php echo esc_url( $empty_url ); ?>" class="button button-secondary easy-dialog-for-wordpress<?php echo ( 0 === count( $this->items ) ? ' disabled' : '' ); ?>" data-dialog="<?php echo esc_attr( Format::get_json( $empty_dialog ) ); ?>"><?php echo esc_html__( 'Empty the log', 'threadi-now-pages' ); ?></a>
 			<?php
 
 			// show button only if setting is enabled.
-			if ( 1 === absint( get_option( 'now_pages_threadi_enable_log_error_count' ) ) ) {
+			if ( 1 === absint( get_option( 'threadi_now_pages_enable_log_error_count' ) ) ) {
 				// define reset-marker-URL.
 				$reset_error_marker_url = add_query_arg(
 					array(
-						'action' => 'now_pages_threadi_log_reset_marker',
-						'nonce'  => wp_create_nonce( 'now-pages-threadi-log-reset-marker' ),
+						'action' => 'threadi_now_pages_log_reset_marker',
+						'nonce'  => wp_create_nonce( 'threadi-now-pages-log-reset-marker' ),
 					),
 					get_admin_url() . 'admin.php'
 				);
 
 				// create reset-marker-dialog.
 				$reset_error_marker_dialog = array(
-					'title'   => __( 'Reset error marker', 'now-pages-threadi' ),
+					'title'   => __( 'Reset error marker', 'threadi-now-pages' ),
 					'texts'   => array(
-						'<p><strong>' . __( 'Are you sure you want to reset the error marker?', 'now-pages-threadi' ) . '</strong></p>',
-						'<p>' . __( 'As soon as a new error occurs, the marker reappears on the screen..', 'now-pages-threadi' ) . '</p>',
+						'<p><strong>' . __( 'Are you sure you want to reset the error marker?', 'threadi-now-pages' ) . '</strong></p>',
+						'<p>' . __( 'As soon as a new error occurs, the marker reappears on the screen..', 'threadi-now-pages' ) . '</p>',
 					),
 					'buttons' => array(
 						array(
 							'action'  => 'location.href="' . esc_url( $reset_error_marker_url ) . '";',
 							'variant' => 'primary',
-							'text'    => __( 'Yes, reset the marker', 'now-pages-threadi' ),
+							'text'    => __( 'Yes, reset the marker', 'threadi-now-pages' ),
 						),
 						array(
 							'action'  => 'closeDialog();',
 							'variant' => 'secondary',
-							'text'    => __( 'Cancel', 'now-pages-threadi' ),
+							'text'    => __( 'Cancel', 'threadi-now-pages' ),
 						),
 					),
 				);
 
 				// get the error count.
-				$errors = absint( get_option( 'now_pages_threadi_log_error_count' ) );
+				$errors = absint( get_option( 'threadi_now_pages_log_error_count' ) );
 
 				?>
-					<a href="<?php echo esc_url( $reset_error_marker_url ); ?>" class="button button-secondary easy-dialog-for-wordpress<?php echo ( 0 === count( $this->items ) || 0 === $errors ? ' disabled' : '' ); ?>" data-dialog="<?php echo esc_attr( Format::get_json( $reset_error_marker_dialog ) ); ?>"><?php echo esc_html__( 'Reset error marker', 'now-pages-threadi' ); ?></a>
+					<a href="<?php echo esc_url( $reset_error_marker_url ); ?>" class="button button-secondary easy-dialog-for-wordpress<?php echo ( 0 === count( $this->items ) || 0 === $errors ? ' disabled' : '' ); ?>" data-dialog="<?php echo esc_attr( Format::get_json( $reset_error_marker_dialog ) ); ?>"><?php echo esc_html__( 'Reset error marker', 'threadi-now-pages' ); ?></a>
 				<?php
 			}
 		}
@@ -276,12 +276,12 @@ class Log_Table extends WP_List_Table {
 
 			// show text.
 			/* translators: %1$s will be replaced by the category name. */
-			printf( esc_html__( 'No log entries for %1$s found.', 'now-pages-threadi' ), esc_html( $categories[ $category ] ?? $category ) );
+			printf( esc_html__( 'No log entries for %1$s found.', 'threadi-now-pages' ), esc_html( $categories[ $category ] ?? $category ) );
 			return;
 		}
 
 		// show default text.
-		echo esc_html__( 'No log entries found.', 'now-pages-threadi' );
+		echo esc_html__( 'No log entries found.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -298,7 +298,7 @@ class Log_Table extends WP_List_Table {
 
 		// define initial list.
 		$list = array(
-			'all' => '<a href="' . esc_url( $url ) . '"' . ( empty( $category ) ? ' class="current"' : '' ) . '>' . esc_html__( 'All', 'now-pages-threadi' ) . '</a>',
+			'all' => '<a href="' . esc_url( $url ) . '"' . ( empty( $category ) ? ' class="current"' : '' ) . '>' . esc_html__( 'All', 'threadi-now-pages' ) . '</a>',
 		);
 
 		// get all log categories.
@@ -310,7 +310,7 @@ class Log_Table extends WP_List_Table {
 
 		// add filter for errors.
 		$url            = add_query_arg( array( 'errors' => 1 ) );
-		$list['errors'] = '<a href="' . esc_url( $url ) . '"' . ( 1 === absint( filter_input( INPUT_GET, 'errors', FILTER_SANITIZE_NUMBER_INT ) ) ? ' class="current"' : '' ) . '>' . esc_html__( 'Errors', 'now-pages-threadi' ) . '</a>';
+		$list['errors'] = '<a href="' . esc_url( $url ) . '"' . ( 1 === absint( filter_input( INPUT_GET, 'errors', FILTER_SANITIZE_NUMBER_INT ) ) ? ' class="current"' : '' ) . '>' . esc_html__( 'Errors', 'threadi-now-pages' ) . '</a>';
 
 		/**
 		 * Filter the list before output.
@@ -318,7 +318,7 @@ class Log_Table extends WP_List_Table {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param array<string,string> $list List of filter.
 		 */
-		return apply_filters( 'now_pages_threadi_log_table_filter', $list );
+		return apply_filters( 'threadi_now_pages_log_table_filter', $list );
 	}
 
 	/**
@@ -366,9 +366,9 @@ class Log_Table extends WP_List_Table {
 	 */
 	private function get_status_icon( string $status ): string {
 		$list = array(
-			'success' => '<span class="dashicons dashicons-yes" title="' . __( 'Ended successfully', 'now-pages-threadi' ) . '"></span>',
-			'info'    => '<span class="dashicons dashicons-info-outline" title="' . __( 'Just an info', 'now-pages-threadi' ) . '"></span>',
-			'error'   => '<span class="dashicons dashicons-no" title="' . __( 'Error occurred', 'now-pages-threadi' ) . '"></span>',
+			'success' => '<span class="dashicons dashicons-yes" title="' . __( 'Ended successfully', 'threadi-now-pages' ) . '"></span>',
+			'info'    => '<span class="dashicons dashicons-info-outline" title="' . __( 'Just an info', 'threadi-now-pages' ) . '"></span>',
+			'error'   => '<span class="dashicons dashicons-no" title="' . __( 'Error occurred', 'threadi-now-pages' ) . '"></span>',
 		);
 
 		/**
@@ -376,7 +376,7 @@ class Log_Table extends WP_List_Table {
 		 *
 		 * @since 1.0.0 Available since 1.0.0.
 		 */
-		$list = apply_filters( 'now_pages_threadi_status_list', $list );
+		$list = apply_filters( 'threadi_now_pages_status_list', $list );
 
 		// bail if status is unknown.
 		if ( empty( $list[ $status ] ) ) {

@@ -2,20 +2,20 @@
 /**
  * This file contains the digest widget for Pagelayer.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder\Pagelayer;
+namespace ThreadiNowPages\PageBuilder\Pagelayer;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Helper\Singleton_Trait;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Helper\Singleton_Trait;
 
 /**
  * Object for the digest widget in Pagelayer.
@@ -30,7 +30,7 @@ class Digest {
 	 * as shortcode and would replace ours, together with all its attributes
 	 * for users, categories and the delay.
 	 */
-	public const TAG = 'now_pages_threadi_pagelayer_digest';
+	public const TAG = 'threadi_now_pages_pagelayer_digest';
 
 	/**
 	 * The display settings this widget can override.
@@ -73,17 +73,17 @@ class Digest {
 
 		// define the display settings.
 		$labels  = array(
-			'show_time'         => __( 'Show times', 'now-pages-threadi' ),
-			'show_source'       => __( 'Show data source', 'now-pages-threadi' ),
-			'link_source'       => __( 'Link the data source', 'now-pages-threadi' ),
-			'show_period'       => __( 'Show period of entries', 'now-pages-threadi' ),
-			'group_by_category' => __( 'Group by category', 'now-pages-threadi' ),
+			'show_time'         => __( 'Show times', 'threadi-now-pages' ),
+			'show_source'       => __( 'Show data source', 'threadi-now-pages' ),
+			'link_source'       => __( 'Link the data source', 'threadi-now-pages' ),
+			'show_period'       => __( 'Show period of entries', 'threadi-now-pages' ),
+			'group_by_category' => __( 'Group by category', 'threadi-now-pages' ),
 		);
 		$display = array(
 			'override_display' => array(
 				'type'  => 'checkbox',
-				'label' => __( 'Use own display settings', 'now-pages-threadi' ),
-				'desc'  => __( 'Without this the widget follows the settings of your website.', 'now-pages-threadi' ),
+				'label' => __( 'Use own display settings', 'threadi-now-pages' ),
+				'desc'  => __( 'Without this the widget follows the settings of your website.', 'threadi-now-pages' ),
 			),
 		);
 		foreach ( self::SWITCHES as $name ) {
@@ -98,28 +98,28 @@ class Digest {
 		pagelayer_add_shortcode(
 			self::TAG,
 			array(
-				'name'     => __( 'Digest', 'now-pages-threadi' ),
-				'group'    => __( 'Now Pages', 'now-pages-threadi' ),
+				'name'     => __( 'Digest', 'threadi-now-pages' ),
+				'group'    => __( 'Now Pages', 'threadi-now-pages' ),
 				'icon'     => 'fas fa-stream',
 				// Now Pages has its own block for the block editor.
 				'no_gt'    => 1,
-				'html'     => '<div class="now-pages-threadi-pagelayer-digest">{{{digest}}}</div>',
+				'html'     => '<div class="threadi-now-pages-pagelayer-digest">{{{digest}}}</div>',
 				'settings' => array(
-					'params'  => __( 'Digest', 'now-pages-threadi' ),
-					'display' => __( 'Display settings', 'now-pages-threadi' ),
+					'params'  => __( 'Digest', 'threadi-now-pages' ),
+					'display' => __( 'Display settings', 'threadi-now-pages' ),
 				),
 				'params'   => array(
 					'period' => array(
 						'type'    => 'select',
-						'label'   => __( 'Period', 'now-pages-threadi' ),
-						'desc'    => __( 'Which period the shown entries are from.', 'now-pages-threadi' ),
+						'label'   => __( 'Period', 'threadi-now-pages' ),
+						'desc'    => __( 'Which period the shown entries are from.', 'threadi-now-pages' ),
 						'list'    => $periods,
 						'default' => Digests::get_instance()->get_default_period(),
 					),
 					'format' => array(
 						'type'    => 'select',
-						'label'   => __( 'Format', 'now-pages-threadi' ),
-						'desc'    => __( 'How the entries are rendered.', 'now-pages-threadi' ),
+						'label'   => __( 'Format', 'threadi-now-pages' ),
+						'desc'    => __( 'How the entries are rendered.', 'threadi-now-pages' ),
 						'list'    => $formats,
 						'default' => Digests::get_instance()->get_default_format(),
 					),

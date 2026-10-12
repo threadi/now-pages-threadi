@@ -2,15 +2,15 @@
 /**
  * File to test the normalization of languages.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Helper\Languages;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Helper\Languages;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 
 /**
  * Object to test Languages.
@@ -48,11 +48,11 @@ class LanguagesTest extends NowPagesTestCase {
 		$callback = static function () {
 			return 'en';
 		};
-		add_filter( 'now_pages_threadi_current_language', $callback );
+		add_filter( 'threadi_now_pages_current_language', $callback );
 
 		$this->assertSame( 'en_US', Languages::get_current_language() );
 
-		remove_filter( 'now_pages_threadi_current_language', $callback );
+		remove_filter( 'threadi_now_pages_current_language', $callback );
 	}
 
 	/**

@@ -7,17 +7,17 @@
  * webhook. The preset only creates the matching source and tells the
  * user which slug to send.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Presets\Preset;
+namespace ThreadiNowPages\Presets\Preset;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Presets\Preset_Base;
+use ThreadiNowPages\Presets\Preset_Base;
 
 /**
  * Object for the Discord preset.
@@ -38,7 +38,7 @@ class Discord extends Preset_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Discord', 'now-pages-threadi' );
+		return __( 'Discord', 'threadi-now-pages' );
 	}
 
 	/**
@@ -47,7 +47,7 @@ class Discord extends Preset_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'Let a bot or an automation push entries here. Discord cannot be read from the outside, so the data has to come to us.', 'now-pages-threadi' );
+		return __( 'Let a bot or an automation push entries here. Discord cannot be read from the outside, so the data has to come to us.', 'threadi-now-pages' );
 	}
 
 	/**

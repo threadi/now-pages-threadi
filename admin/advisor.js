@@ -8,13 +8,13 @@
  * The hint lives outside the element the setup renders into: whatever the
  * setup does with its own markup, it cannot collide with ours.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 ( function () {
 	'use strict';
 
-	const vars = window.nowPagesThreadiAdvisorVars;
+	const vars = window.threadiNowPagesAdvisorVars;
 	const setup = document.getElementById( 'easy-setup-for-wordpress' );
 
 	// bail if we are not on the setup, or the advisor is not offered.
@@ -22,7 +22,7 @@
 		return;
 	}
 
-	const selector = '.now-pages-threadi-advisor-wish';
+	const selector = '.threadi-now-pages-advisor-wish';
 	let hint = null;
 
 	/**
@@ -44,7 +44,7 @@
 		}
 
 		hint = document.createElement( 'p' );
-		hint.className = 'now-pages-threadi-advisor-waiting';
+		hint.className = 'threadi-now-pages-advisor-waiting';
 		hint.setAttribute( 'role', 'status' );
 
 		const spinner = document.createElement( 'span' );

@@ -7,23 +7,23 @@
  * id it is registered with. The id is also written into the page code, so it
  * must never change once a user has placed the module on a page.
  *
- * The file is required from NowPagesThreadi\PageBuilder\LiveComposer::register_module(),
+ * The file is required from ThreadiNowPages\PageBuilder\LiveComposer::register_module(),
  * because DSLC_Module only exists once Live Composer itself has loaded.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Display_Settings;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Display_Settings;
 
 /**
  * Object for the digest module in Live Composer.
  */
-class NowPagesThreadi_DSLC_Digest extends DSLC_Module {
+class ThreadiNowPages_DSLC_Digest extends DSLC_Module {
 
 	/**
 	 * Unique module id. Must match the class name.
@@ -57,8 +57,8 @@ class NowPagesThreadi_DSLC_Digest extends DSLC_Module {
 	 * Constructor.
 	 */
 	public function __construct() {
-		$this->module_id = 'NowPagesThreadi_DSLC_Digest';
-		$this->module_title = __( 'Now Pages Digest', 'now-pages-threadi' );
+		$this->module_id = 'ThreadiNowPages_DSLC_Digest';
+		$this->module_title = __( 'Now Pages Digest', 'threadi-now-pages' );
 		$this->module_icon = 'list';
 		// Live Composer asks third party modules to use this category,
 		// see the doc block of its own modules.
@@ -95,11 +95,11 @@ class NowPagesThreadi_DSLC_Digest extends DSLC_Module {
 		// not change the output until the user actually changes something.
 		$defaults = Display_Settings::resolve( array() );
 		$switches = array(
-			'show_time'         => __( 'Show times', 'now-pages-threadi' ),
-			'show_source'       => __( 'Show data source', 'now-pages-threadi' ),
-			'link_source'       => __( 'Link the data source', 'now-pages-threadi' ),
-			'show_period'       => __( 'Show period of entries', 'now-pages-threadi' ),
-			'group_by_category' => __( 'Group by category', 'now-pages-threadi' ),
+			'show_time'         => __( 'Show times', 'threadi-now-pages' ),
+			'show_source'       => __( 'Show data source', 'threadi-now-pages' ),
+			'link_source'       => __( 'Link the data source', 'threadi-now-pages' ),
+			'show_period'       => __( 'Show period of entries', 'threadi-now-pages' ),
+			'group_by_category' => __( 'Group by category', 'threadi-now-pages' ),
 		);
 
 		$display_choices = array();
@@ -121,72 +121,72 @@ class NowPagesThreadi_DSLC_Digest extends DSLC_Module {
 			// Live Composer handles the responsive visibility itself, but
 			// only if the module offers this option.
 			array(
-				'label'   => __( 'Show On', 'now-pages-threadi' ),
+				'label'   => __( 'Show On', 'threadi-now-pages' ),
 				'id'      => 'css_show_on',
 				'std'     => 'desktop tablet phone',
 				'type'    => 'checkbox',
 				'choices' => array(
 					array(
-						'label' => __( 'Desktop', 'now-pages-threadi' ),
+						'label' => __( 'Desktop', 'threadi-now-pages' ),
 						'value' => 'desktop',
 					),
 					array(
-						'label' => __( 'Tablet', 'now-pages-threadi' ),
+						'label' => __( 'Tablet', 'threadi-now-pages' ),
 						'value' => 'tablet',
 					),
 					array(
-						'label' => __( 'Phone', 'now-pages-threadi' ),
+						'label' => __( 'Phone', 'threadi-now-pages' ),
 						'value' => 'phone',
 					),
 				),
 			),
 
 			array(
-				'label'   => __( 'Period', 'now-pages-threadi' ),
+				'label'   => __( 'Period', 'threadi-now-pages' ),
 				'id'      => 'period',
 				'std'     => Digests::get_instance()->get_default_period(),
 				'type'    => 'select',
 				'choices' => $periods,
 				'section' => 'functionality',
-				'help'    => __( 'Which period the shown entries are from.', 'now-pages-threadi' ),
+				'help'    => __( 'Which period the shown entries are from.', 'threadi-now-pages' ),
 			),
 
 			array(
-				'label'   => __( 'Format', 'now-pages-threadi' ),
+				'label'   => __( 'Format', 'threadi-now-pages' ),
 				'id'      => 'format',
 				'std'     => Digests::get_instance()->get_default_format(),
 				'type'    => 'select',
 				'choices' => $formats,
 				'section' => 'functionality',
-				'help'    => __( 'How the entries are rendered.', 'now-pages-threadi' ),
+				'help'    => __( 'How the entries are rendered.', 'threadi-now-pages' ),
 			),
 
 			array(
-				'label'   => __( 'Display Settings', 'now-pages-threadi' ),
+				'label'   => __( 'Display Settings', 'threadi-now-pages' ),
 				'id'      => 'override_display',
 				'std'     => '',
 				'type'    => 'checkbox',
 				'choices' => array(
 					array(
-						'label' => __( 'Use own display settings', 'now-pages-threadi' ),
+						'label' => __( 'Use own display settings', 'threadi-now-pages' ),
 						'value' => 'active',
 					),
 				),
 				'section' => 'functionality',
-				'help'    => __( 'Without this the module follows the settings of your website.', 'now-pages-threadi' ),
+				'help'    => __( 'Without this the module follows the settings of your website.', 'threadi-now-pages' ),
 			),
 
 			// Live Composer knows no conditional options, so this one is
 			// always visible and simply ignored unless the override above
 			// is enabled. The default mirrors the settings of the website.
 			array(
-				'label'   => __( 'Own Display Settings', 'now-pages-threadi' ),
+				'label'   => __( 'Own Display Settings', 'threadi-now-pages' ),
 				'id'      => 'display',
 				'std'     => implode( ' ', $display_default ),
 				'type'    => 'checkbox',
 				'choices' => $display_choices,
 				'section' => 'functionality',
-				'help'    => __( 'Only used if "Use own display settings" is enabled above.', 'now-pages-threadi' ),
+				'help'    => __( 'Only used if "Use own display settings" is enabled above.', 'threadi-now-pages' ),
 			),
 
 			/**
@@ -194,29 +194,29 @@ class NowPagesThreadi_DSLC_Digest extends DSLC_Module {
 			 */
 
 			array(
-				'label'                 => __( 'BG Color', 'now-pages-threadi' ),
+				'label'                 => __( 'BG Color', 'threadi-now-pages' ),
 				'id'                    => 'css_main_bg_color',
 				'std'                   => '',
 				'type'                  => 'color',
 				'refresh_on_change'     => false,
-				'affect_on_change_el'   => '.dslc-module-now-pages-threadi-digest',
+				'affect_on_change_el'   => '.dslc-module-threadi-now-pages-digest',
 				'affect_on_change_rule' => 'background-color',
 				'section'               => 'styling',
 			),
 
 			array(
-				'label'                 => __( 'Text Color', 'now-pages-threadi' ),
+				'label'                 => __( 'Text Color', 'threadi-now-pages' ),
 				'id'                    => 'css_main_color',
 				'std'                   => '',
 				'type'                  => 'color',
 				'refresh_on_change'     => false,
-				'affect_on_change_el'   => '.dslc-module-now-pages-threadi-digest',
+				'affect_on_change_el'   => '.dslc-module-threadi-now-pages-digest',
 				'affect_on_change_rule' => 'color',
 				'section'               => 'styling',
 			),
 
 			array(
-				'label'                 => __( 'Margin Bottom', 'now-pages-threadi' ),
+				'label'                 => __( 'Margin Bottom', 'threadi-now-pages' ),
 				'id'                    => 'css_main_margin_bottom',
 				'onlypositive'          => true,
 				'min'                   => 0,
@@ -224,14 +224,14 @@ class NowPagesThreadi_DSLC_Digest extends DSLC_Module {
 				'std'                   => '0',
 				'type'                  => 'slider',
 				'refresh_on_change'     => false,
-				'affect_on_change_el'   => '.dslc-module-now-pages-threadi-digest',
+				'affect_on_change_el'   => '.dslc-module-threadi-now-pages-digest',
 				'affect_on_change_rule' => 'margin-bottom',
 				'section'               => 'styling',
 				'ext'                   => 'px',
 			),
 
 			array(
-				'label'                 => __( 'Padding', 'now-pages-threadi' ),
+				'label'                 => __( 'Padding', 'threadi-now-pages' ),
 				'id'                    => 'css_main_padding',
 				'onlypositive'          => true,
 				'min'                   => 0,
@@ -239,7 +239,7 @@ class NowPagesThreadi_DSLC_Digest extends DSLC_Module {
 				'std'                   => '0',
 				'type'                  => 'slider',
 				'refresh_on_change'     => false,
-				'affect_on_change_el'   => '.dslc-module-now-pages-threadi-digest',
+				'affect_on_change_el'   => '.dslc-module-threadi-now-pages-digest',
 				'affect_on_change_rule' => 'padding',
 				'section'               => 'styling',
 				'ext'                   => 'px',
@@ -283,7 +283,7 @@ class NowPagesThreadi_DSLC_Digest extends DSLC_Module {
 		}
 
 		?>
-		<div class="dslc-module-now-pages-threadi-digest">
+		<div class="dslc-module-threadi-now-pages-digest">
 			<?php
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- assembled locally, all dynamic parts are escaped in the formats.
 			echo ( new Digest_Builder() )->build( $args );

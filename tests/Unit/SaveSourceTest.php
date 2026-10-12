@@ -5,18 +5,18 @@
  * The most damaging place in the plugin: a mistake here does not show a
  * wrong text somewhere, it wipes the configuration of every source.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Providers\Providers;
-use NowPagesThreadi\Sources\Sources;
-use NowPagesThreadi\Tests\NowPagesTestCase;
-use NowPagesThreadi\Tests\Unit\Stubs\Stub_Identified_Provider;
-use NowPagesThreadi\Tests\Unit\Stubs\Stub_Provider;
+use ThreadiNowPages\Providers\Providers;
+use ThreadiNowPages\Sources\Sources;
+use ThreadiNowPages\Tests\NowPagesTestCase;
+use ThreadiNowPages\Tests\Unit\Stubs\Stub_Identified_Provider;
+use ThreadiNowPages\Tests\Unit\Stubs\Stub_Provider;
 
 /**
  * Object to test Sources::save_post().
@@ -39,13 +39,13 @@ class SaveSourceTest extends NowPagesTestCase {
 
 		Stub_Provider::reset();
 
-		update_option( 'now_pages_threadi_provider_stub_enabled', 1 );
+		update_option( 'threadi_now_pages_provider_stub_enabled', 1 );
 
 		Providers::get_instance()->register_provider( new Stub_Provider() );
 
 		$this->source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'Test source',
 			)
@@ -78,11 +78,11 @@ class SaveSourceTest extends NowPagesTestCase {
 		$_POST = $fields;
 
 		if ( $with_marker ) {
-			$_POST['now_pages_threadi_source_form'] = '1';
+			$_POST['threadi_now_pages_source_form'] = '1';
 		}
 
-		if ( $with_provider_fields && isset( $fields['now-pages-threadi-provider'] ) ) {
-			$_POST['now-pages-threadi-provider-fields'] = $fields['now-pages-threadi-provider'];
+		if ( $with_provider_fields && isset( $fields['threadi-now-pages-provider'] ) ) {
+			$_POST['threadi-now-pages-provider-fields'] = $fields['threadi-now-pages-provider'];
 		}
 
 		$post = get_post( $this->source_id );
@@ -98,7 +98,7 @@ class SaveSourceTest extends NowPagesTestCase {
 	public function test_submitted_metabox_stores_the_configuration(): void {
 		$this->save(
 			array(
-				'now-pages-threadi-provider' => 'stub',
+				'threadi-now-pages-provider' => 'stub',
 				'stub_url'           => 'https://example.com/feed',
 				'stub_limit'         => '7',
 			)
@@ -119,7 +119,7 @@ class SaveSourceTest extends NowPagesTestCase {
 	public function test_choosing_a_provider_stores_the_defaults_of_its_fields(): void {
 		$this->save(
 			array(
-				'now-pages-threadi-provider' => 'stub',
+				'threadi-now-pages-provider' => 'stub',
 			),
 			true,
 			false
@@ -138,7 +138,7 @@ class SaveSourceTest extends NowPagesTestCase {
 	public function test_a_form_without_the_provider_fields_keeps_them(): void {
 		$this->save(
 			array(
-				'now-pages-threadi-provider' => 'stub',
+				'threadi-now-pages-provider' => 'stub',
 				'stub_url'                   => 'https://example.com/feed',
 				'stub_limit'                 => '7',
 			)
@@ -146,7 +146,7 @@ class SaveSourceTest extends NowPagesTestCase {
 
 		$this->save(
 			array(
-				'now-pages-threadi-provider' => 'stub',
+				'threadi-now-pages-provider' => 'stub',
 			),
 			true,
 			false
@@ -166,11 +166,11 @@ class SaveSourceTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_disabled_provider_cannot_be_selected_for_a_source(): void {
-		update_option( 'now_pages_threadi_provider_stub_enabled', 0 );
+		update_option( 'threadi_now_pages_provider_stub_enabled', 0 );
 
 		$this->save(
 			array(
-				'now-pages-threadi-provider' => 'stub',
+				'threadi-now-pages-provider' => 'stub',
 				'stub_url'           => 'https://example.com/feed',
 			)
 		);
@@ -189,7 +189,7 @@ class SaveSourceTest extends NowPagesTestCase {
 	public function test_save_without_the_metabox_keeps_everything(): void {
 		$this->save(
 			array(
-				'now-pages-threadi-provider' => 'stub',
+				'threadi-now-pages-provider' => 'stub',
 				'stub_url'           => 'https://example.com/feed',
 			)
 		);
@@ -209,7 +209,7 @@ class SaveSourceTest extends NowPagesTestCase {
 	public function test_user_without_capability_changes_nothing(): void {
 		$this->save(
 			array(
-				'now-pages-threadi-provider' => 'stub',
+				'threadi-now-pages-provider' => 'stub',
 				'stub_url'           => 'https://example.com/feed',
 			)
 		);
@@ -218,7 +218,7 @@ class SaveSourceTest extends NowPagesTestCase {
 
 		$this->save(
 			array(
-				'now-pages-threadi-provider' => 'stub',
+				'threadi-now-pages-provider' => 'stub',
 				'stub_url'           => 'https://evil.example.com/feed',
 			)
 		);
@@ -237,7 +237,7 @@ class SaveSourceTest extends NowPagesTestCase {
 	public function test_ampersand_in_a_url_survives(): void {
 		$this->save(
 			array(
-				'now-pages-threadi-provider' => 'stub',
+				'threadi-now-pages-provider' => 'stub',
 				'stub_url'           => 'https://example.com/feed?a=1&b=2',
 			)
 		);
@@ -255,8 +255,8 @@ class SaveSourceTest extends NowPagesTestCase {
 	public function test_override_of_only_markup_is_stored_as_empty(): void {
 		$this->save(
 			array(
-				'now-pages-threadi-provider'      => 'stub',
-				'now-pages-threadi-override-text' => '<p>   </p>',
+				'threadi-now-pages-provider'      => 'stub',
+				'threadi-now-pages-override-text' => '<p>   </p>',
 			)
 		);
 
@@ -277,7 +277,7 @@ class SaveSourceTest extends NowPagesTestCase {
 		// another source which reads the same account and keeps the forum replies.
 		$other = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'Forum replies',
 			)
@@ -290,14 +290,14 @@ class SaveSourceTest extends NowPagesTestCase {
 		$listener = static function ( $provider_obj, $duplicate ) use ( &$reported ): void {
 			$reported[] = $duplicate;
 		};
-		add_action( 'now_pages_threadi_source_duplicate', $listener, 10, 2 );
+		add_action( 'threadi_now_pages_source_duplicate', $listener, 10, 2 );
 
 		// keep the translations of the same account.
 		$this->save(
 			array(
-				'now-pages-threadi-provider'             => 'stub_identified',
+				'threadi-now-pages-provider'             => 'stub_identified',
 				'stub_account'                           => 'tz',
-				'now-pages-threadi-content-filter-rules' => 'include:text:contains:translate.wordpress.org',
+				'threadi-now-pages-content-filter-rules' => 'include:text:contains:translate.wordpress.org',
 			)
 		);
 
@@ -307,13 +307,13 @@ class SaveSourceTest extends NowPagesTestCase {
 		// keep the same as the other source: now both would import the same entries.
 		$this->save(
 			array(
-				'now-pages-threadi-provider'             => 'stub_identified',
+				'threadi-now-pages-provider'             => 'stub_identified',
 				'stub_account'                           => 'tz',
-				'now-pages-threadi-content-filter-rules' => 'include:text:contains:/support/',
+				'threadi-now-pages-content-filter-rules' => 'include:text:contains:/support/',
 			)
 		);
 
-		remove_action( 'now_pages_threadi_source_duplicate', $listener );
+		remove_action( 'threadi_now_pages_source_duplicate', $listener );
 
 		$this->assertSame( array( $other ), $reported );
 	}
@@ -324,19 +324,19 @@ class SaveSourceTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_a_broken_filter_rule_is_reported(): void {
-		$hint = 'now_pages_threadi_content_filter_rules';
+		$hint = 'threadi_now_pages_content_filter_rules';
 
-		\NowPagesThreadi\Dependencies\easyTransientsForWordPress\Transients::get_instance()->get_transient_by_name( $hint )->delete();
+		\ThreadiNowPages\Dependencies\easyTransientsForWordPress\Transients::get_instance()->get_transient_by_name( $hint )->delete();
 
 		$this->save(
 			array(
-				'now-pages-threadi-provider'             => 'stub',
+				'threadi-now-pages-provider'             => 'stub',
 				'stub_url'                               => 'https://example.com/feed',
-				'now-pages-threadi-content-filter-rules' => 'action:link:contains:/support/forum/',
+				'threadi-now-pages-content-filter-rules' => 'action:link:contains:/support/forum/',
 			)
 		);
 
-		$transient = \NowPagesThreadi\Dependencies\easyTransientsForWordPress\Transients::get_instance()->get_transient_by_name( $hint );
+		$transient = \ThreadiNowPages\Dependencies\easyTransientsForWordPress\Transients::get_instance()->get_transient_by_name( $hint );
 
 		$this->assertSame( 'action:link:contains:/support/forum/', get_post_meta( $this->source_id, 'content_filter_rules', true ) );
 		$this->assertTrue( $transient->is_set() );
@@ -347,13 +347,13 @@ class SaveSourceTest extends NowPagesTestCase {
 
 		$this->save(
 			array(
-				'now-pages-threadi-provider'             => 'stub',
+				'threadi-now-pages-provider'             => 'stub',
 				'stub_url'                               => 'https://example.com/feed',
-				'now-pages-threadi-content-filter-rules' => 'include:url:contains:/support/topic/',
+				'threadi-now-pages-content-filter-rules' => 'include:url:contains:/support/topic/',
 			)
 		);
 
-		$this->assertFalse( \NowPagesThreadi\Dependencies\easyTransientsForWordPress\Transients::get_instance()->get_transient_by_name( $hint )->is_set() );
+		$this->assertFalse( \ThreadiNowPages\Dependencies\easyTransientsForWordPress\Transients::get_instance()->get_transient_by_name( $hint )->is_set() );
 	}
 
 	/**
@@ -371,9 +371,9 @@ class SaveSourceTest extends NowPagesTestCase {
 		$this->save(
 			wp_slash(
 				array(
-					'now-pages-threadi-provider'             => 'stub',
+					'threadi-now-pages-provider'             => 'stub',
 					'stub_url'                               => 'https://example.com/feed',
-					'now-pages-threadi-content-filter-rules' => $rules,
+					'threadi-now-pages-content-filter-rules' => $rules,
 				)
 			)
 		);

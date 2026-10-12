@@ -2,19 +2,19 @@
 /**
  * This file contains the support for Avada.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\PageBuilder\Avada\Widgets\Digest;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\PageBuilder\Avada\Widgets\Digest;
 
 /**
  * Registers and handles the support for Avada.
@@ -76,7 +76,7 @@ class Avada extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_page_content(): string {
-		return '[fusion_builder_container][fusion_builder_row][fusion_builder_column type="1_1"][avada_now_pages_threadi_digest period="' . get_option( 'now_pages_threadi_frontend_period', 'live' ) . '"][/fusion_builder_column][/fusion_builder_row][/fusion_builder_container]';
+		return '[fusion_builder_container][fusion_builder_row][fusion_builder_column type="1_1"][avada_threadi_now_pages_digest period="' . get_option( 'threadi_now_pages_frontend_period', 'live' ) . '"][/fusion_builder_column][/fusion_builder_row][/fusion_builder_container]';
 	}
 
 	/**
@@ -115,6 +115,6 @@ class Avada extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Avada', 'now-pages-threadi' );
+		return __( 'Avada', 'threadi-now-pages' );
 	}
 }

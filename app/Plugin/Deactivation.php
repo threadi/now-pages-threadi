@@ -2,17 +2,17 @@
 /**
  * This file defines tasks during the deactivation of this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
+use ThreadiNowPages\Helper\Plugin;
 
 /**
  * Object, which handles the tasks during the deactivation of this plugin.

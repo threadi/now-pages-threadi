@@ -7,21 +7,21 @@
  * registration and no OAuth dance, only a username. A personal access
  * token is optional and only raises the rate limit.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Providers;
+namespace ThreadiNowPages\Providers;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use DateTimeImmutable;
 use Exception;
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Plugin\Crypt;
-use NowPagesThreadi\Plugin\Log;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Plugin\Crypt;
+use ThreadiNowPages\Plugin\Log;
 
 /**
  * Object for the GitHub provider.
@@ -56,7 +56,7 @@ class GitHub_Provider extends HTTP_Provider_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'GitHub', 'now-pages-threadi' );
+		return __( 'GitHub', 'threadi-now-pages' );
 	}
 
 	/**
@@ -65,7 +65,7 @@ class GitHub_Provider extends HTTP_Provider_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'Reads the public activity of a GitHub account: pushes, pull requests, issues, releases and stars. Only a username is required.', 'now-pages-threadi' );
+		return __( 'Reads the public activity of a GitHub account: pushes, pull requests, issues, releases and stars. Only a username is required.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -76,20 +76,20 @@ class GitHub_Provider extends HTTP_Provider_Base {
 	public function get_config_fields(): array {
 		return array(
 			'github_username'  => array(
-				'label'       => __( 'Username', 'now-pages-threadi' ),
+				'label'       => __( 'Username', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => true,
-				'description' => __( 'The GitHub account whose public activity should be read.', 'now-pages-threadi' ),
+				'description' => __( 'The GitHub account whose public activity should be read.', 'threadi-now-pages' ),
 				'placeholder' => 'octocat',
 			),
 			'github_token'     => array(
-				'label'       => __( 'Personal access token', 'now-pages-threadi' ),
+				'label'       => __( 'Personal access token', 'threadi-now-pages' ),
 				'type'        => 'password',
 				'required'    => false,
-				'description' => __( 'Optional. Without a token GitHub allows 60 requests per hour and IP address, with one 5,000. A token with no scopes at all is enough - it only raises the limit.', 'now-pages-threadi' ),
+				'description' => __( 'Optional. Without a token GitHub allows 60 requests per hour and IP address, with one 5,000. A token with no scopes at all is enough - it only raises the limit.', 'threadi-now-pages' ),
 			),
 			'github_max_items' => array(
-				'label'   => __( 'Max. items per run', 'now-pages-threadi' ),
+				'label'   => __( 'Max. items per run', 'threadi-now-pages' ),
 				'type'    => 'number',
 				'default' => 10,
 				'min'     => 1,
@@ -170,7 +170,7 @@ class GitHub_Provider extends HTTP_Provider_Base {
 			} catch ( \Throwable $e ) {
 				// log this event.
 				Log::get_instance()->add(
-					__( 'A GitHub event could not be read and has been skipped. Error:', 'now-pages-threadi' ) . ' <code>' . esc_html( $e->getMessage() ) . '</code>',
+					__( 'A GitHub event could not be read and has been skipped. Error:', 'threadi-now-pages' ) . ' <code>' . esc_html( $e->getMessage() ) . '</code>',
 					'error',
 					'provider'
 				);
@@ -231,7 +231,7 @@ class GitHub_Provider extends HTTP_Provider_Base {
 		} catch ( Exception $e ) {
 			// log this event.
 			Log::get_instance()->add(
-				__( 'A timestamp from GitHub could not be parsed. Error:', 'now-pages-threadi' ) . ' <code>' . esc_html( $e->getMessage() ) . '</code>',
+				__( 'A timestamp from GitHub could not be parsed. Error:', 'threadi-now-pages' ) . ' <code>' . esc_html( $e->getMessage() ) . '</code>',
 				'error',
 				'provider'
 			);
@@ -275,7 +275,7 @@ class GitHub_Provider extends HTTP_Provider_Base {
 
 				$text = sprintf(
 				/* translators: %1$d will be replaced by a number of commits, %2$s by a repository name. */
-					_n( 'Pushed %1$d commit to %2$s', 'Pushed %1$d commits to %2$s', max( 1, $commits ), 'now-pages-threadi' ),
+					_n( 'Pushed %1$d commit to %2$s', 'Pushed %1$d commits to %2$s', max( 1, $commits ), 'threadi-now-pages' ),
 					max( 1, $commits ),
 					$repo
 				);
@@ -289,14 +289,14 @@ class GitHub_Provider extends HTTP_Provider_Base {
 				if ( 'opened' === $action ) {
 					$text = sprintf(
 					/* translators: %1$s will be replaced by a pull request title, %2$s by a repository name. */
-						__( 'Opened the pull request "%1$s" in %2$s', 'now-pages-threadi' ),
+						__( 'Opened the pull request "%1$s" in %2$s', 'threadi-now-pages' ),
 						$title,
 						$repo
 					);
 				} elseif ( 'closed' === $action && $merged ) {
 					$text = sprintf(
 					/* translators: %1$s will be replaced by a pull request title, %2$s by a repository name. */
-						__( 'Merged the pull request "%1$s" in %2$s', 'now-pages-threadi' ),
+						__( 'Merged the pull request "%1$s" in %2$s', 'threadi-now-pages' ),
 						$title,
 						$repo
 					);
@@ -310,14 +310,14 @@ class GitHub_Provider extends HTTP_Provider_Base {
 				if ( 'opened' === $action ) {
 					$text = sprintf(
 					/* translators: %1$s will be replaced by an issue title, %2$s by a repository name. */
-						__( 'Opened the issue "%1$s" in %2$s', 'now-pages-threadi' ),
+						__( 'Opened the issue "%1$s" in %2$s', 'threadi-now-pages' ),
 						$title,
 						$repo
 					);
 				} elseif ( 'closed' === $action ) {
 					$text = sprintf(
 					/* translators: %1$s will be replaced by an issue title, %2$s by a repository name. */
-						__( 'Closed the issue "%1$s" in %2$s', 'now-pages-threadi' ),
+						__( 'Closed the issue "%1$s" in %2$s', 'threadi-now-pages' ),
 						$title,
 						$repo
 					);
@@ -329,7 +329,7 @@ class GitHub_Provider extends HTTP_Provider_Base {
 				if ( 'created' === $action ) {
 					$text = sprintf(
 					/* translators: %1$s will be replaced by an issue title, %2$s by a repository name. */
-						__( 'Commented on "%1$s" in %2$s', 'now-pages-threadi' ),
+						__( 'Commented on "%1$s" in %2$s', 'threadi-now-pages' ),
 						(string) ( $payload['issue']['title'] ?? '' ),
 						$repo
 					);
@@ -341,7 +341,7 @@ class GitHub_Provider extends HTTP_Provider_Base {
 				if ( 'published' === $action ) {
 					$text = sprintf(
 					/* translators: %1$s will be replaced by a release name, %2$s by a repository name. */
-						__( 'Released %1$s of %2$s', 'now-pages-threadi' ),
+						__( 'Released %1$s of %2$s', 'threadi-now-pages' ),
 						(string) ( $payload['release']['tag_name'] ?? '' ),
 						$repo
 					);
@@ -353,7 +353,7 @@ class GitHub_Provider extends HTTP_Provider_Base {
 				if ( 'repository' === $ref_type ) {
 					$text = sprintf(
 					/* translators: %1$s will be replaced by a repository name. */
-						__( 'Created the repository %1$s', 'now-pages-threadi' ),
+						__( 'Created the repository %1$s', 'threadi-now-pages' ),
 						$repo
 					);
 				}
@@ -362,7 +362,7 @@ class GitHub_Provider extends HTTP_Provider_Base {
 			case 'WatchEvent':
 				$text = sprintf(
 				/* translators: %1$s will be replaced by a repository name. */
-					__( 'Starred %1$s', 'now-pages-threadi' ),
+					__( 'Starred %1$s', 'threadi-now-pages' ),
 					$repo
 				);
 				break;
@@ -370,7 +370,7 @@ class GitHub_Provider extends HTTP_Provider_Base {
 			case 'ForkEvent':
 				$text = sprintf(
 				/* translators: %1$s will be replaced by a repository name. */
-					__( 'Forked %1$s', 'now-pages-threadi' ),
+					__( 'Forked %1$s', 'threadi-now-pages' ),
 					$repo
 				);
 				break;
@@ -389,7 +389,7 @@ class GitHub_Provider extends HTTP_Provider_Base {
 		 * @param string              $repo    The repository, as "owner/name".
 		 * @param array<string,mixed> $payload The event payload.
 		 */
-		return (string) apply_filters( 'now_pages_threadi_github_event_text', $text, $type, $repo, $payload );
+		return (string) apply_filters( 'threadi_now_pages_github_event_text', $text, $type, $repo, $payload );
 	}
 
 	/**

@@ -2,20 +2,20 @@
 /**
  * This file contains the support for BoldBuilder.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use bb_now_pages_threadi_digest;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
+use bb_threadi_now_pages_digest;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
 
 /**
  * Registers and handles the support for BoldBuilder.
@@ -66,10 +66,10 @@ class BoldBuilder extends PageBuilder_Base {
 	 */
 	public function register_element(): void {
 		// embed the file with the element.
-		$file = Plugin::get_plugin_path() . 'legacy-classes/BoldBuilder/bb_now_pages_threadi_digest/bb_now_pages_threadi_digest.php';
+		$file = Plugin::get_plugin_path() . 'legacy-classes/BoldBuilder/bb_threadi_now_pages_digest/bb_threadi_now_pages_digest.php';
 
 		// bail if class is already registered.
-		if ( class_exists( 'bb_now_pages_threadi_digest' ) ) {
+		if ( class_exists( 'bb_threadi_now_pages_digest' ) ) {
 			return;
 		}
 
@@ -82,14 +82,14 @@ class BoldBuilder extends PageBuilder_Base {
 		require_once $file;
 
 		// register its object.
-		new bb_now_pages_threadi_digest();
+		new bb_threadi_now_pages_digest();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Bold Page Builder', 'now-pages-threadi' );
+		return __( 'Bold Page Builder', 'threadi-now-pages' );
 	}
 
 	/**
@@ -107,6 +107,6 @@ class BoldBuilder extends PageBuilder_Base {
 	 * @return string
 	 */
 	public function get_page_content(): string {
-		return '[bt_bb_section layout="boxed_1200" lazy_load="yes" show_video_on_mobile="" bb_version="5.9.10"][bt_bb_row][bt_bb_column order="0" lazy_load="yes" bb_version="5.9.10" width="1/1" width_xl="1/1" width_lg="1/1" width_md="1/1" width_sm="1/1" width_xs="1/1"][bb_now_pages_threadi_digest bb_version="5.9.10" period="' . Digests::get_instance()->get_default_period() . '" format="' . Digests::get_instance()->get_default_format() . '" responsive="" publish_datetime="" expiry_datetime="" animation="no_animation,;,,;,,;,,;,,;,,;," el_id="" el_class="" el_style="" override_display="yes" show_time="" show_source="" link_source="" show_period="" group_by_category=""][/bb_now_pages_threadi_digest][/bt_bb_column][/bt_bb_row][/bt_bb_section]';
+		return '[bt_bb_section layout="boxed_1200" lazy_load="yes" show_video_on_mobile="" bb_version="5.9.10"][bt_bb_row][bt_bb_column order="0" lazy_load="yes" bb_version="5.9.10" width="1/1" width_xl="1/1" width_lg="1/1" width_md="1/1" width_sm="1/1" width_xs="1/1"][bb_threadi_now_pages_digest bb_version="5.9.10" period="' . Digests::get_instance()->get_default_period() . '" format="' . Digests::get_instance()->get_default_format() . '" responsive="" publish_datetime="" expiry_datetime="" animation="no_animation,;,,;,,;,,;,,;,,;," el_id="" el_class="" el_style="" override_display="yes" show_time="" show_source="" link_source="" show_period="" group_by_category=""][/bb_threadi_now_pages_digest][/bt_bb_column][/bt_bb_row][/bt_bb_section]';
 	}
 }

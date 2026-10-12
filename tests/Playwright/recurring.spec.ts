@@ -8,7 +8,7 @@ import { completeSetup, php, removeContent } from './helpers';
 async function addRoutineWhichAsks(cli: any): Promise<number> {
     const id = await php(
         cli,
-        `$source_id = \\NowPagesThreadi\\Sources\\Source_Builder::get_instance()->insert(
+        `$source_id = \\ThreadiNowPages\\Sources\\Source_Builder::get_instance()->insert(
             'recurring',
             array(
                 'recurring_text'    => 'Went to the gym',
@@ -17,7 +17,7 @@ async function addRoutineWhichAsks(cli: any): Promise<number> {
             ),
             array( 'title' => 'Sports' )
         );
-        \\NowPagesThreadi\\Sources\\Sources::get_instance()->import();
+        \\ThreadiNowPages\\Sources\\Sources::get_instance()->import();
         echo $source_id;`
     );
 
@@ -30,7 +30,7 @@ async function addRoutineWhichAsks(cli: any): Promise<number> {
 async function getEntryStatus(cli: any, sourceId: number): Promise<string> {
     return php(
         cli,
-        `$entries = get_posts( array( 'post_type' => 'np_threadi_entry', 'post_status' => array( 'any', 'trash' ), 'post_parent' => (int) $args['source'], 'numberposts' => -1 ) );
+        `$entries = get_posts( array( 'post_type' => 'threadi_np_entry', 'post_status' => array( 'any', 'trash' ), 'post_parent' => (int) $args['source'], 'numberposts' => -1 ) );
         echo implode( ',', wp_list_pluck( $entries, 'post_status' ) );`,
         { source: sourceId }
     );
@@ -46,7 +46,7 @@ test.describe('Recurring entries', () => {
     // @ts-ignore
     test('Something done regularly is added with one sentence', async ({ page, cli }) => {
         // @ts-ignore
-        await page.goto(`${cli.serverUrl}/wp-admin/post-new.php?post_type=np_threadi_source`);
+        await page.goto(`${cli.serverUrl}/wp-admin/post-new.php?post_type=threadi_np_source`);
 
         const continueButton = page.getByRole('button', { name: 'Continue' });
 
@@ -62,15 +62,15 @@ test.describe('Recurring entries', () => {
         await completedButton.click();
 
         // the source is named after its sentence.
-        await expect(page).toHaveURL(/edit\.php\?post_type=np_threadi_source/);
+        await expect(page).toHaveURL(/edit\.php\?post_type=threadi_np_source/);
         await expect(page.locator('#the-list tr')).toHaveCount(1);
         await expect(page.locator('#the-list tr')).toContainText('Went to the gym');
-        await expect(page.locator('#the-list td.column-now_pages_threadi_provider')).toHaveText('Recurring entry');
+        await expect(page.locator('#the-list td.column-threadi_now_pages_provider')).toHaveText('Recurring entry');
 
         // and its first entry is there already.
         const entries = await php(
             cli,
-            `foreach ( get_posts( array( 'post_type' => 'np_threadi_entry', 'post_status' => 'any', 'numberposts' => -1 ) ) as $entry ) {
+            `foreach ( get_posts( array( 'post_type' => 'threadi_np_entry', 'post_status' => 'any', 'numberposts' => -1 ) ) as $entry ) {
                 echo $entry->post_status . ':' . $entry->post_content . ';';
             }`
         );
@@ -116,7 +116,7 @@ test.describe('Recurring entries', () => {
         expect(await getEntryStatus(cli, sourceId)).toBe('pending');
 
         // @ts-ignore
-        await page.goto(`${cli.serverUrl}/wp-admin/edit.php?post_type=np_threadi_entry`);
+        await page.goto(`${cli.serverUrl}/wp-admin/edit.php?post_type=threadi_np_entry`);
 
         // the menu says that something waits, and the row says what.
         const menuItem = page.locator('#adminmenu a.menu-top').filter({ hasText: 'Now Page Entries' });
@@ -143,7 +143,7 @@ test.describe('Recurring entries', () => {
         const sourceId = await addRoutineWhichAsks(cli);
 
         // @ts-ignore
-        await page.goto(`${cli.serverUrl}/wp-admin/edit.php?post_type=np_threadi_entry`);
+        await page.goto(`${cli.serverUrl}/wp-admin/edit.php?post_type=threadi_np_entry`);
 
         const row = page.locator('#the-list tr').filter({ hasText: 'Went to the gym' });
         await row.hover();
@@ -153,7 +153,7 @@ test.describe('Recurring entries', () => {
         expect(await getEntryStatus(cli, sourceId)).toBe('trash');
 
         // the next import does not bring it back.
-        await php(cli, `\\NowPagesThreadi\\Sources\\Sources::get_instance()->import();`);
+        await php(cli, `\\ThreadiNowPages\\Sources\\Sources::get_instance()->import();`);
         expect(await getEntryStatus(cli, sourceId)).toBe('trash');
     });
 
@@ -164,8 +164,8 @@ test.describe('Recurring entries', () => {
         // the address the email contains: it cannot be read from the email, only its hash is stored.
         const link = await php(
             cli,
-            `$entries = get_posts( array( 'post_type' => 'np_threadi_entry', 'post_status' => 'pending', 'post_parent' => (int) $args['source'] ) );
-            $confirmation = \\NowPagesThreadi\\NowPages\\Confirmation::get_instance();
+            `$entries = get_posts( array( 'post_type' => 'threadi_np_entry', 'post_status' => 'pending', 'post_parent' => (int) $args['source'] ) );
+            $confirmation = \\ThreadiNowPages\\NowPages\\Confirmation::get_instance();
             echo $confirmation->get_link( $entries[0]->ID, $confirmation->create_token( $entries[0]->ID ), 'confirm' );`,
             { source: sourceId }
         );
@@ -193,13 +193,13 @@ test.describe('Recurring entries', () => {
 
         const entryId = await php(
             cli,
-            `$entries = get_posts( array( 'post_type' => 'np_threadi_entry', 'post_status' => 'pending', 'post_parent' => (int) $args['source'] ) );
+            `$entries = get_posts( array( 'post_type' => 'threadi_np_entry', 'post_status' => 'pending', 'post_parent' => (int) $args['source'] ) );
             echo $entries[0]->ID;`,
             { source: sourceId }
         );
 
         // @ts-ignore
-        const response = await visitor.goto(`${cli.serverUrl}/?now_pages_threadi_confirm=${entryId}&decision=confirm&token=guessed`);
+        const response = await visitor.goto(`${cli.serverUrl}/?threadi_now_pages_confirm=${entryId}&decision=confirm&token=guessed`);
         expect(response?.status()).toBe(404);
         await expect(visitor.getByText('Went to the gym')).toHaveCount(0);
         expect(await getEntryStatus(cli, sourceId)).toBe('pending');

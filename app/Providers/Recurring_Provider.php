@@ -12,20 +12,20 @@
  * as they do for every other source, and a single repetition can be
  * deleted when the routine was skipped.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Providers;
+namespace ThreadiNowPages\Providers;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use DateTimeImmutable;
-use NowPagesThreadi\Digests\Periods;
-use NowPagesThreadi\NowPages\Confirmation;
-use NowPagesThreadi\NowPages\Entry;
+use ThreadiNowPages\Digests\Periods;
+use ThreadiNowPages\NowPages\Confirmation;
+use ThreadiNowPages\NowPages\Entry;
 
 /**
  * Object for the provider of recurring entries.
@@ -83,7 +83,7 @@ class Recurring_Provider extends Provider_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Recurring entry', 'now-pages-threadi' );
+		return __( 'Recurring entry', 'threadi-now-pages' );
 	}
 
 	/**
@@ -92,7 +92,7 @@ class Recurring_Provider extends Provider_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'Repeats a sentence of your own on a schedule, for the things no service knows about - like doing sports once a week. Reads nothing from outside.', 'now-pages-threadi' );
+		return __( 'Repeats a sentence of your own on a schedule, for the things no service knows about - like doing sports once a week. Reads nothing from outside.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -103,32 +103,32 @@ class Recurring_Provider extends Provider_Base {
 	public function get_config_fields(): array {
 		return array(
 			'recurring_text'     => array(
-				'label'       => __( 'Text of the entry', 'now-pages-threadi' ),
+				'label'       => __( 'Text of the entry', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => true,
-				'description' => __( 'The sentence which is repeated, written as you would write any other entry.', 'now-pages-threadi' ),
-				'placeholder' => __( 'Went to the gym', 'now-pages-threadi' ),
+				'description' => __( 'The sentence which is repeated, written as you would write any other entry.', 'threadi-now-pages' ),
+				'placeholder' => __( 'Went to the gym', 'threadi-now-pages' ),
 				// these are the words of the user: whoever proposes them has to show them first.
 				'review'      => true,
 			),
 			'recurring_rhythm'   => array(
-				'label'       => __( 'Repeat', 'now-pages-threadi' ),
+				'label'       => __( 'Repeat', 'threadi-now-pages' ),
 				'type'        => 'select',
 				'default'     => self::RHYTHM_PERIOD,
 				'options'     => $this->get_rhythms(),
-				'description' => __( 'How often a new entry is created. "Once per period of the now page" follows the period chosen in the settings: with a weekly now page the entry is there every week, from its first day on.', 'now-pages-threadi' ),
+				'description' => __( 'How often a new entry is created. "Once per period of the now page" follows the period chosen in the settings: with a weekly now page the entry is there every week, from its first day on.', 'threadi-now-pages' ),
 			),
 			'recurring_weekdays' => array(
-				'label'       => __( 'Days of the week', 'now-pages-threadi' ),
+				'label'       => __( 'Days of the week', 'threadi-now-pages' ),
 				'type'        => 'multiselect',
 				'options'     => $this->get_weekdays(),
-				'description' => __( 'Only used with "Every week": an entry is created on each of the chosen days. Nothing selected means monday.', 'now-pages-threadi' ),
+				'description' => __( 'Only used with "Every week": an entry is created on each of the chosen days. Nothing selected means monday.', 'threadi-now-pages' ),
 			),
 			'recurring_confirm'  => array(
-				'label'       => __( 'Ask me first', 'now-pages-threadi' ),
+				'label'       => __( 'Ask me first', 'threadi-now-pages' ),
 				'type'        => 'checkbox',
 				'default'     => 0,
-				'description' => __( 'If enabled, each new entry waits until you confirm it, in the list of entries or through the link in an email. An entry you do not confirm is discarded as soon as the next one is due. Useful if the routine does not happen every time.', 'now-pages-threadi' ),
+				'description' => __( 'If enabled, each new entry waits until you confirm it, in the list of entries or through the link in an email. An entry you do not confirm is discarded as soon as the next one is due. Useful if the routine does not happen every time.', 'threadi-now-pages' ),
 			),
 		);
 	}
@@ -140,10 +140,10 @@ class Recurring_Provider extends Provider_Base {
 	 */
 	public function get_rhythms(): array {
 		return array(
-			self::RHYTHM_PERIOD  => __( 'Once per period of the now page', 'now-pages-threadi' ),
-			self::RHYTHM_DAILY   => __( 'Every day', 'now-pages-threadi' ),
-			self::RHYTHM_WEEKLY  => __( 'Every week', 'now-pages-threadi' ),
-			self::RHYTHM_MONTHLY => __( 'Every month', 'now-pages-threadi' ),
+			self::RHYTHM_PERIOD  => __( 'Once per period of the now page', 'threadi-now-pages' ),
+			self::RHYTHM_DAILY   => __( 'Every day', 'threadi-now-pages' ),
+			self::RHYTHM_WEEKLY  => __( 'Every week', 'threadi-now-pages' ),
+			self::RHYTHM_MONTHLY => __( 'Every month', 'threadi-now-pages' ),
 		);
 	}
 
@@ -156,13 +156,13 @@ class Recurring_Provider extends Provider_Base {
 	 */
 	public function get_weekdays(): array {
 		return array(
-			'mon' => __( 'Monday', 'now-pages-threadi' ),
-			'tue' => __( 'Tuesday', 'now-pages-threadi' ),
-			'wed' => __( 'Wednesday', 'now-pages-threadi' ),
-			'thu' => __( 'Thursday', 'now-pages-threadi' ),
-			'fri' => __( 'Friday', 'now-pages-threadi' ),
-			'sat' => __( 'Saturday', 'now-pages-threadi' ),
-			'sun' => __( 'Sunday', 'now-pages-threadi' ),
+			'mon' => __( 'Monday', 'threadi-now-pages' ),
+			'tue' => __( 'Tuesday', 'threadi-now-pages' ),
+			'wed' => __( 'Wednesday', 'threadi-now-pages' ),
+			'thu' => __( 'Thursday', 'threadi-now-pages' ),
+			'fri' => __( 'Friday', 'threadi-now-pages' ),
+			'sat' => __( 'Saturday', 'threadi-now-pages' ),
+			'sun' => __( 'Sunday', 'threadi-now-pages' ),
 		);
 	}
 
@@ -282,7 +282,7 @@ class Recurring_Provider extends Provider_Base {
 	 * @return DateTimeImmutable
 	 */
 	private function get_start_of_period( DateTimeImmutable $today ): DateTimeImmutable {
-		$slug = (string) get_option( 'now_pages_threadi_frontend_period' );
+		$slug = (string) get_option( 'threadi_now_pages_frontend_period' );
 
 		// bail for periods which are shorter than a day or move with the clock.
 		if ( in_array( $slug, self::SHORT_PERIODS, true ) ) {

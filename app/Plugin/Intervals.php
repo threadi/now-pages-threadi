@@ -5,17 +5,17 @@
  * Hint: we use our own intervals to prevent intervals of other plugins from being used.
  * This would be an unnecessary dependency that leads to missing execution of our own schedules.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Instance_Registry;
+use ThreadiNowPages\Helper\Instance_Registry;
 
 /**
  * Object for our own intervals.
@@ -24,7 +24,7 @@ class Intervals {
 	/**
 	 * The pseudo interval used to disable a schedule. It is not a registered cron interval.
 	 */
-	public const DISABLED = 'now_pages_threadi_disable_check';
+	public const DISABLED = 'threadi_now_pages_disable_check';
 
 	/**
 	 * The interval objects of this request.
@@ -80,17 +80,17 @@ class Intervals {
 	private function get_intervals(): array {
 		// add the list.
 		$list = array(
-			'\NowPagesThreadi\Plugin\Intervals\Minutly15',
-			'\NowPagesThreadi\Plugin\Intervals\Minutly20',
-			'\NowPagesThreadi\Plugin\Intervals\Minutly30',
-			'\NowPagesThreadi\Plugin\Intervals\Hourly',
-			'\NowPagesThreadi\Plugin\Intervals\Hourly2',
-			'\NowPagesThreadi\Plugin\Intervals\Hourly3',
-			'\NowPagesThreadi\Plugin\Intervals\Hourly4',
-			'\NowPagesThreadi\Plugin\Intervals\Hourly6',
-			'\NowPagesThreadi\Plugin\Intervals\Hourly12',
-			'\NowPagesThreadi\Plugin\Intervals\Daily',
-			'\NowPagesThreadi\Plugin\Intervals\Weekly',
+			'\ThreadiNowPages\Plugin\Intervals\Minutly15',
+			'\ThreadiNowPages\Plugin\Intervals\Minutly20',
+			'\ThreadiNowPages\Plugin\Intervals\Minutly30',
+			'\ThreadiNowPages\Plugin\Intervals\Hourly',
+			'\ThreadiNowPages\Plugin\Intervals\Hourly2',
+			'\ThreadiNowPages\Plugin\Intervals\Hourly3',
+			'\ThreadiNowPages\Plugin\Intervals\Hourly4',
+			'\ThreadiNowPages\Plugin\Intervals\Hourly6',
+			'\ThreadiNowPages\Plugin\Intervals\Hourly12',
+			'\ThreadiNowPages\Plugin\Intervals\Daily',
+			'\ThreadiNowPages\Plugin\Intervals\Weekly',
 		);
 
 		/**
@@ -99,7 +99,7 @@ class Intervals {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param array<int,class-string<Interval_Base>> $list List of our interval objects.
 		 */
-		return apply_filters( 'now_pages_threadi_intervals', $list );
+		return apply_filters( 'threadi_now_pages_intervals', $list );
 	}
 
 	/**
@@ -130,7 +130,7 @@ class Intervals {
 
 		// add entry to disable the setting as first.
 		if ( ! $without_disabled ) {
-			$list[ self::DISABLED ] = __( 'Disable import', 'now-pages-threadi' );
+			$list[ self::DISABLED ] = __( 'Disable import', 'threadi-now-pages' );
 		}
 
 		// add each interval objects as entry.
@@ -176,6 +176,6 @@ class Intervals {
 	 * @return string
 	 */
 	public function get_prefix(): string {
-		return 'now_pages_threadi_';
+		return 'threadi_now_pages_';
 	}
 }

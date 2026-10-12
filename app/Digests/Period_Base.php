@@ -2,15 +2,15 @@
 /**
  * This file contains the base for any period.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests;
+namespace ThreadiNowPages\Digests;
 
 // prevent direct access.
-use NowPagesThreadi\NowPages\Entries;
+use ThreadiNowPages\NowPages\Entries;
 use WP_Query;
 
 defined( 'ABSPATH' ) || exit;
@@ -114,7 +114,7 @@ abstract class Period_Base implements Period_Interface {
 
 		return sprintf(
 		/* translators: %1$s will be replaced by a date, %2$s by a date. */
-			__( 'Entries from %1$s to %2$s', 'now-pages-threadi' ),
+			__( 'Entries from %1$s to %2$s', 'threadi-now-pages' ),
 			mysql2date( $format, $range['after'] ),
 			mysql2date( $format, $range['before'] )
 		);

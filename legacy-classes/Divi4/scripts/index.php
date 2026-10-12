@@ -2,5 +2,5 @@
 /**
  * Silence is golden.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */

@@ -2,17 +2,17 @@
 /**
  * File to test the WordPress provider.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Providers\Provider_Context;
-use NowPagesThreadi\Providers\WordPress_Provider;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Providers\Provider_Context;
+use ThreadiNowPages\Providers\WordPress_Provider;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 
 /**
  * Object to test WordPress_Provider.
@@ -35,7 +35,7 @@ class WordPressProviderTest extends NowPagesTestCase {
 
 		$this->source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'This website',
 			)
@@ -211,7 +211,7 @@ class WordPressProviderTest extends NowPagesTestCase {
 	public function test_own_entries_are_never_read(): void {
 		self::factory()->post->create(
 			array(
-				'post_type'     => 'np_threadi_entry',
+				'post_type'     => 'threadi_np_entry',
 				'post_status'   => 'publish',
 				'post_title'    => '',
 				'post_content'  => 'An existing now page entry',
@@ -219,7 +219,7 @@ class WordPressProviderTest extends NowPagesTestCase {
 			)
 		);
 
-		$entries = $this->fetch( array( 'wp_post_types' => array( 'np_threadi_entry' ) ) );
+		$entries = $this->fetch( array( 'wp_post_types' => array( 'threadi_np_entry' ) ) );
 
 		$this->assertStringNotContainsString( 'An existing now page entry', $this->get_texts( $entries ) );
 	}
@@ -230,7 +230,7 @@ class WordPressProviderTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_own_sources_are_never_read(): void {
-		$entries = $this->fetch( array( 'wp_post_types' => array( 'np_threadi_source' ) ) );
+		$entries = $this->fetch( array( 'wp_post_types' => array( 'threadi_np_source' ) ) );
 
 		$this->assertStringNotContainsString( 'This website', $this->get_texts( $entries ) );
 	}
@@ -260,7 +260,7 @@ class WordPressProviderTest extends NowPagesTestCase {
 	 */
 	public function test_a_configured_author_who_opted_out_is_not_read(): void {
 		$author = self::factory()->user->create( array( 'role' => 'author' ) );
-		update_user_meta( $author, 'now_pages_threadi_disable_now_page', 1 );
+		update_user_meta( $author, 'threadi_now_pages_disable_now_page', 1 );
 
 		$this->create_post( 'From the opted out author', $author );
 

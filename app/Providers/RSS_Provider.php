@@ -10,23 +10,23 @@
  * bridged into one (e.g. via a self-hosted RSS-Bridge instance for
  * services without a native feed).
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Providers;
+namespace ThreadiNowPages\Providers;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use DateTimeImmutable;
 use Exception;
-use NowPagesThreadi\Helper\Format;
-use NowPagesThreadi\Helper\Languages;
-use NowPagesThreadi\Helper\Url;
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Plugin\Log;
+use ThreadiNowPages\Helper\Format;
+use ThreadiNowPages\Helper\Languages;
+use ThreadiNowPages\Helper\Url;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Plugin\Log;
 use WP_Error;
 
 /**
@@ -56,7 +56,7 @@ class RSS_Provider extends Provider_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'RSS / Atom feed', 'now-pages-threadi' );
+		return __( 'RSS / Atom feed', 'threadi-now-pages' );
 	}
 
 	/**
@@ -70,14 +70,14 @@ class RSS_Provider extends Provider_Base {
 	public function get_config_fields(): array {
 		return array(
 			'feed_url'  => array(
-				'label'       => __( 'Feed-URL', 'now-pages-threadi' ),
+				'label'       => __( 'Feed-URL', 'threadi-now-pages' ),
 				'type'        => 'url',
 				'required'    => true,
-				'description' => __( 'Also works with feeds from an RSS-Bridge instance for services without a native feed.', 'now-pages-threadi' ),
+				'description' => __( 'Also works with feeds from an RSS-Bridge instance for services without a native feed.', 'threadi-now-pages' ),
 				'placeholder' => 'https://rss.feed.atom',
 			),
 			'max_items' => array(
-				'label'   => __( 'Max. items per run', 'now-pages-threadi' ),
+				'label'   => __( 'Max. items per run', 'threadi-now-pages' ),
 				'type'    => 'number',
 				'default' => 10,
 				'min'     => 1,
@@ -93,7 +93,7 @@ class RSS_Provider extends Provider_Base {
 	 * @param array<string,mixed> $config  The configuration of the source.
 	 * @param Provider_Context    $context The context of this run.
 	 *
-	 * @return Entry[] List of normalized entries. Empty on error (logged via now_pages_threadi_log action).
+	 * @return Entry[] List of normalized entries. Empty on error (logged via threadi_now_pages_log action).
 	 */
 	public function fetch( array $config, Provider_Context $context ): array {
 		$entries = array();
@@ -123,7 +123,7 @@ class RSS_Provider extends Provider_Base {
 			 * @param string   $slug  The provider slug.
 			 * @param WP_Error $error The resulting error.
 			 */
-			do_action( 'now_pages_threadi_provider_error', $this->get_slug(), $this->redact_error( $feed ) );
+			do_action( 'threadi_now_pages_provider_error', $this->get_slug(), $this->redact_error( $feed ) );
 
 			// do nothing more.
 			return $entries;
@@ -148,7 +148,7 @@ class RSS_Provider extends Provider_Base {
 				$date        = $date_string ? new DateTimeImmutable( $date_string ) : new DateTimeImmutable();
 			} catch ( Exception $e ) {
 				// log this event.
-				Log::get_instance()->add( __( 'Error during formatting of a timestamp from an RSS-feed.', 'now-pages-threadi' ) . ' <code>' . esc_html( $e->getMessage() ) . '</code>', 'error', 'provider' );
+				Log::get_instance()->add( __( 'Error during formatting of a timestamp from an RSS-feed.', 'threadi-now-pages' ) . ' <code>' . esc_html( $e->getMessage() ) . '</code>', 'error', 'provider' );
 
 				// create a simple datetime object.
 				$date = new DateTimeImmutable();
@@ -212,7 +212,7 @@ class RSS_Provider extends Provider_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'Reads any RSS or Atom feed. Also works with an RSS-Bridge instance for services without a native feed.', 'now-pages-threadi' );
+		return __( 'Reads any RSS or Atom feed. Also works with an RSS-Bridge instance for services without a native feed.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -230,7 +230,7 @@ class RSS_Provider extends Provider_Base {
 	 * @return string
 	 */
 	public function get_unavailable_reason(): string {
-		return __( 'The WordPress feed API is not available on this installation.', 'now-pages-threadi' );
+		return __( 'The WordPress feed API is not available on this installation.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -240,7 +240,7 @@ class RSS_Provider extends Provider_Base {
 	 */
 	public function get_filterable_fields(): array {
 		return array(
-			'author' => __( 'Author', 'now-pages-threadi' ),
+			'author' => __( 'Author', 'threadi-now-pages' ),
 		);
 	}
 
@@ -330,10 +330,10 @@ class RSS_Provider extends Provider_Base {
 
 		if ( strlen( wp_remote_retrieve_body( $response ) ) >= self::MAX_RESPONSE_SIZE ) {
 			return new WP_Error(
-				'now_pages_threadi_response_too_large',
+				'threadi_now_pages_response_too_large',
 				sprintf(
 				/* translators: %1$s will be replaced by a URL, %2$s by a file size. */
-					__( 'The answer of %1$s is larger than %2$s and has been ignored.', 'now-pages-threadi' ),
+					__( 'The answer of %1$s is larger than %2$s and has been ignored.', 'threadi-now-pages' ),
 					Url::redact( $url ),
 					size_format( self::MAX_RESPONSE_SIZE )
 				)

@@ -2,7 +2,7 @@
 /**
  * PHPUnit bootstrap file.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 define( 'TESTS_PLUGIN_DIR', dirname( __DIR__ ) );
@@ -41,10 +41,10 @@ require_once "{$_tests_dir}/includes/functions.php";
  * Manually load the plugin being tested.
  */
 function _manually_load_plugin() {
-	require dirname( dirname( __FILE__ ) ) . '/now-pages-threadi.php';
+	require dirname( dirname( __FILE__ ) ) . '/threadi-now-pages.php';
 }
 // the tests need the settings and the setup as in the backend.
-tests_add_filter( 'now_pages_threadi_is_settings_request', '__return_true' );
+tests_add_filter( 'threadi_now_pages_is_settings_request', '__return_true' );
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 

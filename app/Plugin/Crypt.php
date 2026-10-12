@@ -3,12 +3,12 @@
  * File with the handler for any crypt tasks in this plugin
  * We use the composer package "Crypt for WordPress" as help for these tasks.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -65,7 +65,7 @@ class Crypt {
 		if ( null === $this->crypt_obj ) {
 			// configure the crypt object.
 			$this->crypt_obj = new \CryptForWordPress\Crypt( NOWPAGES_PLUGIN );
-			$this->crypt_obj->set_slug( 'now-pages-threadi' );
+			$this->crypt_obj->set_slug( 'threadi-now-pages' );
 			$this->crypt_obj->set_config(
 				array(
 					'openssl' => array(

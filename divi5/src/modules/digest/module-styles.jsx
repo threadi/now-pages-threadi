@@ -33,13 +33,13 @@ export const ModuleStyles = ({
                     attr={attrs.css}
             />
             <TextStyle
-                    selector={`${orderClass} .now-pages-threadi-content`}
+                    selector={`${orderClass} .threadi-now-pages-content`}
                     attr={attrs?.module?.advanced?.text}
                     propertySelectors={{
                         textShadow: {
                             desktop: {
                                 value: {
-                                    'text-shadow': `${orderClass} .now-pages-threadi-content`,
+                                    'text-shadow': `${orderClass} .threadi-now-pages-content`,
                                 },
                             },
                         },

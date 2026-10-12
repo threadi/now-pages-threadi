@@ -2,17 +2,17 @@
 /**
  * REST controller for entries: allow read access only to users who can edit entries.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\NowPages;
+namespace ThreadiNowPages\NowPages;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Format;
+use ThreadiNowPages\Helper\Format;
 use WP_Error;
 use WP_Post;
 use WP_REST_Posts_Controller;
@@ -52,7 +52,7 @@ class Entries_Rest_Controller extends WP_REST_Posts_Controller {
 	private function get_forbidden_error(): WP_Error {
 		return new WP_Error(
 			'rest_forbidden',
-			__( 'Sorry, you are not allowed to do that.', 'now-pages-threadi' ),
+			__( 'Sorry, you are not allowed to do that.', 'threadi-now-pages' ),
 			array( 'status' => rest_authorization_required_code() )
 		);
 	}

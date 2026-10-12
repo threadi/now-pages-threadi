@@ -2,20 +2,20 @@
 /**
  * File to handle the Avia shortcode for the now pages Digest widget.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Display_Settings;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Display_Settings;
 
 /**
  * Object to handle the shortcode.
  */
-class NowPagesThreadiAviaDigest extends aviaShortcodeTemplate {
+class ThreadiNowPagesAviaDigest extends aviaShortcodeTemplate {
 	/**
 	 * Create the config array for the shortcode button
 	 */
@@ -24,14 +24,14 @@ class NowPagesThreadiAviaDigest extends aviaShortcodeTemplate {
 		$this->config['self_closing'] = 'no';
 		$this->config['base_element'] = 'yes';
 
-		$this->config['name']      = __( 'Digest', 'now-pages-threadi' );
-		$this->config['tab']       = __( 'Now Pages', 'now-pages-threadi' );
+		$this->config['name']      = __( 'Digest', 'threadi-now-pages' );
+		$this->config['tab']       = __( 'Now Pages', 'threadi-now-pages' );
 		$this->config['icon']      = '';
 		$this->config['order']     = 10;
 		$this->config['target']    = 'avia-target-insert';
-		$this->config['shortcode'] = 'avia_now_pages_threadi_digest';
+		$this->config['shortcode'] = 'avia_threadi_now_pages_digest';
 		$this->config['tinyMCE']   = array( 'disable' => true );
-		$this->config['tooltip']   = __( 'Provides an Avia Widget to show your now page entries.', 'now-pages-threadi' );
+		$this->config['tooltip']   = __( 'Provides an Avia Widget to show your now page entries.', 'threadi-now-pages' );
 		$this->config['preview']   = false;
 		$this->config['id_name']   = 'id';
 		$this->config['id_show']   = 'yes';
@@ -70,12 +70,12 @@ class NowPagesThreadiAviaDigest extends aviaShortcodeTemplate {
 
 			array(
 				'type'          => 'tab',
-				'name'          => __( 'Settings', 'now-pages-threadi' ),
+				'name'          => __( 'Settings', 'threadi-now-pages' ),
 				'nodescription' => true,
 			),
 
 			array(
-				'name'     => __( 'Period', 'now-pages-threadi' ),
+				'name'     => __( 'Period', 'threadi-now-pages' ),
 				'id'       => 'period',
 				'type'     => 'select',
 				'subtype'  => $periods,
@@ -84,7 +84,7 @@ class NowPagesThreadiAviaDigest extends aviaShortcodeTemplate {
 			),
 
 			array(
-				'name'     => __( 'Format', 'now-pages-threadi' ),
+				'name'     => __( 'Format', 'threadi-now-pages' ),
 				'id'       => 'format',
 				'type'     => 'select',
 				'subtype'  => $formats,
@@ -93,72 +93,72 @@ class NowPagesThreadiAviaDigest extends aviaShortcodeTemplate {
 			),
 
 			array(
-				'name'     => __( 'Use own display settings', 'now-pages-threadi' ),
+				'name'     => __( 'Use own display settings', 'threadi-now-pages' ),
 				'id'       => 'override_display',
 				'type'     => 'select',
 				'subtype'  => array(
-					esc_html__( 'Yes', 'now-pages-threadi' ) => 'yes',
-					esc_html__( 'No', 'now-pages-threadi' ) => 'no',
+					esc_html__( 'Yes', 'threadi-now-pages' ) => 'yes',
+					esc_html__( 'No', 'threadi-now-pages' ) => 'no',
 				),
 				'std'      => 'no',
 				'lockable' => true,
 			),
 
 			array(
-				'name'     => __( 'Show times', 'now-pages-threadi' ),
+				'name'     => __( 'Show times', 'threadi-now-pages' ),
 				'id'       => 'show_time',
 				'type'     => 'select',
 				'subtype'  => array(
-					esc_html__( 'Yes', 'now-pages-threadi' ) => 'yes',
-					esc_html__( 'No', 'now-pages-threadi' ) => 'no',
+					esc_html__( 'Yes', 'threadi-now-pages' ) => 'yes',
+					esc_html__( 'No', 'threadi-now-pages' ) => 'no',
 				),
 				'std'      => 'no',
 				'lockable' => true,
 			),
 
 			array(
-				'name'     => __( 'Show data source', 'now-pages-threadi' ),
+				'name'     => __( 'Show data source', 'threadi-now-pages' ),
 				'id'       => 'show_source',
 				'type'     => 'select',
 				'subtype'  => array(
-					esc_html__( 'Yes', 'now-pages-threadi' ) => 'yes',
-					esc_html__( 'No', 'now-pages-threadi' ) => 'no',
+					esc_html__( 'Yes', 'threadi-now-pages' ) => 'yes',
+					esc_html__( 'No', 'threadi-now-pages' ) => 'no',
 				),
 				'std'      => 'no',
 				'lockable' => true,
 			),
 
 			array(
-				'name'     => __( 'Link the data source', 'now-pages-threadi' ),
+				'name'     => __( 'Link the data source', 'threadi-now-pages' ),
 				'id'       => 'link_source',
 				'type'     => 'select',
 				'subtype'  => array(
-					esc_html__( 'Yes', 'now-pages-threadi' ) => 'yes',
-					esc_html__( 'No', 'now-pages-threadi' ) => 'no',
+					esc_html__( 'Yes', 'threadi-now-pages' ) => 'yes',
+					esc_html__( 'No', 'threadi-now-pages' ) => 'no',
 				),
 				'std'      => 'no',
 				'lockable' => true,
 			),
 
 			array(
-				'name'     => __( 'Show period of entries', 'now-pages-threadi' ),
+				'name'     => __( 'Show period of entries', 'threadi-now-pages' ),
 				'id'       => 'show_period',
 				'type'     => 'select',
 				'subtype'  => array(
-					esc_html__( 'Yes', 'now-pages-threadi' ) => 'yes',
-					esc_html__( 'No', 'now-pages-threadi' ) => 'no',
+					esc_html__( 'Yes', 'threadi-now-pages' ) => 'yes',
+					esc_html__( 'No', 'threadi-now-pages' ) => 'no',
 				),
 				'std'      => 'yes',
 				'lockable' => true,
 			),
 
 			array(
-				'name'     => __( 'Group by category', 'now-pages-threadi' ),
+				'name'     => __( 'Group by category', 'threadi-now-pages' ),
 				'id'       => 'group_by_category',
 				'type'     => 'select',
 				'subtype'  => array(
-					esc_html__( 'Yes', 'now-pages-threadi' ) => 'yes',
-					esc_html__( 'No', 'now-pages-threadi' ) => 'no',
+					esc_html__( 'Yes', 'threadi-now-pages' ) => 'yes',
+					esc_html__( 'No', 'threadi-now-pages' ) => 'no',
 				),
 				'std'      => 'yes',
 				'lockable' => true,
@@ -177,7 +177,7 @@ class NowPagesThreadiAviaDigest extends aviaShortcodeTemplate {
 	 */
 	function editor_element( $params ): array {
 		$params['class']     = '';
-		$params['innerHtml'] = '<div class="avia_now_pages_hint">' . esc_html__( 'Your now page entries will be displayed here.', 'now-pages-threadi' ) . '</div>';
+		$params['innerHtml'] = '<div class="avia_now_pages_hint">' . esc_html__( 'Your now page entries will be displayed here.', 'threadi-now-pages' ) . '</div>';
 		return $params;
 	}
 

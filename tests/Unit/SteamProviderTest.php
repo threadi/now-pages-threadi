@@ -7,17 +7,17 @@
  * NowPagesTestCase::$steam_games, which a test changes between runs to
  * simulate playing.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Providers\Provider_Context;
-use NowPagesThreadi\Providers\Steam_Provider;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Providers\Provider_Context;
+use ThreadiNowPages\Providers\Steam_Provider;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 
 /**
  * Object to test Steam_Provider.
@@ -43,7 +43,7 @@ class SteamProviderTest extends NowPagesTestCase {
 
 		$this->source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'Steam',
 			)
@@ -300,9 +300,9 @@ class SteamProviderTest extends NowPagesTestCase {
 			++$errors;
 		};
 
-		add_action( 'now_pages_threadi_provider_error', $handler );
+		add_action( 'threadi_now_pages_provider_error', $handler );
 		$this->fetch();
-		remove_action( 'now_pages_threadi_provider_error', $handler );
+		remove_action( 'threadi_now_pages_provider_error', $handler );
 
 		$this->assertSame( 0, $errors );
 	}
@@ -400,13 +400,13 @@ class SteamProviderTest extends NowPagesTestCase {
 			++$errors;
 		};
 
-		add_action( 'now_pages_threadi_provider_error', $handler );
+		add_action( 'threadi_now_pages_provider_error', $handler );
 
 		// an empty games list without a total count means the profile is closed.
 		$this->fetch();
 		$this->fetch();
 
-		remove_action( 'now_pages_threadi_provider_error', $handler );
+		remove_action( 'threadi_now_pages_provider_error', $handler );
 
 		$this->assertSame( 1, $errors );
 	}

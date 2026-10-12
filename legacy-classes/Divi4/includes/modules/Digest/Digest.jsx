@@ -16,7 +16,7 @@ function get_html( obj ) {
      * @type {FormData}
      */
     let body = new FormData();
-    body.append('action', 'now_pages_threadi_digest');
+    body.append('action', 'threadi_now_pages_digest');
     body.append('et_admin_load_nonce', window.et_fb_options.et_admin_load_nonce);
     body.append('attributes', JSON.stringify(Object.assign({}, obj.props)));
 
@@ -60,7 +60,7 @@ function get_html( obj ) {
  */
 class Digest extends Component {
 
-    static slug = 'now_pages_threadi_digest';
+    static slug = 'threadi_now_pages_digest';
 
     /**
      * Constructor.

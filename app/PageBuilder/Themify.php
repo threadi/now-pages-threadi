@@ -2,19 +2,19 @@
 /**
  * This file contains the support for Themify.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
 use Themify_Builder_Model;
 
 /**
@@ -34,7 +34,7 @@ class Themify extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Themify', 'now-pages-threadi' );
+		return __( 'Themify', 'threadi-now-pages' );
 	}
 
 	/**
@@ -102,22 +102,22 @@ class Themify extends PageBuilder_Base {
 				'format' => Digests::get_instance()->get_default_format(),
 			),
 			'labels'  => array(
-				'module'          => __( 'Digest', 'now-pages-threadi' ),
-				'period'          => __( 'Period', 'now-pages-threadi' ),
-				'format'          => __( 'Format', 'now-pages-threadi' ),
-				'yes'             => __( 'Yes', 'now-pages-threadi' ),
-				'overrideDisplay' => __( 'Use own display settings', 'now-pages-threadi' ),
-				'showTime'        => __( 'Show times', 'now-pages-threadi' ),
-				'showSource'      => __( 'Show data source', 'now-pages-threadi' ),
-				'linkSource'      => __( 'Link the data source', 'now-pages-threadi' ),
-				'showPeriod'      => __( 'Show period of entries', 'now-pages-threadi' ),
-				'groupByCategory' => __( 'Group by category', 'now-pages-threadi' ),
+				'module'          => __( 'Digest', 'threadi-now-pages' ),
+				'period'          => __( 'Period', 'threadi-now-pages' ),
+				'format'          => __( 'Format', 'threadi-now-pages' ),
+				'yes'             => __( 'Yes', 'threadi-now-pages' ),
+				'overrideDisplay' => __( 'Use own display settings', 'threadi-now-pages' ),
+				'showTime'        => __( 'Show times', 'threadi-now-pages' ),
+				'showSource'      => __( 'Show data source', 'threadi-now-pages' ),
+				'linkSource'      => __( 'Link the data source', 'threadi-now-pages' ),
+				'showPeriod'      => __( 'Show period of entries', 'threadi-now-pages' ),
+				'groupByCategory' => __( 'Group by category', 'threadi-now-pages' ),
 			),
 		);
 
 		?>
-		<script id="now-pages-threadi-themify-data">
-			window.nowPagesThreadiThemify = <?php echo wp_json_encode( $data ); ?>;
+		<script id="threadi-now-pages-themify-data">
+			window.threadiNowPagesThemify = <?php echo wp_json_encode( $data ); ?>;
 		</script>
 		<?php
 	}

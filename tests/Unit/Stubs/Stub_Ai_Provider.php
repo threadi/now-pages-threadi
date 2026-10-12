@@ -8,10 +8,10 @@
  * replaced - it answers what the test told it to answer, and remembers
  * what it was asked.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
-namespace NowPagesThreadi\Tests\Unit\Stubs;
+namespace ThreadiNowPages\Tests\Unit\Stubs;
 
 use Throwable;
 use WordPress\AiClient\AiClient;
@@ -295,7 +295,7 @@ class Stub_Ai_Provider extends AbstractProvider {
 	 * @return ProviderMetadata
 	 */
 	protected static function createProviderMetadata(): ProviderMetadata {
-		return new ProviderMetadata( 'now-pages-threadi-stub', 'Now Pages stub', ProviderTypeEnum::cloud() );
+		return new ProviderMetadata( 'threadi-now-pages-stub', 'Now Pages stub', ProviderTypeEnum::cloud() );
 	}
 
 	/**

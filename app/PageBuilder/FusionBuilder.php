@@ -2,20 +2,20 @@
 /**
  * This file contains the support for Fusion Builder.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
 
 /**
  * Registers and handles the support for Avada.
@@ -28,7 +28,7 @@ class FusionBuilder extends PageBuilder_Base {
 	 *
 	 * @var string
 	 */
-	private string $shortcode = 'fusion_builder_now_pages_threadi_digest';
+	private string $shortcode = 'fusion_builder_threadi_now_pages_digest';
 
 	/**
 	 * {@inheritDoc}
@@ -78,51 +78,51 @@ class FusionBuilder extends PageBuilder_Base {
 
 		fsn_map(
 			array(
-				'name'          => __( 'Digest', 'now-pages-threadi' ),
+				'name'          => __( 'Digest', 'threadi-now-pages' ),
 				'shortcode_tag' => $this->shortcode,
 				'icon'          => 'icon-notes',
 				'params'        => array(
 					array(
 						'type'       => 'select',
 						'param_name' => 'period',
-						'label'      => __( 'Period', 'now-pages-threadi' ),
+						'label'      => __( 'Period', 'threadi-now-pages' ),
 						'options'    => $periods,
 					),
 					array(
 						'type'       => 'select',
 						'param_name' => 'format',
-						'label'      => __( 'Format', 'now-pages-threadi' ),
+						'label'      => __( 'Format', 'threadi-now-pages' ),
 						'options'    => $formats,
 					),
 					array(
 						'type'       => 'checkbox',
 						'param_name' => 'override_display',
-						'label'      => __( 'Use own display settings', 'now-pages-threadi' ),
+						'label'      => __( 'Use own display settings', 'threadi-now-pages' ),
 					),
 					array(
 						'type'       => 'checkbox',
 						'param_name' => 'show_time',
-						'label'      => __( 'Show times', 'now-pages-threadi' ),
+						'label'      => __( 'Show times', 'threadi-now-pages' ),
 					),
 					array(
 						'type'       => 'checkbox',
 						'param_name' => 'show_source',
-						'label'      => __( 'Show data source', 'now-pages-threadi' ),
+						'label'      => __( 'Show data source', 'threadi-now-pages' ),
 					),
 					array(
 						'type'       => 'checkbox',
 						'param_name' => 'link_source',
-						'label'      => __( 'Link source', 'now-pages-threadi' ),
+						'label'      => __( 'Link source', 'threadi-now-pages' ),
 					),
 					array(
 						'type'       => 'checkbox',
 						'param_name' => 'show_period',
-						'label'      => __( 'Show period of entries', 'now-pages-threadi' ),
+						'label'      => __( 'Show period of entries', 'threadi-now-pages' ),
 					),
 					array(
 						'type'       => 'checkbox',
 						'param_name' => 'group_by_category',
-						'label'      => __( 'Group by category', 'now-pages-threadi' ),
+						'label'      => __( 'Group by category', 'threadi-now-pages' ),
 					),
 				),
 			)
@@ -169,7 +169,7 @@ class FusionBuilder extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Fusion Page Builder', 'now-pages-threadi' );
+		return __( 'Fusion Page Builder', 'threadi-now-pages' );
 	}
 
 	/**
@@ -183,7 +183,7 @@ class FusionBuilder extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_page_content(): string {
-		return '[fsn_row][fsn_column width="12"][fusion_builder_now_pages_threadi_digest period="' . Digests::get_instance()->get_default_period() . '" format="' . Digests::get_instance()->get_default_format() . '"][/fusion_builder_now_pages_threadi_digest][/fsn_column][/fsn_row]';
+		return '[fsn_row][fsn_column width="12"][fusion_builder_threadi_now_pages_digest period="' . Digests::get_instance()->get_default_period() . '" format="' . Digests::get_instance()->get_default_format() . '"][/fusion_builder_threadi_now_pages_digest][/fsn_column][/fsn_row]';
 	}
 
 	/**

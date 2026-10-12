@@ -2,21 +2,21 @@
 /**
  * File to handle intro for this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Format;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\NowPages\Categories;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\Sources\Sources;
+use ThreadiNowPages\Helper\Format;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\NowPages\Categories;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\Sources\Sources;
 use easySettingsForWordPress\Fields\Button;
 use easySettingsForWordPress\Page;
 use easySettingsForWordPress\Section;
@@ -63,7 +63,7 @@ class Intro {
 	 */
 	public function init(): void {
 		// add admin-actions.
-		add_action( 'admin_action_now_pages_threadi_reset_intro', array( $this, 'reset_intro' ) );
+		add_action( 'admin_action_threadi_now_pages_reset_intro', array( $this, 'reset_intro' ) );
 
 		// add settings.
 		add_action( 'init', array( $this, 'add_the_settings' ), 20 );
@@ -82,7 +82,7 @@ class Intro {
 		 * @param bool $false Return true to hide the intro.
 		 * @noinspection PhpConditionAlreadyCheckedInspection
 		 */
-		if ( apply_filters( 'now_pages_threadi_hide_intro', $false ) ) {
+		if ( apply_filters( 'threadi_now_pages_hide_intro', $false ) ) {
 			return;
 		}
 
@@ -91,7 +91,7 @@ class Intro {
 		add_filter( 'admin_body_class', array( $this, 'add_body_classes' ) );
 
 		// add AJAX-actions.
-		add_action( 'wp_ajax_now_pages_threadi_intro_closed', array( $this, 'set_closed_via_ajax' ) );
+		add_action( 'wp_ajax_threadi_now_pages_intro_closed', array( $this, 'set_closed_via_ajax' ) );
 	}
 
 	/**
@@ -100,7 +100,7 @@ class Intro {
 	 * @return bool
 	 */
 	private function is_closed(): bool {
-		return 1 === absint( get_option( 'now_pages_threadi_intro' ) );
+		return 1 === absint( get_option( 'threadi_now_pages_intro' ) );
 	}
 
 	/**
@@ -109,7 +109,7 @@ class Intro {
 	 * @return void
 	 */
 	public function set_closed(): void {
-		update_option( 'now_pages_threadi_intro', 1 );
+		update_option( 'threadi_now_pages_intro', 1 );
 	}
 
 	/**
@@ -119,7 +119,7 @@ class Intro {
 	 */
 	public function set_closed_via_ajax(): void {
 		// check nonce.
-		check_ajax_referer( 'now-pages-threadi-intro-closed', 'nonce' );
+		check_ajax_referer( 'threadi-now-pages-intro-closed', 'nonce' );
 
 		// bail if capability is missing.
 		if ( ! current_user_can( Settings::get_instance()->get_settings_obj()->get_capability() ) ) {
@@ -165,7 +165,7 @@ class Intro {
 
 		// embed the JS from "driver.js".
 		wp_enqueue_script(
-			'now-pages-threadi-intro',
+			'threadi-now-pages-intro',
 			$url . 'driver.js.iife.js',
 			array(),
 			Plugin::get_file_version( $path . 'driver.js.iife.js' ),
@@ -174,16 +174,16 @@ class Intro {
 
 		// embed our own JS script.
 		wp_enqueue_script(
-			'now-pages-threadi-intro-custom',
+			'threadi-now-pages-intro-custom',
 			Plugin::get_plugin_url() . 'admin/intro.js',
-			array( 'now-pages-threadi-intro' ),
+			array( 'threadi-now-pages-intro' ),
 			Plugin::get_file_version( Plugin::get_plugin_path() . 'admin/intro.js' ),
 			true
 		);
 
 		// embed the CSS from "driver.js".
 		wp_enqueue_style(
-			'now-pages-threadi-intro',
+			'threadi-now-pages-intro',
 			$url . 'driver.css',
 			array(),
 			Plugin::get_file_version( $path . 'driver.css' )
@@ -200,47 +200,47 @@ class Intro {
 
 		// add php-vars to our js-script.
 		wp_localize_script(
-			'now-pages-threadi-intro-custom',
-			'nowPagesThreadiIntroVars',
+			'threadi-now-pages-intro-custom',
+			'threadiNowPagesIntroVars',
 			array(
 				'ajax_url'           => admin_url( 'admin-ajax.php' ),
-				'intro_closed_nonce' => wp_create_nonce( 'now-pages-threadi-intro-closed' ),
-				'next_button'        => __( 'Next', 'now-pages-threadi' ),
-				'prev_button'        => __( 'Back', 'now-pages-threadi' ),
-				'done_button'        => __( 'Done', 'now-pages-threadi' ),
+				'intro_closed_nonce' => wp_create_nonce( 'threadi-now-pages-intro-closed' ),
+				'next_button'        => __( 'Next', 'threadi-now-pages' ),
+				'prev_button'        => __( 'Back', 'threadi-now-pages' ),
+				'done_button'        => __( 'Done', 'threadi-now-pages' ),
 				'steps'              => array(
 					array(
 						'element'     => '',
-						'title'       => __( 'Welcome', 'now-pages-threadi' ),
-						'description' => __( 'Thank you for installing <em>Now Pages</em>. Let us show you the few things worth knowing.', 'now-pages-threadi' ),
+						'title'       => __( 'Welcome', 'threadi-now-pages' ),
+						'description' => __( 'Thank you for installing <em>Now Pages</em>. Let us show you the few things worth knowing.', 'threadi-now-pages' ),
 					),
 					array(
 						'element'     => '.wp-list-table',
-						'title'       => __( 'Your sources', 'now-pages-threadi' ),
-						'description' => __( 'This is the source your setup created. Entries for your Now Page are imported from these sources automatically.', 'now-pages-threadi' ),
+						'title'       => __( 'Your sources', 'threadi-now-pages' ),
+						'description' => __( 'This is the source your setup created. Entries for your Now Page are imported from these sources automatically.', 'threadi-now-pages' ),
 					),
 					array(
 						'element'     => '.page-title-action:last-of-type',
-						'title'       => __( 'More sources', 'now-pages-threadi' ),
-						'description' => __( 'Add another service here - we will suggest what fits and prefill it for you.', 'now-pages-threadi' ),
+						'title'       => __( 'More sources', 'threadi-now-pages' ),
+						'description' => __( 'Add another service here - we will suggest what fits and prefill it for you.', 'threadi-now-pages' ),
 					),
 					array(
-						'element'     => '#menu-posts-' . Sources::get_instance()->get_slug() . ' a[href*="now_pages_threadi_category"]',
-						'title'       => __( 'Categories', 'now-pages-threadi' ),
+						'element'     => '#menu-posts-' . Sources::get_instance()->get_slug() . ' a[href*="threadi_now_pages_category"]',
+						'title'       => __( 'Categories', 'threadi-now-pages' ),
 						/* translators: %1$s will be replaced by a URL. */
-						'description' => sprintf( __( 'Group your entries by topic - and let <a href="%1$s" target="_blank">a category</a> replace its entries with one or two sentences of your own. That is what turns a list into a page about your life.', 'now-pages-threadi' ), $category_url ),
+						'description' => sprintf( __( 'Group your entries by topic - and let <a href="%1$s" target="_blank">a category</a> replace its entries with one or two sentences of your own. That is what turns a list into a page about your life.', 'threadi-now-pages' ), $category_url ),
 					),
 					array(
 						'element'     => '#menu-settings a[href*="' . Settings::get_instance()->get_settings_obj()->get_menu_slug() . '"]',
-						'title'       => __( 'Settings', 'now-pages-threadi' ),
-						'description' => __( 'Period, format and what each entry shows - all of it lives here. You can also preview your now page before anybody else sees it.', 'now-pages-threadi' ),
+						'title'       => __( 'Settings', 'threadi-now-pages' ),
+						'description' => __( 'Period, format and what each entry shows - all of it lives here. You can also preview your now page before anybody else sees it.', 'threadi-now-pages' ),
 						'open_menu'   => '#menu-settings',
 					),
 					array(
 						'element'     => '',
-						'title'       => __( 'Thank you', 'now-pages-threadi' ),
+						'title'       => __( 'Thank you', 'threadi-now-pages' ),
 						/* translators: %1$s and %2$s will be replaced by URLs. */
-						'description' => sprintf( __( 'Questions belong in <a href="%1$s" target="_blank">our support forum</a>, and <a href="%2$s" target="_blank">a review</a> is always welcome.', 'now-pages-threadi' ), Plugin::get_plugin_support_url(), Plugin::get_review_url() ),
+						'description' => sprintf( __( 'Questions belong in <a href="%1$s" target="_blank">our support forum</a>, and <a href="%2$s" target="_blank">a review</a> is always welcome.', 'threadi-now-pages' ), Plugin::get_plugin_support_url(), Plugin::get_review_url() ),
 					),
 				),
 			)
@@ -254,7 +254,7 @@ class Intro {
 	 */
 	public function reset_intro(): void {
 		// check nonce.
-		check_ajax_referer( 'now-pages-threadi-intro-reset', 'nonce' );
+		check_ajax_referer( 'threadi-now-pages-intro-reset', 'nonce' );
 
 		// bail if capability is missing.
 		if ( ! current_user_can( Settings::get_instance()->get_settings_obj()->get_capability() ) ) {
@@ -262,7 +262,7 @@ class Intro {
 		}
 
 		// delete the actual setting.
-		delete_option( 'now_pages_threadi_intro' );
+		delete_option( 'threadi_now_pages_intro' );
 
 		// redirect user to intro-start.
 		wp_safe_redirect( $this->get_start_url() );
@@ -297,7 +297,7 @@ class Intro {
 		$main_settings_page = Settings::get_instance()->get_settings_page();
 
 		// get the advanced tab.
-		$advanced_tab = $main_settings_page->get_tab( 'now_pages_threadi_advanced' );
+		$advanced_tab = $main_settings_page->get_tab( 'threadi_now_pages_advanced' );
 
 		// bail if the page could not be loaded.
 		if ( ! $advanced_tab instanceof Tab ) {
@@ -305,7 +305,7 @@ class Intro {
 		}
 
 		// get the advanced section.
-		$advanced_section = $advanced_tab->get_section( 'now_pages_threadi_advanced_plugin' );
+		$advanced_section = $advanced_tab->get_section( 'threadi_now_pages_advanced_plugin' );
 
 		// bail if the section could not be loaded.
 		if ( ! $advanced_section instanceof Section ) {
@@ -314,32 +314,32 @@ class Intro {
 
 		// create dialog.
 		$dialog = array(
-			'title'   => __( 'Reset intro', 'now-pages-threadi' ),
+			'title'   => __( 'Reset intro', 'threadi-now-pages' ),
 			'texts'   => array(
-				'<p><strong>' . __( 'Are your sure you want to reset the intro?', 'now-pages-threadi' ) . '</strong></p>',
+				'<p><strong>' . __( 'Are your sure you want to reset the intro?', 'threadi-now-pages' ) . '</strong></p>',
 			),
 			'buttons' => array(
 				array(
 					'action'  => 'location.href="' . $this->get_reset_url() . '";',
 					'variant' => 'primary',
-					'text'    => __( 'Yes', 'now-pages-threadi' ),
+					'text'    => __( 'Yes', 'threadi-now-pages' ),
 				),
 				array(
 					'action'  => 'closeDialog();',
 					'variant' => 'secondary',
-					'text'    => __( 'No', 'now-pages-threadi' ),
+					'text'    => __( 'No', 'threadi-now-pages' ),
 				),
 			),
 		);
 
 		// add setting.
-		$setting = $settings_obj->add_setting( 'now_pages_threadi_reset_intro' );
+		$setting = $settings_obj->add_setting( 'threadi_now_pages_reset_intro' );
 		$setting->set_section( $advanced_section );
 		$setting->set_autoload( false );
 		$setting->prevent_export( true );
 		$field = new Button( $settings_obj );
-		$field->set_title( __( 'Reset intro', 'now-pages-threadi' ) );
-		$field->set_button_title( __( 'Rerun the intro', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Reset intro', 'threadi-now-pages' ) );
+		$field->set_button_title( __( 'Rerun the intro', 'threadi-now-pages' ) );
 		$field->set_button_url( $this->get_reset_url() );
 		$field->add_class( 'easy-dialog-for-wordpress' );
 		$field->add_data( 'dialog', Format::get_json( $dialog ) );
@@ -354,7 +354,7 @@ class Intro {
 		}
 
 		// add setting.
-		$setting = $settings_obj->add_setting( 'now_pages_threadi_intro' );
+		$setting = $settings_obj->add_setting( 'threadi_now_pages_intro' );
 		$setting->set_section( $hidden_section );
 		$setting->set_show_in_rest( true );
 		$setting->set_type( 'integer' );
@@ -369,8 +369,8 @@ class Intro {
 	private function get_reset_url(): string {
 		return add_query_arg(
 			array(
-				'action' => 'now_pages_threadi_reset_intro',
-				'nonce'  => wp_create_nonce( 'now-pages-threadi-intro-reset' ),
+				'action' => 'threadi_now_pages_reset_intro',
+				'nonce'  => wp_create_nonce( 'threadi-now-pages-intro-reset' ),
 			),
 			get_admin_url() . 'admin.php'
 		);
@@ -394,7 +394,7 @@ class Intro {
 		}
 
 		// add our class to mark to show the intro.
-		$classes .= ' now-pages-threadi-show-intro';
+		$classes .= ' threadi-now-pages-show-intro';
 
 		// return the resulting list of classes.
 		return $classes;

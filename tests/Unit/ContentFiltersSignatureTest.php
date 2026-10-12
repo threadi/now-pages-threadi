@@ -5,15 +5,15 @@
  * The signature tells whether two lists of rules filter the same way. It
  * decides whether two sources of the same feed are duplicates.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\NowPages\Content_Filters;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\NowPages\Content_Filters;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 
 /**
  * Object to test Content_Filters::get_signature().

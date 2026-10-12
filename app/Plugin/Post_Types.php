@@ -2,22 +2,22 @@
 /**
  * File for handling any post-type we add.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Fediverse\Updates;
-use NowPagesThreadi\Helper\Instance_Registry;
-use NowPagesThreadi\Helper\Singleton_Interface;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\Sources\Sources;
+use ThreadiNowPages\Fediverse\Updates;
+use ThreadiNowPages\Helper\Instance_Registry;
+use ThreadiNowPages\Helper\Singleton_Interface;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\Sources\Sources;
 use WP_Query;
 
 /**
@@ -70,7 +70,7 @@ class Post_Types implements Singleton_Interface {
 		 *
 		 * @param array<int,class-string<Post_Type_Base>> $post_types List of post-types.
 		 */
-		return apply_filters( 'now_pages_threadi_register_post_type', $post_types );
+		return apply_filters( 'threadi_now_pages_register_post_type', $post_types );
 	}
 
 	/**

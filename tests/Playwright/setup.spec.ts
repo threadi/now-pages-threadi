@@ -7,7 +7,7 @@ import type { Page } from '@playwright/test';
  * Click through the setup with the source "This website", which needs no account and no other server.
  */
 async function runSetup(page: Page, serverUrl: string, choice: string): Promise<void> {
-    await page.goto(`${serverUrl}/wp-admin/options-general.php?page=now_pages_threadi_settings-setup`);
+    await page.goto(`${serverUrl}/wp-admin/options-general.php?page=threadi_now_pages_settings-setup`);
 
     const continueButton = page.getByRole('button', { name: 'Continue' });
     const firstChoice = page.getByRole('radio', { name: 'Create a page I can design myself' });
@@ -34,7 +34,7 @@ async function runSetup(page: Page, serverUrl: string, choice: string): Promise<
     await completedButton.click();
 
     // it ends on the list of sources, with the new one in it.
-    await expect(page).toHaveURL(/edit\.php\?post_type=np_threadi_source/);
+    await expect(page).toHaveURL(/edit\.php\?post_type=threadi_np_source/);
     await expect(page.getByRole('link', { name: 'This website', exact: true })).toBeVisible();
 }
 
@@ -63,7 +63,7 @@ test.describe('Setup', () => {
         await runSetup(page, cli.serverUrl, 'Just the address /now/, without a page');
 
         // no page has been created.
-        expect(await php(cli, `echo \\NowPagesThreadi\\NowPages\\Now_Page::get_instance()->get_page() ? 'page' : 'no page';`)).toBe('no page');
+        expect(await php(cli, `echo \\ThreadiNowPages\\NowPages\\Now_Page::get_instance()->get_page() ? 'page' : 'no page';`)).toBe('no page');
 
         // @ts-ignore
         const response = await visitor.goto(`${cli.serverUrl}/now/`);
@@ -77,7 +77,7 @@ test.describe('Setup', () => {
         await runSetup(page, cli.serverUrl, 'Create a page I can design myself');
 
         // the page exists, is published and has the address of the now page.
-        expect(await php(cli, `$page = \\NowPagesThreadi\\NowPages\\Now_Page::get_instance()->get_page(); echo $page ? $page->post_type . '/' . $page->post_status . '/' . $page->post_name : 'no page';`)).toBe('page/publish/now');
+        expect(await php(cli, `$page = \\ThreadiNowPages\\NowPages\\Now_Page::get_instance()->get_page(); echo $page ? $page->post_type . '/' . $page->post_status . '/' . $page->post_name : 'no page';`)).toBe('page/publish/now');
 
         // @ts-ignore
         const response = await visitor.goto(`${cli.serverUrl}/now/`);
@@ -97,7 +97,7 @@ test.describe('Setup', () => {
         });
 
         // @ts-ignore
-        await page.goto(`${cli.serverUrl}/wp-admin/options-general.php?page=now_pages_threadi_settings-setup`);
+        await page.goto(`${cli.serverUrl}/wp-admin/options-general.php?page=threadi_now_pages_settings-setup`);
 
         // choose as soon as the choice is offered: it is only offered once the setup has loaded its values.
         await page.getByRole('radio', { name: 'Just the address /now/, without a page' }).check();
@@ -111,6 +111,6 @@ test.describe('Setup', () => {
 
         // one click has been ignored, and the choice has been saved as made.
         expect(saves).toBe(1);
-        expect(await php(cli, `echo \\easySetupForWordPress\\Setup::get_instance()->get_field_value( 'now-pages-threadi', 'now_pages_threadi_setup_create_page', '' );`)).toBe('virtual');
+        expect(await php(cli, `echo \\easySetupForWordPress\\Setup::get_instance()->get_field_value( 'threadi-now-pages', 'threadi_now_pages_setup_create_page', '' );`)).toBe('virtual');
     });
 });

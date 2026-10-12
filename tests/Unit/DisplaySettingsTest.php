@@ -2,16 +2,16 @@
 /**
  * File to test the resolution of the display settings.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Plugin\Settings;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Plugin\Settings;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 
 /**
  * Object to test Display_Settings.
@@ -54,7 +54,7 @@ class DisplaySettingsTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_global_option_beats_the_default(): void {
-		update_option( 'now_pages_threadi_show_time', '1' );
+		update_option( 'threadi_now_pages_show_time', '1' );
 
 		$resolved = Display_Settings::resolve( array() );
 
@@ -68,11 +68,11 @@ class DisplaySettingsTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_user_meta_beats_the_global_option(): void {
-		update_option( 'now_pages_threadi_show_time', '1' );
+		update_option( 'threadi_now_pages_show_time', '1' );
 
 		$user_id = self::factory()->user->create();
 
-		update_user_meta( $user_id, 'now_pages_threadi_show_time', 0 );
+		update_user_meta( $user_id, 'threadi_now_pages_show_time', 0 );
 
 		// with a user in context the profile wins.
 		$resolved = Display_Settings::resolve( array( 'user_id' => $user_id ) );
@@ -93,11 +93,11 @@ class DisplaySettingsTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_empty_user_meta_inherits_the_global_option(): void {
-		update_option( 'now_pages_threadi_show_time', '1' );
+		update_option( 'threadi_now_pages_show_time', '1' );
 
 		$user_id = self::factory()->user->create();
 
-		update_user_meta( $user_id, 'now_pages_threadi_show_time', '' );
+		update_user_meta( $user_id, 'threadi_now_pages_show_time', '' );
 
 		$resolved = Display_Settings::resolve( array( 'user_id' => $user_id ) );
 
@@ -111,11 +111,11 @@ class DisplaySettingsTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_explicit_argument_beats_everything(): void {
-		update_option( 'now_pages_threadi_show_time', '1' );
+		update_option( 'threadi_now_pages_show_time', '1' );
 
 		$user_id = self::factory()->user->create();
 
-		update_user_meta( $user_id, 'now_pages_threadi_show_time', 1 );
+		update_user_meta( $user_id, 'threadi_now_pages_show_time', 1 );
 
 		$resolved = Display_Settings::resolve(
 			array(
@@ -137,11 +137,11 @@ class DisplaySettingsTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_order_is_limited_to_asc_and_desc(): void {
-		update_option( 'now_pages_threadi_order', 'desc' );
+		update_option( 'threadi_now_pages_order', 'desc' );
 
 		$this->assertSame( 'DESC', Display_Settings::resolve( array() )['order'] );
 
-		update_option( 'now_pages_threadi_order', 'RAND(); DROP TABLE' );
+		update_option( 'threadi_now_pages_order', 'RAND(); DROP TABLE' );
 
 		$this->assertSame( 'ASC', Display_Settings::resolve( array() )['order'] );
 	}
@@ -153,7 +153,7 @@ class DisplaySettingsTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_delay_hours_is_never_negative(): void {
-		update_option( 'now_pages_threadi_delay_hours', '-5' );
+		update_option( 'threadi_now_pages_delay_hours', '-5' );
 
 		$this->assertSame( 5, Display_Settings::resolve( array() )['delay_hours'] );
 

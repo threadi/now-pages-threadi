@@ -2,17 +2,17 @@
 /**
  * File to test adding entries via the import funnel.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
 use DateTimeImmutable;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 use WP_Query;
 
 /**
@@ -63,7 +63,7 @@ class EntriesAddEntryTest extends NowPagesTestCase {
 		return self::factory()->post->create(
 			array_merge(
 				array(
-					'post_type'  => 'np_threadi_source',
+					'post_type'  => 'threadi_np_source',
 					'post_title' => 'Test source',
 				),
 				$args
@@ -81,7 +81,7 @@ class EntriesAddEntryTest extends NowPagesTestCase {
 	private function get_entries( int $source_id ): array {
 		$query = new WP_Query(
 			array(
-				'post_type'      => 'np_threadi_entry',
+				'post_type'      => 'threadi_np_entry',
 				'post_status'    => array( 'any', 'trash' ),
 				'post_parent'    => $source_id,
 				'posts_per_page' => -1,

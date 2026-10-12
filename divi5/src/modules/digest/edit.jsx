@@ -42,7 +42,7 @@ export const edit = ({
     // Fetching data from REST API.
     fetch({
       method:    'GET',
-      restRoute: '/now-pages-threadi-divi5/v1/module-data/digest?' + query,
+      restRoute: '/threadi-now-pages-divi5/v1/module-data/digest?' + query,
     }).catch(error => {
       console.log(error);
     });
@@ -65,7 +65,7 @@ export const edit = ({
         {isLoading && <div>Loading...</div>}
         {!isLoading && (
           <div
-            className="now-pages-threadi-content"
+            className="threadi-now-pages-content"
             dangerouslySetInnerHTML={{ __html: response?.data ?? '' }}
           />
         )}

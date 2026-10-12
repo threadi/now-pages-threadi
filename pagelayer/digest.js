@@ -7,13 +7,13 @@
  * server for the output with the current settings and puts it into the
  * widget once it arrives.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 (() => {
   'use strict';
 
   // the data from PHP, see Pagelayer::add_editor_scripts().
-  const data = window.nowPagesThreadiPagelayer || {};
+  const data = window.threadiNowPagesPagelayer || {};
 
   // bail if the data is missing.
   if (!data.tag) {
@@ -51,7 +51,7 @@
       window.pagelayer_el_data_ref(el.$).tmp.digest = html;
     }
 
-    el.$.find('.now-pages-threadi-pagelayer-digest').html(html);
+    el.$.find('.threadi-now-pages-pagelayer-digest').html(html);
   };
 
   /**

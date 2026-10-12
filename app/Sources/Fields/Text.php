@@ -2,17 +2,17 @@
 /**
  * File to handle a single field for provider configuration.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Sources\Fields;
+namespace ThreadiNowPages\Sources\Fields;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Sources\Field_Base;
+use ThreadiNowPages\Sources\Field_Base;
 
 /**
  * Object to handle a single field for provider configuration.

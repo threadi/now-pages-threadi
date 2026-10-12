@@ -5,7 +5,7 @@
 
 ## Actions
 
-### `now_pages_threadi_register_providers`
+### `threadi_now_pages_register_providers`
 
 *Fires once the built-in providers are registered.*
 
@@ -13,7 +13,7 @@ Use this to add further providers (e.g. custom Discord/LinkedIn
 clients) from your own code, without touching this plugin.
 
 Example:
-add_action( 'now_pages_threadi_register_providers', function( $providers ) {
+add_action( 'threadi_now_pages_register_providers', function( $providers ) {
     $providers->register_provider( new My_Provider() );
 } );
 
@@ -21,11 +21,11 @@ add_action( 'now_pages_threadi_register_providers', function( $providers ) {
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$interface` | `\NowPagesThreadi\Providers\Providers` | The providers objects.
+`$interface` | `\ThreadiNowPages\Providers\Providers` | The providers objects.
 
 Source: [app/Providers/Providers.php](Providers/Providers.php), [line 90](Providers/Providers.php#L90-L103)
 
-### `now_pages_threadi_entry_received`
+### `threadi_now_pages_entry_received`
 
 *Fires once a normalized entry has been received, from any provider (pull or push).*
 
@@ -36,12 +36,12 @@ The actual now_page_entries-post is created by whatever hooks into this
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$entry` | `\NowPagesThreadi\NowPages\Entry` | The normalized entry.
+`$entry` | `\ThreadiNowPages\NowPages\Entry` | The normalized entry.
 `$source_id` | `int` | The ID of the source.
 
 Source: [app/Providers/Webhook_Controller.php](Providers/Webhook_Controller.php), [line 457](Providers/Webhook_Controller.php#L457-L466)
 
-### `now_pages_threadi_provider_error`
+### `threadi_now_pages_provider_error`
 
 *Fires when a provider fails to fetch data, for the central logging requirement.*
 
@@ -54,7 +54,7 @@ Argument | Type | Description
 
 Source: [app/Providers/RSS_Provider.php](Providers/RSS_Provider.php), [line 120](Providers/RSS_Provider.php#L120-L126)
 
-### `now_pages_threadi_provider_error`
+### `threadi_now_pages_provider_error`
 
 *This action is documented in app/Providers/RSS_Provider.php*
 
@@ -67,7 +67,7 @@ Argument | Type | Description
 
 Source: [app/Providers/HTTP_Provider_Base.php](Providers/HTTP_Provider_Base.php), [line 217](Providers/HTTP_Provider_Base.php#L217-L218)
 
-### `now_pages_threadi_entry_received`
+### `threadi_now_pages_entry_received`
 
 *This hook is documented in app/NowPages/Entries.php.*
 
@@ -80,7 +80,7 @@ Argument | Type | Description
 
 Source: [app/NowPages/Abilities.php](NowPages/Abilities.php), [line 1212](NowPages/Abilities.php#L1212-L1215)
 
-### `now_pages_threadi_category_assign_error`
+### `threadi_now_pages_category_assign_error`
 
 *Fires when assigning a category to an entry failed.*
 
@@ -94,7 +94,7 @@ Argument | Type | Description
 
 Source: [app/NowPages/Categories.php](NowPages/Categories.php), [line 503](NowPages/Categories.php#L503-L510)
 
-### `now_pages_threadi_category_assign_error`
+### `threadi_now_pages_category_assign_error`
 
 *This hook is documented in app/NowPages/Categories.php.*
 
@@ -108,7 +108,7 @@ Argument | Type | Description
 
 Source: [app/NowPages/Categories.php](NowPages/Categories.php), [line 602](NowPages/Categories.php#L602-L605)
 
-### `now_pages_threadi_source_category_changed`
+### `threadi_now_pages_source_category_changed`
 
 *Fires after the entries of a source followed the category of this source.*
 
@@ -129,7 +129,7 @@ Version | Description
 
 Source: [app/NowPages/Categories.php](NowPages/Categories.php), [line 614](NowPages/Categories.php#L614-L624)
 
-### `now_pages_threadi_entry_added`
+### `threadi_now_pages_entry_added`
 
 *Fires after a new entry has been stored.*
 
@@ -138,7 +138,7 @@ Source: [app/NowPages/Categories.php](NowPages/Categories.php), [line 614](NowPa
 Argument | Type | Description
 -------- | ---- | -----------
 `(int) $post_id` |  | 
-`$entry` | `\NowPagesThreadi\NowPages\Entry` | The entry object it was created from.
+`$entry` | `\ThreadiNowPages\NowPages\Entry` | The entry object it was created from.
 `$sources_id` | `int` | The ID of the source it came from (0 = none).
 
 **Changelog**
@@ -149,7 +149,7 @@ Version | Description
 
 Source: [app/NowPages/Entries.php](NowPages/Entries.php), [line 246](NowPages/Entries.php#L246-L255)
 
-### `now_pages_threadi_entry_confirmed`
+### `threadi_now_pages_entry_confirmed`
 
 *Fires after the user confirmed an entry which was waiting.*
 
@@ -167,7 +167,7 @@ Version | Description
 
 Source: [app/NowPages/Confirmation.php](NowPages/Confirmation.php), [line 171](NowPages/Confirmation.php#L171-L178)
 
-### `now_pages_threadi_entry_discarded`
+### `threadi_now_pages_entry_discarded`
 
 *Fires after an entry which was waiting has been discarded.*
 
@@ -185,7 +185,7 @@ Version | Description
 
 Source: [app/NowPages/Confirmation.php](NowPages/Confirmation.php), [line 207](NowPages/Confirmation.php#L207-L214)
 
-### `now_pages_threadi_cleanup_done`
+### `threadi_now_pages_cleanup_done`
 
 *Run additional tasks after old entries have been deleted.*
 
@@ -204,7 +204,7 @@ Version | Description
 
 Source: [app/NowPages/Cleanup.php](NowPages/Cleanup.php), [line 425](NowPages/Cleanup.php#L425-L433)
 
-### `now_pages_threadi_provider_error`
+### `threadi_now_pages_provider_error`
 
 *Return the resolved provider + configuration for every published source.*
 
@@ -217,16 +217,16 @@ and so the source_id always travels along in the exact same shape.
 Argument | Type | Description
 -------- | ---- | -----------
 `$provider_slug` |  | 
-`new WP_Error('now_pages_threadi_unknown_provider', sprintf(
+`new WP_Error('threadi_now_pages_unknown_provider', sprintf(
     /* translators: %1$s will be replaced by a provider slug, %2$s by the title of a source. */
-    __('The provider %1$s configured on the source %2$s does not exist. It was probably provided by a plugin that is no longer active.', 'now-pages-threadi'),
+    __('The provider %1$s configured on the source %2$s does not exist. It was probably provided by a plugin that is no longer active.', 'threadi-now-pages'),
     '<code>' . esc_html($provider_slug) . '</code>',
     '<a href="' . esc_url((string) get_edit_post_link($post_id, '')) . '">' . esc_html(get_the_title($post_id)) . '</a>'
 ), array('source_id' => $post_id, 'formatted' => true))` |  | 
 
 Source: [app/Sources/Sources.php](Sources/Sources.php), [line 820](Sources/Sources.php#L820-L885)
 
-### `now_pages_threadi_provider_error`
+### `threadi_now_pages_provider_error`
 
 *Run the import of all configured sources.*
 
@@ -235,11 +235,11 @@ Source: [app/Sources/Sources.php](Sources/Sources.php), [line 820](Sources/Sourc
 Argument | Type | Description
 -------- | ---- | -----------
 `$source['provider']->get_slug()` |  | 
-`new WP_Error('now_pages_threadi_provider_exception', $e->getMessage(), array('source_id' => absint($source['source_id'])))` |  | 
+`new WP_Error('threadi_now_pages_provider_exception', $e->getMessage(), array('source_id' => absint($source['source_id'])))` |  | 
 
 Source: [app/Sources/Sources.php](Sources/Sources.php), [line 1372](Sources/Sources.php#L1372-L1463)
 
-### `now_pages_threadi_entry_received`
+### `threadi_now_pages_entry_received`
 
 *Add a new entry for now pages.*
 
@@ -247,7 +247,7 @@ Source: [app/Sources/Sources.php](Sources/Sources.php), [line 1372](Sources/Sour
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$entry` | `\NowPagesThreadi\NowPages\Entry` | The entry object.
+`$entry` | `\ThreadiNowPages\NowPages\Entry` | The entry object.
 `$source['source_id']` |  | 
 
 **Changelog**
@@ -258,7 +258,7 @@ Version | Description
 
 Source: [app/Sources/Sources.php](Sources/Sources.php), [line 1526](Sources/Sources.php#L1526-L1533)
 
-### `now_pages_threadi_provider_error`
+### `threadi_now_pages_provider_error`
 
 *Report a secret of a source which cannot be decrypted.*
 
@@ -270,16 +270,16 @@ provider would run without it and silently import nothing.
 Argument | Type | Description
 -------- | ---- | -----------
 `$source['provider']->get_slug()` |  | 
-`new WP_Error('now_pages_threadi_secret_not_decryptable', sprintf(
+`new WP_Error('threadi_now_pages_secret_not_decryptable', sprintf(
     /* translators: %1$s will be replaced by a field label, %2$s by the title of a source. */
-    __('The value of the field %1$s on the source %2$s could not be decrypted, so the source has not been imported. Probably the security keys of this website have changed. Please enter the value again.', 'now-pages-threadi'),
+    __('The value of the field %1$s on the source %2$s could not be decrypted, so the source has not been imported. Probably the security keys of this website have changed. Please enter the value again.', 'threadi-now-pages'),
     '<code>' . esc_html((string) ($field['label'] ?? $name)) . '</code>',
     '<a href="' . esc_url((string) get_edit_post_link(absint($source['source_id']), '')) . '">' . esc_html($source['title']) . '</a>'
 ), array('source_id' => absint($source['source_id']), 'formatted' => true))` |  | 
 
 Source: [app/Sources/Sources.php](Sources/Sources.php), [line 1550](Sources/Sources.php#L1550-L1603)
 
-### `now_pages_threadi_source_duplicate`
+### `threadi_now_pages_source_duplicate`
 
 *Run additional tasks after a duplicate was detected.*
 
@@ -287,7 +287,7 @@ Source: [app/Sources/Sources.php](Sources/Sources.php), [line 1550](Sources/Sour
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$provider_obj` | `\NowPagesThreadi\Providers\Provider_Interface` | The provider.
+`$provider_obj` | `\ThreadiNowPages\Providers\Provider_Interface` | The provider.
 `$duplicate` | `int` | Amount of duplicates.
 `$post_id` | `int` | The post ID which is a duplicate.
 `$identity` | `array` | The list of parameters to identify the duplicate.
@@ -300,7 +300,7 @@ Version | Description
 
 Source: [app/Sources/Sources.php](Sources/Sources.php), [line 1919](Sources/Sources.php#L1919-L1928)
 
-### `now_pages_threadi_source_created`
+### `threadi_now_pages_source_created`
 
 *Fires after a source has been created by the setup, an ability or the advisor.*
 
@@ -320,7 +320,7 @@ Version | Description
 
 Source: [app/Sources/Source_Builder.php](Sources/Source_Builder.php), [line 697](Sources/Source_Builder.php#L697-L706)
 
-### `now_pages_threadi_advisor_source_created`
+### `threadi_now_pages_advisor_source_created`
 
 *Fires after a source has been created from a proposal of the advisor.*
 
@@ -340,7 +340,7 @@ Version | Description
 
 Source: [app/Sources/Advisor.php](Sources/Advisor.php), [line 635](Sources/Advisor.php#L635-L644)
 
-### `now_pages_threadi_fediverse_update_created`
+### `threadi_now_pages_fediverse_update_created`
 
 *Fires after an update for the Fediverse has been created.*
 
@@ -359,7 +359,7 @@ Version | Description
 
 Source: [app/Fediverse/Fediverse.php](Fediverse/Fediverse.php), [line 788](Fediverse/Fediverse.php#L788-L796)
 
-### `now_pages_threadi_setup_source_created`
+### `threadi_now_pages_setup_source_created`
 
 *Fires after the setup created a source from a preset.*
 
@@ -368,7 +368,7 @@ Source: [app/Fediverse/Fediverse.php](Fediverse/Fediverse.php), [line 788](Fediv
 Argument | Type | Description
 -------- | ---- | -----------
 `absint($post_id)` |  | 
-`$preset` | `\NowPagesThreadi\Presets\Preset_Interface` | The used preset.
+`$preset` | `\ThreadiNowPages\Presets\Preset_Interface` | The used preset.
 
 **Changelog**
 
@@ -378,7 +378,7 @@ Version | Description
 
 Source: [app/Plugin/Setup.php](Plugin/Setup.php), [line 1330](Plugin/Setup.php#L1330-L1338)
 
-### `now_pages_threadi_setup_completed`
+### `threadi_now_pages_setup_completed`
 
 *Run additional tasks if the setup is marked as completed.*
 
@@ -391,7 +391,7 @@ Version | Description
 
 Source: [app/Plugin/Setup.php](Plugin/Setup.php), [line 1395](Plugin/Setup.php#L1395-L1400)
 
-### `now_pages_threadi_digest_error`
+### `threadi_now_pages_digest_error`
 
 *Render the given entries as a narrative summary.*
 
@@ -399,13 +399,13 @@ Source: [app/Plugin/Setup.php](Plugin/Setup.php), [line 1395](Plugin/Setup.php#L
 
 Argument | Type | Description
 -------- | ---- | -----------
-`new WP_Error('now_pages_threadi_summarizer_unavailable', __('The configured summarizer is not available.', 'now-pages-threadi'))` |  | 
+`new WP_Error('threadi_now_pages_summarizer_unavailable', __('The configured summarizer is not available.', 'threadi-now-pages'))` |  | 
 `$summarizer_slug` |  | 
 `''` |  | 
 
 Source: [app/Digests/Formats/Narrative_Format.php](Digests/Formats/Narrative_Format.php), [line 67](Digests/Formats/Narrative_Format.php#L67-L99)
 
-### `now_pages_threadi_digest_error`
+### `threadi_now_pages_digest_error`
 
 *Fires when a narrative summary could not be generated.*
 
@@ -425,7 +425,7 @@ Version | Description
 
 Source: [app/Digests/Formats/Narrative_Format.php](Digests/Formats/Narrative_Format.php), [line 221](Digests/Formats/Narrative_Format.php#L221-L230)
 
-### `now_pages_threadi_register_summarizers`
+### `threadi_now_pages_register_summarizers`
 
 *Fires once the built-in summarizers are registered.*
 
@@ -433,17 +433,17 @@ Source: [app/Digests/Formats/Narrative_Format.php](Digests/Formats/Narrative_For
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$interface` | `\NowPagesThreadi\Digests\Summarizers` | The summarizers object.
+`$interface` | `\ThreadiNowPages\Digests\Summarizers` | The summarizers object.
 
 Source: [app/Digests/Summarizers.php](Digests/Summarizers.php), [line 57](Digests/Summarizers.php#L57-L62)
 
-### `now_pages_threadi_register_digest_formats`
+### `threadi_now_pages_register_digest_formats`
 
 *Fires once the built-in digest formats are registered.*
 
 Use this to add further formats from your own code, without
 touching this plugin:
-add_action( 'now_pages_threadi_register_digest_formats', function ( $formats ) {
+add_action( 'threadi_now_pages_register_digest_formats', function ( $formats ) {
     $formats->register_format( new My_Format() );
 } );
 
@@ -451,11 +451,11 @@ add_action( 'now_pages_threadi_register_digest_formats', function ( $formats ) {
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$interface` | `\NowPagesThreadi\Digests\Digests` | The digests object.
+`$interface` | `\ThreadiNowPages\Digests\Digests` | The digests object.
 
 Source: [app/Digests/Digests.php](Digests/Digests.php), [line 54](Digests/Digests.php#L54-L65)
 
-### `now_pages_threadi_summarizer_request`
+### `threadi_now_pages_summarizer_request`
 
 *Turn the given entries into a narrative summary via an AI model.*
 
@@ -467,7 +467,7 @@ Argument | Type | Description
 
 Source: [app/Digests/Summarizers/Ai_Summarizer.php](Digests/Summarizers/Ai_Summarizer.php), [line 100](Digests/Summarizers/Ai_Summarizer.php#L100-L145)
 
-### `now_pages_threadi_summarizer_request`
+### `threadi_now_pages_summarizer_request`
 
 *Fires after a summarizer request has finished.*
 
@@ -485,7 +485,7 @@ Version | Description
 
 Source: [app/Digests/Summarizers/Ai_Summarizer.php](Digests/Summarizers/Ai_Summarizer.php), [line 201](Digests/Summarizers/Ai_Summarizer.php#L201-L229)
 
-### `now_pages_threadi_register_presets`
+### `threadi_now_pages_register_presets`
 
 *Fires once the built-in presets are registered.*
 
@@ -493,7 +493,7 @@ Use this to add your own services to the list shown when a new
 source is created.
 
 Example:
-add_action( 'now_pages_threadi_register_presets', function( $presets ) {
+add_action( 'threadi_now_pages_register_presets', function( $presets ) {
     $presets->register_preset( new My_Preset() );
 } );
 
@@ -501,7 +501,7 @@ add_action( 'now_pages_threadi_register_presets', function( $presets ) {
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$interface` | `\NowPagesThreadi\Presets\Presets` | The presets object.
+`$interface` | `\ThreadiNowPages\Presets\Presets` | The presets object.
 
 **Changelog**
 
@@ -513,7 +513,7 @@ Source: [app/Presets/Presets.php](Presets/Presets.php), [line 77](Presets/Preset
 
 ## Filters
 
-### `now_pages_threadi_validate_webhook_token`
+### `threadi_now_pages_validate_webhook_token`
 
 *Filters whether a given webhook token is valid.*
 
@@ -535,7 +535,7 @@ Version | Description
 
 Source: [app/Providers/Webhook_Controller.php](Providers/Webhook_Controller.php), [line 232](Providers/Webhook_Controller.php#L232-L245)
 
-### `now_pages_threadi_webhook_max_text_length`
+### `threadi_now_pages_webhook_max_text_length`
 
 **Arguments**
 
@@ -545,7 +545,7 @@ Argument | Type | Description
 
 Source: [app/Providers/Webhook_Controller.php](Providers/Webhook_Controller.php), [line 349](Providers/Webhook_Controller.php#L349-L349)
 
-### `now_pages_threadi_webhook_client_ip`
+### `threadi_now_pages_webhook_client_ip`
 
 *Filter the client identifier used for rate limiting.*
 
@@ -566,7 +566,7 @@ Version | Description
 
 Source: [app/Providers/Webhook_Controller.php](Providers/Webhook_Controller.php), [line 606](Providers/Webhook_Controller.php#L606-L616)
 
-### `now_pages_threadi_github_event_text`
+### `threadi_now_pages_github_event_text`
 
 *Filter the text describing a single GitHub event.*
 
@@ -590,7 +590,7 @@ Version | Description
 
 Source: [app/Providers/GitHub_Provider.php](Providers/GitHub_Provider.php), [line 379](Providers/GitHub_Provider.php#L379-L392)
 
-### `now_pages_threadi_provider_request_args`
+### `threadi_now_pages_provider_request_args`
 
 *Filter the arguments of a provider request.*
 
@@ -610,11 +610,11 @@ Version | Description
 
 Source: [app/Providers/HTTP_Provider_Base.php](Providers/HTTP_Provider_Base.php), [line 113](Providers/HTTP_Provider_Base.php#L113-L122)
 
-### `now_pages_threadi_current_language`
+### `threadi_now_pages_current_language`
 
 *Filter the current front-end language (2-letter code).*
 
-Example: add_filter( 'now_pages_threadi_current_language', function () {
+Example: add_filter( 'threadi_now_pages_current_language', function () {
     return substr( apply_filters( 'wpml_current_language', get_locale() ), 0, 5 );
 } );
 
@@ -632,7 +632,7 @@ Version | Description
 
 Source: [app/Helper/Languages.php](Helper/Languages.php), [line 30](Helper/Languages.php#L30-L40)
 
-### `now_pages_threadi_file_version`
+### `threadi_now_pages_file_version`
 
 *Filter the used file version (for JS- and CSS-files, which get enqueued).*
 
@@ -651,7 +651,7 @@ Version | Description
 
 Source: [app/Helper/Plugin.php](Helper/Plugin.php), [line 60](Helper/Plugin.php#L60-L68)
 
-### `now_pages_threadi_is_settings_request`
+### `threadi_now_pages_is_settings_request`
 
 *Filter whether the settings of this plugin are built in the actual request.*
 
@@ -669,7 +669,7 @@ Version | Description
 
 Source: [app/Helper/Plugin.php](Helper/Plugin.php), [line 288](Helper/Plugin.php#L288-L294)
 
-### `now_pages_threadi_entry_text_pre_linkify`
+### `threadi_now_pages_entry_text_pre_linkify`
 
 *Link URLs in a given text.*
 
@@ -681,7 +681,7 @@ Argument | Type | Description
 
 Source: [app/Helper/Format.php](Helper/Format.php), [line 82](Helper/Format.php#L82-L94)
 
-### `now_pages_threadi_entry_text_linkified`
+### `threadi_now_pages_entry_text_linkified`
 
 *Link URLs in a given text.*
 
@@ -694,7 +694,7 @@ Argument | Type | Description
 
 Source: [app/Helper/Format.php](Helper/Format.php), [line 82](Helper/Format.php#L82-L96)
 
-### `now_pages_threadi_avada_class`
+### `threadi_now_pages_avada_class`
 
 *Filter the used CSS class for Avada widgets.*
 
@@ -713,7 +713,7 @@ Version | Description
 
 Source: [app/PageBuilder/Avada/Fusion_Elements/Digest.php](PageBuilder/Avada/Fusion_Elements/Digest.php), [line 277](PageBuilder/Avada/Fusion_Elements/Digest.php#L277-L285)
 
-### `now_pages_threadi_avada_fusion_flow_elements`
+### `threadi_now_pages_avada_fusion_flow_elements`
 
 *Filter the flow elements used by Avada to format output in frontend.*
 
@@ -731,7 +731,7 @@ Version | Description
 
 Source: [app/PageBuilder/Avada/Fusion_Elements/Digest.php](PageBuilder/Avada/Fusion_Elements/Digest.php), [line 296](PageBuilder/Avada/Fusion_Elements/Digest.php#L296-L303)
 
-### `now_pages_threadi_pagebuilder`
+### `threadi_now_pages_pagebuilder`
 
 *Filter the possible page builders.*
 
@@ -739,7 +739,7 @@ Source: [app/PageBuilder/Avada/Fusion_Elements/Digest.php](PageBuilder/Avada/Fus
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$list` | `array<int,class-string<\NowPagesThreadi\PageBuilder\PageBuilder_Base>>` | List of the handler.
+`$list` | `array<int,class-string<\ThreadiNowPages\PageBuilder\PageBuilder_Base>>` | List of the handler.
 
 **Changelog**
 
@@ -749,7 +749,7 @@ Version | Description
 
 Source: [app/PageBuilder/Page_Builders.php](PageBuilder/Page_Builders.php), [line 69](PageBuilder/Page_Builders.php#L69-L76)
 
-### `now_pages_threadi_frontend_digest_args`
+### `threadi_now_pages_frontend_digest_args`
 
 *This hook is documented in app/NowPages/Frontend.php.*
 
@@ -762,9 +762,9 @@ Argument | Type | Description
 
 Source: [app/NowPages/Abilities.php](NowPages/Abilities.php), [line 2268](NowPages/Abilities.php#L2268-L2271)
 
-### `now_pages_threadi_category_taxonomy_args`
+### `threadi_now_pages_category_taxonomy_args`
 
-*Filter the arguments passed to register_taxonomy() for "now_pages_threadi_category".*
+*Filter the arguments passed to register_taxonomy() for "threadi_now_pages_category".*
 
 **Arguments**
 
@@ -780,9 +780,9 @@ Version | Description
 
 Source: [app/NowPages/Categories.php](NowPages/Categories.php), [line 265](NowPages/Categories.php#L265-L272)
 
-### `now_pages_threadi_category_object_types`
+### `threadi_now_pages_category_object_types`
 
-*Filter which post types the "now_pages_threadi_category" taxonomy is attached to.*
+*Filter which post types the "threadi_now_pages_category" taxonomy is attached to.*
 
 **Arguments**
 
@@ -798,7 +798,7 @@ Version | Description
 
 Source: [app/NowPages/Categories.php](NowPages/Categories.php), [line 279](NowPages/Categories.php#L279-L286)
 
-### `now_pages_threadi_narrative_category_templates`
+### `threadi_now_pages_narrative_category_templates`
 
 *Filter category-slug → sentence template map (fallback when term meta is empty).*
 
@@ -810,7 +810,7 @@ Argument | Type | Description
 
 Source: [app/NowPages/Categories.php](NowPages/Categories.php), [line 774](NowPages/Categories.php#L774-L779)
 
-### `now_pages_threadi_is_public`
+### `threadi_now_pages_is_public`
 
 *Filter whether the now page is publicly available.*
 
@@ -829,7 +829,7 @@ Version | Description
 
 Source: [app/NowPages/Frontend.php](NowPages/Frontend.php), [line 473](NowPages/Frontend.php#L473-L481)
 
-### `now_pages_threadi_frontend_digest_args`
+### `threadi_now_pages_frontend_digest_args`
 
 *Filter the Digest_Builder args used for the /now frontend routes.*
 
@@ -842,7 +842,7 @@ Argument | Type | Description
 
 Source: [app/NowPages/Frontend.php](NowPages/Frontend.php), [line 530](NowPages/Frontend.php#L530-L536)
 
-### `now_pages_threadi_frontend_content`
+### `threadi_now_pages_frontend_content`
 
 *Filter the digest HTML body (not the full document).*
 
@@ -856,7 +856,7 @@ Argument | Type | Description
 
 Source: [app/NowPages/Frontend.php](NowPages/Frontend.php), [line 570](NowPages/Frontend.php#L570-L577)
 
-### `now_pages_threadi_frontend_templates`
+### `threadi_now_pages_frontend_templates`
 
 *Filter the list of template names looked up in the theme.*
 
@@ -864,7 +864,7 @@ Source: [app/NowPages/Frontend.php](NowPages/Frontend.php), [line 570](NowPages/
 
 Argument | Type | Description
 -------- | ---- | -----------
-`array('now-pages-threadi/now-pages-threadi.php', 'now-pages-threadi.php', 'now.php')` |  | 
+`array('threadi-now-pages/threadi-now-pages.php', 'threadi-now-pages.php', 'now.php')` |  | 
 `$this->user` |  | 
 
 **Changelog**
@@ -875,7 +875,7 @@ Version | Description
 
 Source: [app/NowPages/Frontend.php](NowPages/Frontend.php), [line 837](NowPages/Frontend.php#L837-L853)
 
-### `now_pages_threadi_frontend_template`
+### `threadi_now_pages_frontend_template`
 
 *Filter the resolved template path.*
 
@@ -895,7 +895,7 @@ Version | Description
 
 Source: [app/NowPages/Frontend.php](NowPages/Frontend.php), [line 870](NowPages/Frontend.php#L870-L879)
 
-### `now_pages_threadi_frontend_digest_args`
+### `threadi_now_pages_frontend_digest_args`
 
 *Filter the Digest_Builder args used for the /now frontend routes.*
 
@@ -908,7 +908,7 @@ Argument | Type | Description
 
 Source: [app/NowPages/Frontend.php](NowPages/Frontend.php), [line 1305](NowPages/Frontend.php#L1305-L1311)
 
-### `now_pages_threadi_entry_is_manual`
+### `threadi_now_pages_entry_is_manual`
 
 *Filter whether an entry counts as manually created.*
 
@@ -927,7 +927,7 @@ Version | Description
 
 Source: [app/NowPages/Entries.php](NowPages/Entries.php), [line 857](NowPages/Entries.php#L857-L865)
 
-### `now_pages_threadi_sitemap_entry`
+### `threadi_now_pages_sitemap_entry`
 
 *Filter a single now-page sitemap entry.*
 
@@ -940,7 +940,7 @@ Argument | Type | Description
 
 Source: [app/NowPages/Sitemap.php](NowPages/Sitemap.php), [line 126](NowPages/Sitemap.php#L126-L132)
 
-### `now_pages_threadi_sitemap_entry`
+### `threadi_now_pages_sitemap_entry`
 
 *This filter is documented above.*
 
@@ -953,7 +953,7 @@ Argument | Type | Description
 
 Source: [app/NowPages/Sitemap.php](NowPages/Sitemap.php), [line 150](NowPages/Sitemap.php#L150-L151)
 
-### `now_pages_threadi_frontend_digest_args`
+### `threadi_now_pages_frontend_digest_args`
 
 *This filter is documented in Frontend::prepare().*
 
@@ -966,7 +966,7 @@ Argument | Type | Description
 
 Source: [app/NowPages/Sitemap.php](NowPages/Sitemap.php), [line 227](NowPages/Sitemap.php#L227-L228)
 
-### `now_pages_threadi_cleanup_max_per_run`
+### `threadi_now_pages_cleanup_max_per_run`
 
 **Arguments**
 
@@ -977,7 +977,7 @@ Argument | Type | Description
 
 Source: [app/NowPages/Cleanup.php](NowPages/Cleanup.php), [line 348](NowPages/Cleanup.php#L348-L348)
 
-### `now_pages_threadi_page_builder_for_page`
+### `threadi_now_pages_page_builder_for_page`
 
 *Filter the page builder used to prefill a new now page.*
 
@@ -985,7 +985,7 @@ Source: [app/NowPages/Cleanup.php](NowPages/Cleanup.php), [line 348](NowPages/Cl
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$active` | `\NowPagesThreadi\PageBuilder\PageBuilder_Base\|null` | The chosen page builder.
+`$active` | `\ThreadiNowPages\PageBuilder\PageBuilder_Base\|null` | The chosen page builder.
 
 **Changelog**
 
@@ -995,7 +995,7 @@ Version | Description
 
 Source: [app/NowPages/Now_Page.php](NowPages/Now_Page.php), [line 362](NowPages/Now_Page.php#L362-L369)
 
-### `now_pages_threadi_content_filter_rules`
+### `threadi_now_pages_content_filter_rules`
 
 *Filter the content filter rules applied to an entry before it is imported.*
 
@@ -1014,7 +1014,7 @@ Version | Description
 
 Source: [app/NowPages/Content_Filters.php](NowPages/Content_Filters.php), [line 282](NowPages/Content_Filters.php#L282-L290)
 
-### `now_pages_threadi_content_filter_fields`
+### `threadi_now_pages_content_filter_fields`
 
 *Filter the fields content filter rules may use.*
 
@@ -1026,7 +1026,7 @@ Provider_Interface::get_filterable_fields().
 Argument | Type | Description
 -------- | ---- | -----------
 `$fields` | `string[]` | The names of the fields.
-`$provider` | `\NowPagesThreadi\Providers\Provider_Interface\|null` | The provider, null for all providers.
+`$provider` | `\ThreadiNowPages\Providers\Provider_Interface\|null` | The provider, null for all providers.
 
 **Changelog**
 
@@ -1036,7 +1036,7 @@ Version | Description
 
 Source: [app/NowPages/Content_Filters.php](NowPages/Content_Filters.php), [line 484](NowPages/Content_Filters.php#L484-L495)
 
-### `now_pages_threadi_source_fields`
+### `threadi_now_pages_source_fields`
 
 *Filter the fields for providers on settings for sources.*
 
@@ -1044,7 +1044,7 @@ Source: [app/NowPages/Content_Filters.php](NowPages/Content_Filters.php), [line 
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$fields` | `array<int,class-string<\NowPagesThreadi\Sources\Field_Base>>` | List of field-types.
+`$fields` | `array<int,class-string<\ThreadiNowPages\Sources\Field_Base>>` | List of field-types.
 
 **Changelog**
 
@@ -1054,7 +1054,7 @@ Version | Description
 
 Source: [app/Sources/Fields.php](Sources/Fields.php), [line 77](Sources/Fields.php#L77-L84)
 
-### `now_pages_threadi_import_time_budget`
+### `threadi_now_pages_import_time_budget`
 
 **Arguments**
 
@@ -1064,7 +1064,7 @@ Argument | Type | Description
 
 Source: [app/Sources/Sources.php](Sources/Sources.php), [line 1321](Sources/Sources.php#L1321-L1321)
 
-### `now_pages_threadi_availability_tests`
+### `threadi_now_pages_availability_tests`
 
 *Filter the tests run against a source.*
 
@@ -1083,7 +1083,7 @@ Version | Description
 
 Source: [app/Sources/Availability.php](Sources/Availability.php), [line 272](Sources/Availability.php#L272-L280)
 
-### `now_pages_threadi_availability_error_texts`
+### `threadi_now_pages_availability_error_texts`
 
 *Filter the texts explaining the error codes of the analyzer.*
 
@@ -1102,7 +1102,7 @@ Version | Description
 
 Source: [app/Sources/Availability.php](Sources/Availability.php), [line 515](Sources/Availability.php#L515-L523)
 
-### `now_pages_threadi_source_catalog`
+### `threadi_now_pages_source_catalog`
 
 *Filter what a source can be created from.*
 
@@ -1121,7 +1121,7 @@ Version | Description
 
 Source: [app/Sources/Source_Builder.php](Sources/Source_Builder.php), [line 200](Sources/Source_Builder.php#L200-L208)
 
-### `now_pages_threadi_pre_address_problem`
+### `threadi_now_pages_pre_address_problem`
 
 *Filter what is wrong with the address of a source, before its host is looked up.*
 
@@ -1140,7 +1140,7 @@ Version | Description
 
 Source: [app/Sources/Source_Builder.php](Sources/Source_Builder.php), [line 816](Sources/Source_Builder.php#L816-L824)
 
-### `now_pages_threadi_advisor_is_available`
+### `threadi_now_pages_advisor_is_available`
 
 *Filter whether the advisor is offered.*
 
@@ -1158,7 +1158,7 @@ Version | Description
 
 Source: [app/Sources/Advisor.php](Sources/Advisor.php), [line 145](Sources/Advisor.php#L145-L152)
 
-### `now_pages_threadi_advice`
+### `threadi_now_pages_advice`
 
 *Filter the advice for a wish before it is cached and shown.*
 
@@ -1178,7 +1178,7 @@ Version | Description
 
 Source: [app/Sources/Advisor.php](Sources/Advisor.php), [line 437](Sources/Advisor.php#L437-L446)
 
-### `now_pages_threadi_advisor_instruction`
+### `threadi_now_pages_advisor_instruction`
 
 *Filter the instruction the model of the advisor works by.*
 
@@ -1198,7 +1198,7 @@ Version | Description
 
 Source: [app/Sources/Advisor.php](Sources/Advisor.php), [line 1178](Sources/Advisor.php#L1178-L1187)
 
-### `now_pages_threadi_advisor_pre_request`
+### `threadi_now_pages_advisor_pre_request`
 
 *Filter the answer of the model before it is requested.*
 
@@ -1220,7 +1220,7 @@ Version | Description
 
 Source: [app/Sources/Advisor.php](Sources/Advisor.php), [line 1202](Sources/Advisor.php#L1202-L1213)
 
-### `now_pages_threadi_advisor_use_web_search`
+### `threadi_now_pages_advisor_use_web_search`
 
 **Arguments**
 
@@ -1230,7 +1230,7 @@ Argument | Type | Description
 
 Source: [app/Sources/Advisor.php](Sources/Advisor.php), [line 1234](Sources/Advisor.php#L1234-L1234)
 
-### `now_pages_threadi_fediverse_is_available`
+### `threadi_now_pages_fediverse_is_available`
 
 *Filter whether something is there which federates our updates.*
 
@@ -1248,7 +1248,7 @@ Version | Description
 
 Source: [app/Fediverse/Fediverse.php](Fediverse/Fediverse.php), [line 186](Fediverse/Fediverse.php#L186-L193)
 
-### `now_pages_threadi_fediverse_digest_content`
+### `threadi_now_pages_fediverse_digest_content`
 
 *Filter the content of a summary before it is shared in the Fediverse.*
 
@@ -1270,7 +1270,7 @@ Version | Description
 
 Source: [app/Fediverse/Fediverse.php](Fediverse/Fediverse.php), [line 508](Fediverse/Fediverse.php#L508-L519)
 
-### `now_pages_threadi_fediverse_entries_per_run`
+### `threadi_now_pages_fediverse_entries_per_run`
 
 **Arguments**
 
@@ -1280,7 +1280,7 @@ Argument | Type | Description
 
 Source: [app/Fediverse/Fediverse.php](Fediverse/Fediverse.php), [line 639](Fediverse/Fediverse.php#L639-L639)
 
-### `now_pages_threadi_fediverse_share_entry`
+### `threadi_now_pages_fediverse_share_entry`
 
 *Filter whether a single entry is shared in the Fediverse.*
 
@@ -1300,7 +1300,7 @@ Version | Description
 
 Source: [app/Fediverse/Fediverse.php](Fediverse/Fediverse.php), [line 684](Fediverse/Fediverse.php#L684-L693)
 
-### `now_pages_threadi_fediverse_entry_content`
+### `threadi_now_pages_fediverse_entry_content`
 
 *Filter the content of a single entry before it is shared in the Fediverse.*
 
@@ -1319,7 +1319,7 @@ Version | Description
 
 Source: [app/Fediverse/Fediverse.php](Fediverse/Fediverse.php), [line 732](Fediverse/Fediverse.php#L732-L740)
 
-### `now_pages_threadi_import_error_support_hint`
+### `threadi_now_pages_import_error_support_hint`
 
 *Filter the support part of an email.*
 
@@ -1337,7 +1337,7 @@ Version | Description
 
 Source: [app/Plugin/Email_Base.php](Plugin/Email_Base.php), [line 313](Plugin/Email_Base.php#L313-L319)
 
-### `now_pages_threadi_email_headers`
+### `threadi_now_pages_email_headers`
 
 *Filter the email header.*
 
@@ -1355,7 +1355,7 @@ Version | Description
 
 Source: [app/Plugin/Email_Base.php](Plugin/Email_Base.php), [line 441](Plugin/Email_Base.php#L441-L447)
 
-### `now_pages_threadi_register_post_type`
+### `threadi_now_pages_register_post_type`
 
 *Filter the post-types.*
 
@@ -1363,7 +1363,7 @@ Source: [app/Plugin/Email_Base.php](Plugin/Email_Base.php), [line 441](Plugin/Em
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$post_types` | `array<int,class-string<\NowPagesThreadi\Plugin\Post_Type_Base>>` | List of post-types.
+`$post_types` | `array<int,class-string<\ThreadiNowPages\Plugin\Post_Type_Base>>` | List of post-types.
 
 **Changelog**
 
@@ -1373,7 +1373,7 @@ Version | Description
 
 Source: [app/Plugin/Post_Types.php](Plugin/Post_Types.php), [line 66](Plugin/Post_Types.php#L66-L73)
 
-### `now_pages_threadi_set_template_directory`
+### `threadi_now_pages_set_template_directory`
 
 **Arguments**
 
@@ -1383,7 +1383,7 @@ Argument | Type | Description
 
 Source: [app/Plugin/Templates.php](Plugin/Templates.php), [line 88](Plugin/Templates.php#L88-L88)
 
-### `now_pages_threadi_set_template_directory`
+### `threadi_now_pages_set_template_directory`
 
 **Arguments**
 
@@ -1393,7 +1393,7 @@ Argument | Type | Description
 
 Source: [app/Plugin/Templates.php](Plugin/Templates.php), [line 127](Plugin/Templates.php#L127-L127)
 
-### `now_pages_threadi_setup_is_completed`
+### `threadi_now_pages_setup_is_completed`
 
 *Filter the setup complete marker.*
 
@@ -1411,7 +1411,7 @@ Version | Description
 
 Source: [app/Plugin/Setup.php](Plugin/Setup.php), [line 225](Plugin/Setup.php#L225-L231)
 
-### `now_pages_threadi_setup`
+### `threadi_now_pages_setup`
 
 *Filter the configured setup for this plugin.*
 
@@ -1429,7 +1429,7 @@ Version | Description
 
 Source: [app/Plugin/Setup.php](Plugin/Setup.php), [line 301](Plugin/Setup.php#L301-L308)
 
-### `now_pages_threadi_setup_config`
+### `threadi_now_pages_setup_config`
 
 *Filter the setup configuration.*
 
@@ -1447,7 +1447,7 @@ Version | Description
 
 Source: [app/Plugin/Setup.php](Plugin/Setup.php), [line 410](Plugin/Setup.php#L410-L416)
 
-### `now_pages_threadi_setup_process_completed_text`
+### `threadi_now_pages_setup_process_completed_text`
 
 **Arguments**
 
@@ -1458,7 +1458,7 @@ Argument | Type | Description
 
 Source: [app/Plugin/Setup.php](Plugin/Setup.php), [line 1368](Plugin/Setup.php#L1368-L1368)
 
-### `now_pages_threadi_schedule_our_events`
+### `threadi_now_pages_schedule_our_events`
 
 *Filter the list of our own events, e.g., to check if all, which are enabled in setting are active.*
 
@@ -1476,7 +1476,7 @@ Version | Description
 
 Source: [app/Plugin/Schedules.php](Plugin/Schedules.php), [line 157](Plugin/Schedules.php#L157-L164)
 
-### `now_pages_threadi_disable_cron_check`
+### `threadi_now_pages_disable_cron_check`
 
 *Disable the additional cron check.*
 
@@ -1494,11 +1494,11 @@ Version | Description
 
 Source: [app/Plugin/Schedules.php](Plugin/Schedules.php), [line 182](Plugin/Schedules.php#L182-L190)
 
-### `now_pages_threadi_schedules`
+### `threadi_now_pages_schedules`
 
 *Add custom schedule-objects to use.*
 
-They must be objects based on NowPagesThreadi\Plugin\Schedules_Base.
+They must be objects based on ThreadiNowPages\Plugin\Schedules_Base.
 
 **Arguments**
 
@@ -1514,7 +1514,7 @@ Version | Description
 
 Source: [app/Plugin/Schedules.php](Plugin/Schedules.php), [line 349](Plugin/Schedules.php#L349-L358)
 
-### `now_pages_threadi_objects_with_db_tables`
+### `threadi_now_pages_objects_with_db_tables`
 
 *Add additional objects for this plugin, which use custom tables.*
 
@@ -1532,7 +1532,7 @@ Version | Description
 
 Source: [app/Plugin/Init.php](Plugin/Init.php), [line 232](Plugin/Init.php#L232-L238)
 
-### `now_pages_threadi_emails`
+### `threadi_now_pages_emails`
 
 *Filter the list of possible email objects.*
 
@@ -1550,7 +1550,7 @@ Version | Description
 
 Source: [app/Plugin/Emails.php](Plugin/Emails.php), [line 104](Plugin/Emails.php#L104-L110)
 
-### `now_pages_threadi_log_without_debug`
+### `threadi_now_pages_log_without_debug`
 
 *Filter whether a log entry should be written when debug mode is disabled.*
 
@@ -1572,7 +1572,7 @@ Version | Description
 
 Source: [app/Plugin/Log.php](Plugin/Log.php), [line 183](Plugin/Log.php#L183-L194)
 
-### `now_pages_threadi_log_with_debug`
+### `threadi_now_pages_log_with_debug`
 
 *Filter whether a log entry should be written when debug mode is enabled.*
 
@@ -1594,7 +1594,7 @@ Version | Description
 
 Source: [app/Plugin/Log.php](Plugin/Log.php), [line 210](Plugin/Log.php#L210-L221)
 
-### `now_pages_threadi_log_categories`
+### `threadi_now_pages_log_categories`
 
 *Filter the list of possible log categories.*
 
@@ -1612,7 +1612,7 @@ Version | Description
 
 Source: [app/Plugin/Log.php](Plugin/Log.php), [line 322](Plugin/Log.php#L322-L329)
 
-### `now_pages_threadi_log_limit`
+### `threadi_now_pages_log_limit`
 
 *Filter limit to prevent possible errors on big tables.*
 
@@ -1630,7 +1630,7 @@ Version | Description
 
 Source: [app/Plugin/Log.php](Plugin/Log.php), [line 353](Plugin/Log.php#L353-L359)
 
-### `now_pages_threadi_log_category`
+### `threadi_now_pages_log_category`
 
 *Filter the used category.*
 
@@ -1648,7 +1648,7 @@ Version | Description
 
 Source: [app/Plugin/Log.php](Plugin/Log.php), [line 364](Plugin/Log.php#L364-L370)
 
-### `now_pages_threadi_log_md5`
+### `threadi_now_pages_log_md5`
 
 *Filter the used md5.*
 
@@ -1666,7 +1666,7 @@ Version | Description
 
 Source: [app/Plugin/Log.php](Plugin/Log.php), [line 380](Plugin/Log.php#L380-L386)
 
-### `now_pages_threadi_log_errors`
+### `threadi_now_pages_log_errors`
 
 *Filter for errors.*
 
@@ -1684,7 +1684,7 @@ Version | Description
 
 Source: [app/Plugin/Log.php](Plugin/Log.php), [line 391](Plugin/Log.php#L391-L397)
 
-### `now_pages_threadi_intervals`
+### `threadi_now_pages_intervals`
 
 *Filter the list of possible intervals.*
 
@@ -1692,7 +1692,7 @@ Source: [app/Plugin/Log.php](Plugin/Log.php), [line 391](Plugin/Log.php#L391-L39
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$list` | `array<int,class-string<\NowPagesThreadi\Plugin\Interval_Base>>` | List of our interval objects.
+`$list` | `array<int,class-string<\ThreadiNowPages\Plugin\Interval_Base>>` | List of our interval objects.
 
 **Changelog**
 
@@ -1702,7 +1702,7 @@ Version | Description
 
 Source: [app/Plugin/Intervals.php](Plugin/Intervals.php), [line 96](Plugin/Intervals.php#L96-L102)
 
-### `now_pages_threadi_report_digest_args`
+### `threadi_now_pages_report_digest_args`
 
 *Filter the digest args used for the report email.*
 
@@ -1722,7 +1722,7 @@ Version | Description
 
 Source: [app/Plugin/Emails/Report.php](Plugin/Emails/Report.php), [line 373](Plugin/Emails/Report.php#L373-L382)
 
-### `now_pages_threadi_hide_intro`
+### `threadi_now_pages_hide_intro`
 
 *Hide intro via hook.*
 
@@ -1740,7 +1740,7 @@ Version | Description
 
 Source: [app/Plugin/Intro.php](Plugin/Intro.php), [line 77](Plugin/Intro.php#L77-L85)
 
-### `now_pages_threadi_schedule_interval`
+### `threadi_now_pages_schedule_interval`
 
 *Filter the interval to a single schedule.*
 
@@ -1749,7 +1749,7 @@ Source: [app/Plugin/Intro.php](Plugin/Intro.php), [line 77](Plugin/Intro.php#L77
 Argument | Type | Description
 -------- | ---- | -----------
 `$interval` | `string` | The interval.
-`$instance` | `\NowPagesThreadi\Plugin\Schedules_Base` | The schedule-object.
+`$instance` | `\ThreadiNowPages\Plugin\Schedules_Base` | The schedule-object.
 
 **Changelog**
 
@@ -1759,7 +1759,7 @@ Version | Description
 
 Source: [app/Plugin/Schedules_Base.php](Plugin/Schedules_Base.php), [line 92](Plugin/Schedules_Base.php#L92-L99)
 
-### `now_pages_threadi_schedule_enabling`
+### `threadi_now_pages_schedule_enabling`
 
 *Filter whether to activate this schedule.*
 
@@ -1768,7 +1768,7 @@ Source: [app/Plugin/Schedules_Base.php](Plugin/Schedules_Base.php), [line 92](Pl
 Argument | Type | Description
 -------- | ---- | -----------
 `$false` | `bool` | True if this object should NOT be enabled.
-`$instance` | `\NowPagesThreadi\Plugin\Schedules_Base` | Actual object.
+`$instance` | `\ThreadiNowPages\Plugin\Schedules_Base` | Actual object.
 
 **Changelog**
 
@@ -1778,7 +1778,7 @@ Version | Description
 
 Source: [app/Plugin/Schedules_Base.php](Plugin/Schedules_Base.php), [line 311](Plugin/Schedules_Base.php#L311-L321)
 
-### `now_pages_threadi_knowledge_center_entries`
+### `threadi_now_pages_knowledge_center_entries`
 
 *Filter the list of available knowledge center entries.*
 
@@ -1786,7 +1786,7 @@ Source: [app/Plugin/Schedules_Base.php](Plugin/Schedules_Base.php), [line 311](P
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$entries` | `array<int,class-string<\NowPagesThreadi\Plugin\KnowledgeCenter_Base>>` | List of knowledge center entries.
+`$entries` | `array<int,class-string<\ThreadiNowPages\Plugin\KnowledgeCenter_Base>>` | List of knowledge center entries.
 
 **Changelog**
 
@@ -1796,7 +1796,7 @@ Version | Description
 
 Source: [app/Plugin/KnowledgeCenter.php](Plugin/KnowledgeCenter.php), [line 79](Plugin/KnowledgeCenter.php#L79-L85)
 
-### `now_pages_threadi_show_help`
+### `threadi_now_pages_show_help`
 
 **Arguments**
 
@@ -1807,7 +1807,7 @@ Argument | Type | Description
 
 Source: [app/Plugin/KnowledgeCenter.php](Plugin/KnowledgeCenter.php), [line 123](Plugin/KnowledgeCenter.php#L123-L123)
 
-### `now_pages_threadi_help_tabs`
+### `threadi_now_pages_help_tabs`
 
 *Filter the list of help tabs with its contents.*
 
@@ -1825,7 +1825,7 @@ Version | Description
 
 Source: [app/Plugin/KnowledgeCenter.php](Plugin/KnowledgeCenter.php), [line 152](Plugin/KnowledgeCenter.php#L152-L158)
 
-### `now_pages_threadi_help_sidebar_content`
+### `threadi_now_pages_help_sidebar_content`
 
 *Filter the sidebar content.*
 
@@ -1843,7 +1843,7 @@ Version | Description
 
 Source: [app/Plugin/KnowledgeCenter.php](Plugin/KnowledgeCenter.php), [line 172](Plugin/KnowledgeCenter.php#L172-L178)
 
-### `now_pages_threadi_log_table_filter`
+### `threadi_now_pages_log_table_filter`
 
 *Filter the list before output.*
 
@@ -1861,7 +1861,7 @@ Version | Description
 
 Source: [app/Plugin/Log_Table.php](Plugin/Log_Table.php), [line 315](Plugin/Log_Table.php#L315-L321)
 
-### `now_pages_threadi_status_list`
+### `threadi_now_pages_status_list`
 
 *Filter the list of possible states in the log table.*
 
@@ -1879,7 +1879,7 @@ Version | Description
 
 Source: [app/Plugin/Log_Table.php](Plugin/Log_Table.php), [line 374](Plugin/Log_Table.php#L374-L379)
 
-### `now_pages_threadi_export_filename`
+### `threadi_now_pages_export_filename`
 
 *Filter the filename for CSV-download.*
 
@@ -1897,7 +1897,7 @@ Version | Description
 
 Source: [app/Plugin/Admin/Admin.php](Plugin/Admin/Admin.php), [line 159](Plugin/Admin/Admin.php#L159-L166)
 
-### `now_pages_threadi_dashboard_widgets`
+### `threadi_now_pages_dashboard_widgets`
 
 *Filter the dashboard-widgets used by this plugin.*
 
@@ -1915,7 +1915,7 @@ Version | Description
 
 Source: [app/Plugin/Admin/Dashboard.php](Plugin/Admin/Dashboard.php), [line 85](Plugin/Admin/Dashboard.php#L85-L91)
 
-### `now_pages_threadi_digest_source_url`
+### `threadi_now_pages_digest_source_url`
 
 *Filter the URL a source name links to.*
 
@@ -1937,7 +1937,7 @@ Version | Description
 
 Source: [app/Digests/Formats/Verbatim_Format.php](Digests/Formats/Verbatim_Format.php), [line 302](Digests/Formats/Verbatim_Format.php#L302-L313)
 
-### `now_pages_threadi_digest_range`
+### `threadi_now_pages_digest_range`
 
 *Resolve the digest args into a concrete after/before datetime range.*
 
@@ -1953,7 +1953,7 @@ Argument | Type | Description
 
 Source: [app/Digests/Digest_Builder.php](Digests/Digest_Builder.php), [line 313](Digests/Digest_Builder.php#L313-L353)
 
-### `now_pages_threadi_digest_period_text`
+### `threadi_now_pages_digest_period_text`
 
 *Filter the note about the period of a digest.*
 
@@ -1972,7 +1972,7 @@ Version | Description
 
 Source: [app/Digests/Digest_Builder.php](Digests/Digest_Builder.php), [line 388](Digests/Digest_Builder.php#L388-L396)
 
-### `now_pages_threadi_digest_query_args`
+### `threadi_now_pages_digest_query_args`
 
 *Filter the WP_Query arguments used to fetch entries for a digest.*
 
@@ -1991,7 +1991,7 @@ Version | Description
 
 Source: [app/Digests/Digest_Builder.php](Digests/Digest_Builder.php), [line 521](Digests/Digest_Builder.php#L521-L529)
 
-### `now_pages_threadi_digest_delay_notice`
+### `threadi_now_pages_digest_delay_notice`
 
 *Filter the frontend delay notice. Empty string = hide.*
 
@@ -2004,7 +2004,7 @@ Argument | Type | Description
 
 Source: [app/Digests/Digest_Builder.php](Digests/Digest_Builder.php), [line 705](Digests/Digest_Builder.php#L705-L711)
 
-### `now_pages_threadi_digest_allowed_html`
+### `threadi_now_pages_digest_allowed_html`
 
 *Filter the HTML a rendered digest may contain.*
 
@@ -2022,7 +2022,7 @@ Version | Description
 
 Source: [app/Digests/Digests.php](Digests/Digests.php), [line 164](Digests/Digests.php#L164-L171)
 
-### `now_pages_threadi_periods`
+### `threadi_now_pages_periods`
 
 *Filter the list of possible periods.*
 
@@ -2032,7 +2032,7 @@ Use this to add your own period to the ones a digest can cover.
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$list` | `array<int,class-string<\NowPagesThreadi\Digests\Period_Base>>` | List of our period objects.
+`$list` | `array<int,class-string<\ThreadiNowPages\Digests\Period_Base>>` | List of our period objects.
 
 **Changelog**
 
@@ -2042,7 +2042,7 @@ Version | Description
 
 Source: [app/Digests/Periods.php](Digests/Periods.php), [line 54](Digests/Periods.php#L54-L63)
 
-### `now_pages_threadi_narrative_sentence_template`
+### `threadi_now_pages_narrative_sentence_template`
 
 *Filter the sentence template used to turn one entry's text into a sentence.*
 
@@ -2064,7 +2064,7 @@ Version | Description
 
 Source: [app/Digests/Summarizers/Template_Summarizer.php](Digests/Summarizers/Template_Summarizer.php), [line 133](Digests/Summarizers/Template_Summarizer.php#L133-L144)
 
-### `now_pages_threadi_narrative_connectors`
+### `threadi_now_pages_narrative_connectors`
 
 *Filter the pool of connector phrases used between sentences.*
 
@@ -2072,7 +2072,7 @@ Source: [app/Digests/Summarizers/Template_Summarizer.php](Digests/Summarizers/Te
 
 Argument | Type | Description
 -------- | ---- | -----------
-`array(__('I also', 'now-pages-threadi'), __('Besides that, I', 'now-pages-threadi'), __('On top of that, I', 'now-pages-threadi'))` |  | 
+`array(__('I also', 'threadi-now-pages'), __('Besides that, I', 'threadi-now-pages'), __('On top of that, I', 'threadi-now-pages'))` |  | 
 
 **Changelog**
 
@@ -2082,7 +2082,7 @@ Version | Description
 
 Source: [app/Digests/Summarizers/Template_Summarizer.php](Digests/Summarizers/Template_Summarizer.php), [line 164](Digests/Summarizers/Template_Summarizer.php#L164-L178)
 
-### `now_pages_threadi_narrative_soften_start`
+### `threadi_now_pages_narrative_soften_start`
 
 **Arguments**
 
@@ -2093,7 +2093,7 @@ Argument | Type | Description
 
 Source: [app/Digests/Summarizers/Template_Summarizer.php](Digests/Summarizers/Template_Summarizer.php), [line 203](Digests/Summarizers/Template_Summarizer.php#L203-L203)
 
-### `now_pages_threadi_ai_temperature`
+### `threadi_now_pages_ai_temperature`
 
 *Filter the temperature used for the narrative summary.*
 
@@ -2115,7 +2115,7 @@ Version | Description
 
 Source: [app/Digests/Summarizers/Ai_Summarizer.php](Digests/Summarizers/Ai_Summarizer.php), [line 159](Digests/Summarizers/Ai_Summarizer.php#L159-L170)
 
-### `now_pages_threadi_ai_cache_lifetime`
+### `threadi_now_pages_ai_cache_lifetime`
 
 **Arguments**
 
@@ -2125,7 +2125,7 @@ Argument | Type | Description
 
 Source: [app/Digests/Summarizers/Ai_Summarizer.php](Digests/Summarizers/Ai_Summarizer.php), [line 257](Digests/Summarizers/Ai_Summarizer.php#L257-L257)
 
-### `now_pages_threadi_ai_max_length`
+### `threadi_now_pages_ai_max_length`
 
 **Arguments**
 
@@ -2135,7 +2135,7 @@ Argument | Type | Description
 
 Source: [app/Digests/Summarizers/Ai_Summarizer.php](Digests/Summarizers/Ai_Summarizer.php), [line 514](Digests/Summarizers/Ai_Summarizer.php#L514-L514)
 
-### `now_pages_threadi_ai_max_requests_per_hour`
+### `threadi_now_pages_ai_max_requests_per_hour`
 
 **Arguments**
 
@@ -2145,7 +2145,7 @@ Argument | Type | Description
 
 Source: [app/Digests/Summarizers/Ai_Summarizer.php](Digests/Summarizers/Ai_Summarizer.php), [line 608](Digests/Summarizers/Ai_Summarizer.php#L608-L608)
 
-### `now_pages_threadi_preset_groups`
+### `threadi_now_pages_preset_groups`
 
 *Filter the groups presets are sorted into.*
 

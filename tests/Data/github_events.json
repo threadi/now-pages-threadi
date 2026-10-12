@@ -3,7 +3,7 @@
 		"id": "40000000005",
 		"type": "PushEvent",
 		"created_at": "2026-09-05T10:00:00Z",
-		"repo": { "name": "octocat/now-pages-threadi" },
+		"repo": { "name": "octocat/threadi-now-pages" },
 		"payload": {
 			"head": "aaaabbbbccccddddeeeeffff0000111122223333",
 			"commits": [
@@ -23,12 +23,12 @@
 		"id": "40000000003",
 		"type": "ReleaseEvent",
 		"created_at": "2026-09-05T09:00:00Z",
-		"repo": { "name": "octocat/now-pages-threadi" },
+		"repo": { "name": "octocat/threadi-now-pages" },
 		"payload": {
 			"action": "published",
 			"release": {
 				"tag_name": "1.2.0",
-				"html_url": "https://github.com/octocat/now-pages-threadi/releases/tag/1.2.0"
+				"html_url": "https://github.com/octocat/threadi-now-pages/releases/tag/1.2.0"
 			}
 		}
 	},
@@ -36,13 +36,13 @@
 		"id": "40000000002",
 		"type": "PullRequestEvent",
 		"created_at": "2026-09-05T08:30:00Z",
-		"repo": { "name": "octocat/now-pages-threadi" },
+		"repo": { "name": "octocat/threadi-now-pages" },
 		"payload": {
 			"action": "opened",
 			"pull_request": {
 				"title": "Add the ICS provider",
 				"merged": false,
-				"html_url": "https://github.com/octocat/now-pages-threadi/pull/42"
+				"html_url": "https://github.com/octocat/threadi-now-pages/pull/42"
 			}
 		}
 	},
@@ -50,19 +50,19 @@
 		"id": "40000000001",
 		"type": "MemberEvent",
 		"created_at": "2026-09-05T08:00:00Z",
-		"repo": { "name": "octocat/now-pages-threadi" },
+		"repo": { "name": "octocat/threadi-now-pages" },
 		"payload": { "action": "added" }
 	},
 	{
 		"id": "40000000000",
 		"type": "IssuesEvent",
 		"created_at": "2026-09-05T07:30:00Z",
-		"repo": { "name": "octocat/now-pages-threadi" },
+		"repo": { "name": "octocat/threadi-now-pages" },
 		"payload": {
 			"action": "opened",
 			"issue": {
 				"title": "Recurring events are expanded wrong",
-				"html_url": "https://github.com/octocat/now-pages-threadi/issues/17"
+				"html_url": "https://github.com/octocat/threadi-now-pages/issues/17"
 			}
 		}
 	}

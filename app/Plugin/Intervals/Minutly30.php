@@ -2,17 +2,17 @@
 /**
  * File to handle the 30minutly interval.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin\Intervals;
+namespace ThreadiNowPages\Plugin\Intervals;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Plugin\Interval_Base;
+use ThreadiNowPages\Plugin\Interval_Base;
 
 /**
  * Object to handle the 30minutly interval.
@@ -57,6 +57,6 @@ class Minutly30 extends Interval_Base {
 	 * @return string
 	 */
 	public function get_title(): string {
-		return __( 'Every 30 minutes', 'now-pages-threadi' );
+		return __( 'Every 30 minutes', 'threadi-now-pages' );
 	}
 }

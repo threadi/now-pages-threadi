@@ -2,12 +2,12 @@
 /**
  * This file contains URL-helper for this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Helper;
+namespace ThreadiNowPages\Helper;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -32,7 +32,7 @@ class Url {
 
 		// bail if the URL could not be parsed: show nothing of it.
 		if ( ! is_array( $parts ) || empty( $parts['host'] ) ) {
-			return '[' . __( 'hidden URL', 'now-pages-threadi' ) . ']';
+			return '[' . __( 'hidden URL', 'threadi-now-pages' ) . ']';
 		}
 
 		$result = ( ! empty( $parts['scheme'] ) ? $parts['scheme'] . '://' : '' ) . $parts['host'];

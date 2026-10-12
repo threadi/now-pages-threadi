@@ -2,17 +2,17 @@
 /**
  * This file contains the Goodreads preset.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Presets\Preset;
+namespace ThreadiNowPages\Presets\Preset;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Presets\Preset_Base;
+use ThreadiNowPages\Presets\Preset_Base;
 
 /**
  * Object for the Goodreads preset.
@@ -33,7 +33,7 @@ class Goodreads extends Preset_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Goodreads', 'now-pages-threadi' );
+		return __( 'Goodreads', 'threadi-now-pages' );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Goodreads extends Preset_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'What you are reading. Every shelf has its own feed, no key needed.', 'now-pages-threadi' );
+		return __( 'What you are reading. Every shelf has its own feed, no key needed.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -71,17 +71,17 @@ class Goodreads extends Preset_Base {
 	public function get_setup_fields(): array {
 		return array(
 			'goodreads_user_id' => array(
-				'label'       => __( 'User ID', 'now-pages-threadi' ),
+				'label'       => __( 'User ID', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => true,
-				'description' => __( 'The number in the address of your profile, for example 12345678 in goodreads.com/user/show/12345678.', 'now-pages-threadi' ),
+				'description' => __( 'The number in the address of your profile, for example 12345678 in goodreads.com/user/show/12345678.', 'threadi-now-pages' ),
 				'placeholder' => '12345678',
 			),
 			'goodreads_shelf'   => array(
-				'label'       => __( 'Shelf', 'now-pages-threadi' ),
+				'label'       => __( 'Shelf', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => false,
-				'description' => __( 'Which shelf to read. Leave empty for the books you are currently reading.', 'now-pages-threadi' ),
+				'description' => __( 'Which shelf to read. Leave empty for the books you are currently reading.', 'threadi-now-pages' ),
 				'placeholder' => 'currently-reading',
 			),
 		);

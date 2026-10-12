@@ -6,19 +6,19 @@
  * about, so a new provider only has to implement slug, label, fields and
  * fetch().
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Providers;
+namespace ThreadiNowPages\Providers;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use easySettingsForWordPress\Fields\Checkbox;
 use easySettingsForWordPress\Tab;
-use NowPagesThreadi\Plugin\Settings;
+use ThreadiNowPages\Plugin\Settings;
 
 /**
  * Object which holds the shared behavior of all providers.
@@ -54,7 +54,7 @@ abstract class Provider_Base implements Provider_Interface {
 	 */
 	public function add_settings(): void {
 		// bail if the settings are not needed in this request.
-		if ( ! \NowPagesThreadi\Helper\Plugin::is_settings_request() ) {
+		if ( ! \ThreadiNowPages\Helper\Plugin::is_settings_request() ) {
 			return;
 		}
 
@@ -65,26 +65,26 @@ abstract class Provider_Base implements Provider_Interface {
 		$settings_page = Settings::get_instance()->get_settings_page();
 
 		// get the provider tab.
-		$providers_tab = $settings_page->get_tab( 'now_pages_threadi_provider' );
+		$providers_tab = $settings_page->get_tab( 'threadi_now_pages_provider' );
 		if ( ! $providers_tab instanceof Tab ) {
 			return;
 		}
 
 		// add a sub-tab for this provider.
-		$this->settings_tab = $providers_tab->add_tab( 'now_pages_threadi_provider_' . $this->get_slug(), 10 );
+		$this->settings_tab = $providers_tab->add_tab( 'threadi_now_pages_provider_' . $this->get_slug(), 10 );
 		$this->settings_tab->set_title( $this->get_label() );
 
 		// add section.
-		$section = $this->settings_tab->add_section( 'now_pages_threadi_provider_' . $this->get_slug() . '_section', 10 );
+		$section = $this->settings_tab->add_section( 'threadi_now_pages_provider_' . $this->get_slug() . '_section', 10 );
 		$section->set_title( $this->get_label() );
 
 		// add setting.
-		$setting = $settings_obj->add_setting( 'now_pages_threadi_provider_' . $this->get_slug() . '_enabled' );
+		$setting = $settings_obj->add_setting( 'threadi_now_pages_provider_' . $this->get_slug() . '_enabled' );
 		$setting->set_section( $section );
 		$setting->set_default( $this->is_default_enabled() ? 1 : 0 );
 		$field = new Checkbox( $settings_obj );
-		$field->set_title( __( 'Enable', 'now-pages-threadi' ) );
-		$field->set_description( __( 'If enabled, this provider can be used for a source.', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Enable', 'threadi-now-pages' ) );
+		$field->set_description( __( 'If enabled, this provider can be used for a source.', 'threadi-now-pages' ) );
 		$setting->set_field( $field );
 	}
 
@@ -157,7 +157,7 @@ abstract class Provider_Base implements Provider_Interface {
 	 * @return bool
 	 */
 	public function is_enabled(): bool {
-		return 1 === absint( get_option( 'now_pages_threadi_provider_' . $this->get_slug() . '_enabled', $this->is_default_enabled() ? 1 : 0 ) );
+		return 1 === absint( get_option( 'threadi_now_pages_provider_' . $this->get_slug() . '_enabled', $this->is_default_enabled() ? 1 : 0 ) );
 	}
 
 	/**

@@ -2,12 +2,12 @@
 /**
  * File to handle a widget for Avada.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder\Avada\Fusion_Elements;
+namespace ThreadiNowPages\PageBuilder\Avada\Fusion_Elements;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -17,8 +17,8 @@ use Fusion_Builder_Margin_Helper;
 use Fusion_Builder_Padding_Helper;
 use Fusion_Element;
 use FusionBuilder;
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
 
 /**
  * Object for a widget in Avada.
@@ -30,7 +30,7 @@ class Digest extends Fusion_Element {
 	 *
 	 * @var string
 	 */
-	protected string $class = 'now-pages-threadi-entry';
+	protected string $class = 'threadi-now-pages-entry';
 
 	/**
 	 * Define flow-text-elements.
@@ -54,7 +54,7 @@ class Digest extends Fusion_Element {
 		$this->class .= '-' . wp_rand( 0, 50 );
 
 		// add the shortcode which needs to be interpreted in frontend.
-		add_shortcode( 'avada_now_pages_threadi_digest', array( $this, 'render' ) );
+		add_shortcode( 'avada_threadi_now_pages_digest', array( $this, 'render' ) );
 	}
 
 	/**
@@ -72,7 +72,7 @@ class Digest extends Fusion_Element {
 		}
 
 		$this->defaults = array_merge( self::get_element_defaults(), $this->get_custom_element_defaults() );
-		$this->args     = FusionBuilder::set_shortcode_defaults( $this->defaults, $attributes, 'avada_now_pages_threadi_digest' );
+		$this->args     = FusionBuilder::set_shortcode_defaults( $this->defaults, $attributes, 'avada_threadi_now_pages_digest' );
 
 		$args = array(
 			'period' => ! empty( $this->args['period'] ) ? $this->args['period'] : Digests::get_instance()->get_default_period(),
@@ -113,8 +113,8 @@ class Digest extends Fusion_Element {
 	 */
 	public static function get_element_defaults(): array {
 		return array(
-			'period'            => get_option( 'now_pages_threadi_frontend_period', 'live' ),
-			'format'            => get_option( 'now_pages_threadi_frontend_format', 'verbatim' ),
+			'period'            => get_option( 'threadi_now_pages_frontend_period', 'live' ),
+			'format'            => get_option( 'threadi_now_pages_frontend_format', 'verbatim' ),
 			'override_display'  => 'no',
 			'show_time'         => 'no',
 			'show_source'       => 'no',
@@ -282,7 +282,7 @@ class Digest extends Fusion_Element {
 		 * @param string         $class_name The CSS-classes.
 		 * @param Fusion_Element $instance   The widget-object.
 		 */
-		return apply_filters( 'now_pages_threadi_avada_class', $class_name, $instance );
+		return apply_filters( 'threadi_now_pages_avada_class', $class_name, $instance );
 	}
 
 	/**
@@ -300,6 +300,6 @@ class Digest extends Fusion_Element {
 		 *
 		 * @param array $flow_elements List of elements.
 		 */
-		return apply_filters( 'now_pages_threadi_avada_fusion_flow_elements', $flow_elements );
+		return apply_filters( 'threadi_now_pages_avada_fusion_flow_elements', $flow_elements );
 	}
 }

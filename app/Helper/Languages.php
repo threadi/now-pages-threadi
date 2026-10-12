@@ -2,12 +2,12 @@
 /**
  * This file contains helper for language tasks.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Helper;
+namespace ThreadiNowPages\Helper;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -30,14 +30,14 @@ class Languages {
 		/**
 		 * Filter the current front-end language (2-letter code).
 		 *
-		 * Example: add_filter( 'now_pages_threadi_current_language', function () {
+		 * Example: add_filter( 'threadi_now_pages_current_language', function () {
 		 *     return substr( apply_filters( 'wpml_current_language', get_locale() ), 0, 5 );
 		 * } );
 		 *
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param string $language The detected language. Default: the site's own locale.
 		 */
-		$language = (string) apply_filters( 'now_pages_threadi_current_language', self::normalize_locale( get_locale() ) );
+		$language = (string) apply_filters( 'threadi_now_pages_current_language', self::normalize_locale( get_locale() ) );
 
 		// use the same form as for the stored languages, also for values from the filter (e.g. "de" from WPML).
 		return self::normalize_locale( $language );

@@ -2,20 +2,20 @@
 /**
  * This file contains the support for Divi 4.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\PageBuilder\Divi4\Extend_Divi;
-use NowPagesThreadi\PageBuilder\Divi4\Render;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\PageBuilder\Divi4\Extend_Divi;
+use ThreadiNowPages\PageBuilder\Divi4\Render;
 
 /**
  * Registers and handles the support for Divi 4.
@@ -50,8 +50,8 @@ class Divi4 extends PageBuilder_Base {
 
 		// enable our own Divi 4 extension.
 		add_action( 'divi_extensions_init', array( $this, 'init_extension' ) );
-		add_filter( 'now_pages_threadi_divi4_widgets', array( $this, 'add_widgets' ) );
-		add_action( 'wp_ajax_now_pages_threadi_digest', array( $this, 'get_entries' ) );
+		add_filter( 'threadi_now_pages_divi4_widgets', array( $this, 'add_widgets' ) );
+		add_action( 'wp_ajax_threadi_now_pages_digest', array( $this, 'get_entries' ) );
 	}
 
 	/**
@@ -113,7 +113,7 @@ class Divi4 extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_page_content(): string {
-		return '[et_pb_section fb_built="1" _builder_version="4.27.8" _module_preset="default" global_colors_info="{}"][et_pb_row _builder_version="4.27.8" _module_preset="default" global_colors_info="{}"][et_pb_column type="4_4" _builder_version="4.27.8" _module_preset="default" global_colors_info="{}"][et_pb_text _builder_version="4.27.8" _module_preset="default" global_colors_info="{}"]<p>Your content goes here. Edit or remove this text inline or in the module Content settings. You can also style every aspect of this content in the module Design settings and even apply custom CSS to this text in the module Advanced settings.</p>[/et_pb_text][now_pages_threadi_digest period="' . get_option( 'now_pages_threadi_frontend_period', 'live' ) . '" show_time="on" show_period="off" group_by_category="off" _builder_version="4.27.8" _module_preset="default" global_colors_info="{}"][/now_pages_threadi_digest][/et_pb_column][/et_pb_row][/et_pb_section]';
+		return '[et_pb_section fb_built="1" _builder_version="4.27.8" _module_preset="default" global_colors_info="{}"][et_pb_row _builder_version="4.27.8" _module_preset="default" global_colors_info="{}"][et_pb_column type="4_4" _builder_version="4.27.8" _module_preset="default" global_colors_info="{}"][et_pb_text _builder_version="4.27.8" _module_preset="default" global_colors_info="{}"]<p>Your content goes here. Edit or remove this text inline or in the module Content settings. You can also style every aspect of this content in the module Design settings and even apply custom CSS to this text in the module Advanced settings.</p>[/et_pb_text][threadi_now_pages_digest period="' . get_option( 'threadi_now_pages_frontend_period', 'live' ) . '" show_time="on" show_period="off" group_by_category="off" _builder_version="4.27.8" _module_preset="default" global_colors_info="{}"][/threadi_now_pages_digest][/et_pb_column][/et_pb_row][/et_pb_section]';
 	}
 
 	/**
@@ -194,7 +194,7 @@ class Divi4 extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Divi 4', 'now-pages-threadi' );
+		return __( 'Divi 4', 'threadi-now-pages' );
 	}
 
 	/**

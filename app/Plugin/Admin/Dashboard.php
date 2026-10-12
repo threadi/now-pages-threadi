@@ -2,12 +2,12 @@
 /**
  * File for handling dashboard tasks in this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin\Admin;
+namespace ThreadiNowPages\Plugin\Admin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -88,6 +88,6 @@ class Dashboard {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param array<string,array<string,mixed>> $dashboard_widgets List of widgets.
 		 */
-		return apply_filters( 'now_pages_threadi_dashboard_widgets', $dashboard_widgets );
+		return apply_filters( 'threadi_now_pages_dashboard_widgets', $dashboard_widgets );
 	}
 }

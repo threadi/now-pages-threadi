@@ -1,20 +1,20 @@
 <?php
 /**
- * Taxonomy "now_pages_threadi_category" for thematic grouping of now-page entries.
+ * Taxonomy "threadi_now_pages_category" for thematic grouping of now-page entries.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\NowPages;
+namespace ThreadiNowPages\NowPages;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Format;
-use NowPagesThreadi\Helper\Singleton_Interface;
-use NowPagesThreadi\Helper\Singleton_Trait;
+use ThreadiNowPages\Helper\Format;
+use ThreadiNowPages\Helper\Singleton_Interface;
+use ThreadiNowPages\Helper\Singleton_Trait;
 use WP_Error;
 use WP_Post;
 use WP_Query;
@@ -22,7 +22,7 @@ use WP_REST_Response;
 use WP_Term;
 
 /**
- * Registers and helpers for the "now_pages_threadi_category" taxonomy.
+ * Registers and helpers for the "threadi_now_pages_category" taxonomy.
  */
 class Categories implements Singleton_Interface {
 	use Singleton_Trait;
@@ -32,7 +32,7 @@ class Categories implements Singleton_Interface {
 	 *
 	 * @var string
 	 */
-	public const TAXONOMY = 'now_pages_threadi_category';
+	public const TAXONOMY = 'threadi_now_pages_category';
 
 	/**
 	 * Post-meta key on Sources for the default category term ID.
@@ -213,30 +213,30 @@ class Categories implements Singleton_Interface {
 	 */
 	public function register(): void {
 		$labels = array(
-			'name'                       => _x( 'Categories', 'taxonomy general name', 'now-pages-threadi' ),
-			'singular_name'              => _x( 'Category', 'taxonomy singular name', 'now-pages-threadi' ),
-			'search_items'               => __( 'Search Categories', 'now-pages-threadi' ),
-			'popular_items'              => __( 'Popular Categories', 'now-pages-threadi' ),
-			'all_items'                  => __( 'All Categories', 'now-pages-threadi' ),
-			'parent_item'                => __( 'Parent Category', 'now-pages-threadi' ),
-			'parent_item_colon'          => __( 'Parent Category:', 'now-pages-threadi' ),
-			'edit_item'                  => __( 'Edit Category', 'now-pages-threadi' ),
-			'view_item'                  => __( 'View Category', 'now-pages-threadi' ),
-			'update_item'                => __( 'Update Category', 'now-pages-threadi' ),
-			'add_new_item'               => __( 'Add New Category', 'now-pages-threadi' ),
-			'new_item_name'              => __( 'New Category Name', 'now-pages-threadi' ),
-			'separate_items_with_commas' => __( 'Separate categories with commas', 'now-pages-threadi' ),
-			'add_or_remove_items'        => __( 'Add or remove categories', 'now-pages-threadi' ),
-			'choose_from_most_used'      => __( 'Choose from the most used categories', 'now-pages-threadi' ),
-			'not_found'                  => __( 'No categories found.', 'now-pages-threadi' ),
-			'no_terms'                   => __( 'No categories', 'now-pages-threadi' ),
-			'filter_by_item'             => __( 'Filter by category', 'now-pages-threadi' ),
-			'items_list_navigation'      => __( 'Categories list navigation', 'now-pages-threadi' ),
-			'items_list'                 => __( 'Categories list', 'now-pages-threadi' ),
-			'back_to_items'              => __( '← Go to Categories', 'now-pages-threadi' ),
-			'item_link'                  => _x( 'Category Link', 'navigation link block title', 'now-pages-threadi' ),
-			'item_link_description'      => _x( 'A link to a category.', 'navigation link block description', 'now-pages-threadi' ),
-			'menu_name'                  => __( 'Categories', 'now-pages-threadi' ),
+			'name'                       => _x( 'Categories', 'taxonomy general name', 'threadi-now-pages' ),
+			'singular_name'              => _x( 'Category', 'taxonomy singular name', 'threadi-now-pages' ),
+			'search_items'               => __( 'Search Categories', 'threadi-now-pages' ),
+			'popular_items'              => __( 'Popular Categories', 'threadi-now-pages' ),
+			'all_items'                  => __( 'All Categories', 'threadi-now-pages' ),
+			'parent_item'                => __( 'Parent Category', 'threadi-now-pages' ),
+			'parent_item_colon'          => __( 'Parent Category:', 'threadi-now-pages' ),
+			'edit_item'                  => __( 'Edit Category', 'threadi-now-pages' ),
+			'view_item'                  => __( 'View Category', 'threadi-now-pages' ),
+			'update_item'                => __( 'Update Category', 'threadi-now-pages' ),
+			'add_new_item'               => __( 'Add New Category', 'threadi-now-pages' ),
+			'new_item_name'              => __( 'New Category Name', 'threadi-now-pages' ),
+			'separate_items_with_commas' => __( 'Separate categories with commas', 'threadi-now-pages' ),
+			'add_or_remove_items'        => __( 'Add or remove categories', 'threadi-now-pages' ),
+			'choose_from_most_used'      => __( 'Choose from the most used categories', 'threadi-now-pages' ),
+			'not_found'                  => __( 'No categories found.', 'threadi-now-pages' ),
+			'no_terms'                   => __( 'No categories', 'threadi-now-pages' ),
+			'filter_by_item'             => __( 'Filter by category', 'threadi-now-pages' ),
+			'items_list_navigation'      => __( 'Categories list navigation', 'threadi-now-pages' ),
+			'items_list'                 => __( 'Categories list', 'threadi-now-pages' ),
+			'back_to_items'              => __( '← Go to Categories', 'threadi-now-pages' ),
+			'item_link'                  => _x( 'Category Link', 'navigation link block title', 'threadi-now-pages' ),
+			'item_link_description'      => _x( 'A link to a category.', 'navigation link block description', 'threadi-now-pages' ),
+			'menu_name'                  => __( 'Categories', 'threadi-now-pages' ),
 		);
 
 		$args = array(
@@ -263,13 +263,13 @@ class Categories implements Singleton_Interface {
 		);
 
 		/**
-		 * Filter the arguments passed to register_taxonomy() for "now_pages_threadi_category".
+		 * Filter the arguments passed to register_taxonomy() for "threadi_now_pages_category".
 		 *
 		 * @since 1.0.0 Available since 1.0.0.
 		 *
 		 * @param array<string,mixed> $args Taxonomy args.
 		 */
-		$args = apply_filters( 'now_pages_threadi_category_taxonomy_args', $args );
+		$args = apply_filters( 'threadi_now_pages_category_taxonomy_args', $args );
 
 		// set the object types this taxonomy is assigned to.
 		$object_types = array(
@@ -277,13 +277,13 @@ class Categories implements Singleton_Interface {
 		);
 
 		/**
-		 * Filter which post types the "now_pages_threadi_category" taxonomy is attached to.
+		 * Filter which post types the "threadi_now_pages_category" taxonomy is attached to.
 		 *
 		 * @since 1.0.0 Available since 1.0.0.
 		 *
 		 * @param array<int,string> $object_types Post type slugs.
 		 */
-		$object_types = apply_filters( 'now_pages_threadi_category_object_types', $object_types );
+		$object_types = apply_filters( 'threadi_now_pages_category_object_types', $object_types );
 
 		// register this taxonomy.
 		register_taxonomy( self::TAXONOMY, $object_types, $args );
@@ -346,14 +346,14 @@ class Categories implements Singleton_Interface {
 	public function render_add_fields(): void {
 		?>
 		<div class="form-field">
-			<label for="now_pages_threadi_sentence_template"><?php esc_html_e( 'Narrative sentence template', 'now-pages-threadi' ); ?></label>
-			<input type="text" name="now_pages_threadi_sentence_template" id="now_pages_threadi_sentence_template" value="" class="regular-text" />
+			<label for="threadi_now_pages_sentence_template"><?php esc_html_e( 'Narrative sentence template', 'threadi-now-pages' ); ?></label>
+			<input type="text" name="threadi_now_pages_sentence_template" id="threadi_now_pages_sentence_template" value="" class="regular-text" />
 			<p class="description">
 				<?php
 				echo esc_html(
 					sprintf(
 					/* translators: %s is the literal placeholder characters. */
-						__( 'Used by the template summarizer. Include %s where the entry text should appear. Leave empty for the default (“I did …”).', 'now-pages-threadi' ),
+						__( 'Used by the template summarizer. Include %s where the entry text should appear. Leave empty for the default (“I did …”).', 'threadi-now-pages' ),
 						'%s'
 					)
 				);
@@ -361,13 +361,13 @@ class Categories implements Singleton_Interface {
 			</p>
 		</div>
 		<div class="form-field">
-			<label for="now_pages_threadi_override_text"><?php esc_html_e( 'Summary shown instead of the entries', 'now-pages-threadi' ); ?></label>
+			<label for="threadi_now_pages_override_text"><?php esc_html_e( 'Summary shown instead of the entries', 'threadi-now-pages' ); ?></label>
 			<?php
 			wp_editor(
 				'',
-				'now_pages_threadi_override_text',
+				'threadi_now_pages_override_text',
 				array(
-					'textarea_name' => 'now_pages_threadi_override_text',
+					'textarea_name' => 'threadi_now_pages_override_text',
 					'textarea_rows' => 5,
 					'teeny'         => true,
 					'media_buttons' => false,
@@ -378,7 +378,7 @@ class Categories implements Singleton_Interface {
 			<p class="description">
 				<?php
 				echo wp_kses_post(
-					__( 'Replaces every entry of this category with your own text. Instead of listing twelve commits, your now page could say: <em>“Spent the week rewriting the import, it finally handles feeds without dates.”</em> Leave empty to list the entries as usual.', 'now-pages-threadi' )
+					__( 'Replaces every entry of this category with your own text. Instead of listing twelve commits, your now page could say: <em>“Spent the week rewriting the import, it finally handles feeds without dates.”</em> Leave empty to list the entries as usual.', 'threadi-now-pages' )
 				);
 				?>
 			</p>
@@ -402,16 +402,16 @@ class Categories implements Singleton_Interface {
 		?>
 		<tr class="form-field">
 			<th scope="row">
-				<label for="now_pages_threadi_sentence_template"><?php esc_html_e( 'Narrative sentence template', 'now-pages-threadi' ); ?></label>
+				<label for="threadi_now_pages_sentence_template"><?php esc_html_e( 'Narrative sentence template', 'threadi-now-pages' ); ?></label>
 			</th>
 			<td>
-				<input type="text" name="now_pages_threadi_sentence_template" id="now_pages_threadi_sentence_template" value="<?php echo esc_attr( $value ); ?>" class="regular-text" />
+				<input type="text" name="threadi_now_pages_sentence_template" id="threadi_now_pages_sentence_template" value="<?php echo esc_attr( $value ); ?>" class="regular-text" />
 				<p class="description">
 					<?php
 					echo esc_html(
 						sprintf(
 						/* translators: %s is the literal placeholder characters. */
-							__( 'Used by the template summarizer. Include %s where the entry text should appear. Leave empty for the default (“I did …”).', 'now-pages-threadi' ),
+							__( 'Used by the template summarizer. Include %s where the entry text should appear. Leave empty for the default (“I did …”).', 'threadi-now-pages' ),
 							'%s'
 						)
 					);
@@ -421,15 +421,15 @@ class Categories implements Singleton_Interface {
 		</tr>
 		<tr class="form-field">
 			<th scope="row">
-				<label for="now_pages_threadi_override_text"><?php esc_html_e( 'Fixed override text', 'now-pages-threadi' ); ?></label>
+				<label for="threadi_now_pages_override_text"><?php esc_html_e( 'Fixed override text', 'threadi-now-pages' ); ?></label>
 			</th>
 			<td>
 				<?php
 				wp_editor(
 					$override,
-					'now_pages_threadi_override_text',
+					'threadi_now_pages_override_text',
 					array(
-						'textarea_name' => 'now_pages_threadi_override_text',
+						'textarea_name' => 'threadi_now_pages_override_text',
 						'textarea_rows' => 5,
 						'teeny'         => true,
 						'media_buttons' => false,
@@ -438,7 +438,7 @@ class Categories implements Singleton_Interface {
 				);
 				?>
 				<p class="description">
-					<?php esc_html_e( 'If set, whenever this category has 1 or more entries in a digest period, this exact text is shown instead of the individual entries. Leave empty to show entries normally.', 'now-pages-threadi' ); ?>
+					<?php esc_html_e( 'If set, whenever this category has 1 or more entries in a digest period, this exact text is shown instead of the individual entries. Leave empty to show entries normally.', 'threadi-now-pages' ); ?>
 				</p>
 			</td>
 		</tr>
@@ -456,9 +456,9 @@ class Categories implements Singleton_Interface {
 		$term_id = absint( $term_id );
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- core taxonomy form nonce.
-		if ( isset( $_POST['now_pages_threadi_sentence_template'] ) ) {
+		if ( isset( $_POST['threadi_now_pages_sentence_template'] ) ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$raw = wp_unslash( (string) $_POST['now_pages_threadi_sentence_template'] );
+			$raw = wp_unslash( (string) $_POST['threadi_now_pages_sentence_template'] );
 			$raw = $this->sanitize_sentence_template( $raw );
 
 			if ( '' === $raw ) {
@@ -470,9 +470,9 @@ class Categories implements Singleton_Interface {
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- core taxonomy form nonce.
-		if ( isset( $_POST['now_pages_threadi_override_text'] ) ) {
+		if ( isset( $_POST['threadi_now_pages_override_text'] ) ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$override = wp_kses_post( wp_unslash( (string) $_POST['now_pages_threadi_override_text'] ) );
+			$override = wp_kses_post( wp_unslash( (string) $_POST['threadi_now_pages_override_text'] ) );
 
 			// save the field value, if set.
 			if ( '' === trim( wp_strip_all_tags( $override ) ) ) {
@@ -507,7 +507,7 @@ class Categories implements Singleton_Interface {
 			 * @param int      $post_id Entry post ID.
 			 * @param int      $term_id Requested term ID.
 			 */
-			do_action( 'now_pages_threadi_category_assign_error', $result, $post_id, $term_id );
+			do_action( 'threadi_now_pages_category_assign_error', $result, $post_id, $term_id );
 		}
 	}
 
@@ -602,7 +602,7 @@ class Categories implements Singleton_Interface {
 				/**
 				 * This hook is documented in app/NowPages/Categories.php.
 				 */
-				do_action( 'now_pages_threadi_category_assign_error', $result, $entry_id, $term_id );
+				do_action( 'threadi_now_pages_category_assign_error', $result, $entry_id, $term_id );
 				continue;
 			}
 
@@ -621,7 +621,7 @@ class Categories implements Singleton_Interface {
 		 * @param int $previous  The category of the source before (0 = none).
 		 * @param int $changed   The number of entries which were changed.
 		 */
-		do_action( 'now_pages_threadi_source_category_changed', $source_id, $term_id, $previous, $changed );
+		do_action( 'threadi_now_pages_source_category_changed', $source_id, $term_id, $previous, $changed );
 
 		return $changed;
 	}
@@ -735,7 +735,7 @@ class Categories implements Singleton_Interface {
 	 *
 	 * Priority:
 	 * 1. Term meta `sentence_template` on the first assigned category that has one
-	 * 2. Slug map from filter `now_pages_threadi_narrative_category_templates`
+	 * 2. Slug map from filter `threadi_now_pages_narrative_category_templates`
 	 * 3. Global default “I did %s.”
 	 *
 	 * @param WP_Post $entry Entry post.
@@ -762,7 +762,7 @@ class Categories implements Singleton_Interface {
 		}
 
 		/* translators: %s: the entry's text. */
-		return __( 'I did %s.', 'now-pages-threadi' );
+		return __( 'I did %s.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -776,7 +776,7 @@ class Categories implements Singleton_Interface {
 		 *
 		 * @param array<string,string> $map slug => template with %s.
 		 */
-		return apply_filters( 'now_pages_threadi_narrative_category_templates', array() );
+		return apply_filters( 'threadi_now_pages_narrative_category_templates', array() );
 	}
 
 	/**
@@ -891,7 +891,7 @@ class Categories implements Singleton_Interface {
 
 		// bail with "uncategorized" if no terms are set or error occurred.
 		if ( empty( $terms ) || is_wp_error( $terms ) ) {
-			return __( 'Uncategorized', 'now-pages-threadi' );
+			return __( 'Uncategorized', 'threadi-now-pages' );
 		}
 
 		// get the names of each term.
@@ -904,14 +904,14 @@ class Categories implements Singleton_Interface {
 
 		// bail if no names could be found.
 		if ( empty( $names ) ) { // @phpstan-ignore empty.variable
-			return __( 'Uncategorized', 'now-pages-threadi' );
+			return __( 'Uncategorized', 'threadi-now-pages' );
 		}
 
 		// sort them.
 		$names = Format::get_nat_sorted_array( $names );
 
 		/* translators: used between list items, there is a space after the comma. */
-		$separator = __( ', ', 'now-pages-threadi' );
+		$separator = __( ', ', 'threadi-now-pages' );
 
 		// implode this list.
 		return implode( $separator, $names );
@@ -949,10 +949,10 @@ class Categories implements Singleton_Interface {
 
             $(document).ajaxSuccess(function(event, xhr, settings) {
                 if (settings.data && settings.data.indexOf('action=add-tag') !== -1) {
-                    if (typeof tinyMCE !== 'undefined' && tinyMCE.get('now_pages_threadi_override_text')) {
-                        tinyMCE.get('now_pages_threadi_override_text').setContent('');
+                    if (typeof tinyMCE !== 'undefined' && tinyMCE.get('threadi_now_pages_override_text')) {
+                        tinyMCE.get('threadi_now_pages_override_text').setContent('');
                     }
-                    $('#now_pages_threadi_override_text').val('');
+                    $('#threadi_now_pages_override_text').val('');
                 }
             });
         });

@@ -2,19 +2,19 @@
 /**
  * This file contains the support for Pagelayer.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\PageBuilder\Pagelayer\Digest;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\PageBuilder\Pagelayer\Digest;
 
 /**
  * Registers and handles the support for Pagelayer.
@@ -56,7 +56,7 @@ class Pagelayer extends PageBuilder_Base {
 		add_filter( 'pagelayer_shortcode_params', array( $this, 'hide_classic_widget' ), 10, 2 );
 
 		// use our own hooks.
-		add_action( 'wp_ajax_now_pages_threadi_pagelayer_digest', array( $digest_obj, 'render_via_ajax' ) );
+		add_action( 'wp_ajax_threadi_now_pages_pagelayer_digest', array( $digest_obj, 'render_via_ajax' ) );
 	}
 
 	/**
@@ -111,7 +111,7 @@ class Pagelayer extends PageBuilder_Base {
 	 */
 	public function add_editor_scripts(): void {
 		wp_enqueue_script(
-			'now-pages-threadi-pagelayer',
+			'threadi-now-pages-pagelayer',
 			Plugin::get_plugin_url() . 'pagelayer/digest.js',
 			array( 'jquery', 'pagelayer-editor' ),
 			Plugin::get_file_version( Plugin::get_plugin_path() . 'pagelayer/digest.js' ),
@@ -120,19 +120,19 @@ class Pagelayer extends PageBuilder_Base {
 
 		// add the data the script needs.
 		wp_localize_script(
-			'now-pages-threadi-pagelayer',
-			'nowPagesThreadiPagelayer',
+			'threadi-now-pages-pagelayer',
+			'threadiNowPagesPagelayer',
 			array(
-				'action'  => 'now_pages_threadi_pagelayer_digest',
+				'action'  => 'threadi_now_pages_pagelayer_digest',
 				'tag'     => Digest::TAG,
-				'loading' => __( 'Loading entries …', 'now-pages-threadi' ),
-				'error'   => __( 'The entries could not be loaded.', 'now-pages-threadi' ),
+				'loading' => __( 'Loading entries …', 'threadi-now-pages' ),
+				'error'   => __( 'The entries could not be loaded.', 'threadi-now-pages' ),
 			)
 		);
 
 		// add the public CSS of the digest.
 		wp_enqueue_style(
-			'now-pages-threadi',
+			'threadi-now-pages',
 			Plugin::get_plugin_url() . 'css/style.css',
 			array(),
 			Plugin::get_file_version( Plugin::get_plugin_path() . 'css/style.css' )
@@ -163,8 +163,8 @@ class Pagelayer extends PageBuilder_Base {
 		);
 
 		$digest = array(
-			'period'           => get_option( 'now_pages_threadi_frontend_period', 'live' ),
-			'format'           => get_option( 'now_pages_threadi_frontend_format', 'verbatim' ),
+			'period'           => get_option( 'threadi_now_pages_frontend_period', 'live' ),
+			'format'           => get_option( 'threadi_now_pages_frontend_format', 'verbatim' ),
 			'override_display' => '',
 			'pagelayer-id'     => $this->get_element_id(),
 		);
@@ -206,7 +206,7 @@ class Pagelayer extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Pagelayer', 'now-pages-threadi' );
+		return __( 'Pagelayer', 'threadi-now-pages' );
 	}
 
 	/**

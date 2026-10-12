@@ -6,17 +6,17 @@
  * or be built at render time by a callback - which is what a provider
  * needs when the choices depend on the website, like its post types.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Sources\Fields;
+namespace ThreadiNowPages\Sources\Fields;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Sources\Field_Base;
+use ThreadiNowPages\Sources\Field_Base;
 
 /**
  * Object to handle a multi select field for provider configuration.
@@ -111,7 +111,7 @@ class MultiSelect extends Field_Base {
 
 		// show a hint instead of an empty box.
 		if ( empty( $options ) ) {
-			$this->get_html_wrapper( '<em>' . esc_html__( 'No options available.', 'now-pages-threadi' ) . '</em>' );
+			$this->get_html_wrapper( '<em>' . esc_html__( 'No options available.', 'threadi-now-pages' ) . '</em>' );
 
 			return;
 		}

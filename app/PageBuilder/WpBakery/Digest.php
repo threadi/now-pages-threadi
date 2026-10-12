@@ -2,21 +2,21 @@
 /**
  * File for digest widget in WpBakery.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder\WpBakery;
+namespace ThreadiNowPages\PageBuilder\WpBakery;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use Exception;
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\PageBuilder\Shortcode;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\PageBuilder\Shortcode;
 use WPBakeryShortCode;
 
 /**
@@ -28,14 +28,14 @@ class Digest extends WPBakeryShortCode {
 	 *
 	 * @var string
 	 */
-	protected string $now_pages_threadi_shortcode = 'now_pages_threadi_digest';
+	protected string $threadi_now_pages_shortcode = 'threadi_now_pages_digest';
 
 	/**
 	 * Constructor
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'register' ), 999 );
-		parent::__construct( array( 'base' => $this->get_now_pages_threadi_shortcode() ) );
+		parent::__construct( array( 'base' => $this->get_threadi_now_pages_shortcode() ) );
 	}
 
 	/**
@@ -63,84 +63,84 @@ class Digest extends WPBakeryShortCode {
 		unset( $defaults['_origin'] );
 
 		return array(
-			'name'        => __( 'Digest', 'now-pages-threadi' ),
-			'description' => __( 'Show entries of your now page.', 'now-pages-threadi' ),
+			'name'        => __( 'Digest', 'threadi-now-pages' ),
+			'description' => __( 'Show entries of your now page.', 'threadi-now-pages' ),
 			'params'      => array(
 				array(
 					'type'        => 'dropdown',
-					'heading'     => __( 'Period', 'now-pages-threadi' ),
+					'heading'     => __( 'Period', 'threadi-now-pages' ),
 					'param_name'  => 'period',
 					'admin_label' => false,
-					'group'       => __( 'Now Pages', 'now-pages-threadi' ),
+					'group'       => __( 'Now Pages', 'threadi-now-pages' ),
 					'value'       => $periods,
 					'std'         => Digests::get_instance()->get_default_period(),
 				),
 				array(
 					'type'        => 'dropdown',
-					'heading'     => __( 'Format', 'now-pages-threadi' ),
+					'heading'     => __( 'Format', 'threadi-now-pages' ),
 					'param_name'  => 'format',
 					'admin_label' => false,
-					'group'       => __( 'Now Pages', 'now-pages-threadi' ),
+					'group'       => __( 'Now Pages', 'threadi-now-pages' ),
 					'value'       => $formats,
 					'std'         => Digests::get_instance()->get_default_format(),
 				),
 				array(
 					'type'        => 'checkbox',
-					'heading'     => __( 'Use own display settings', 'now-pages-threadi' ),
+					'heading'     => __( 'Use own display settings', 'threadi-now-pages' ),
 					'param_name'  => 'override_display',
 					'admin_label' => false,
-					'group'       => __( 'Now Pages', 'now-pages-threadi' ),
-					'value'       => array( __( 'Yes', 'now-pages-threadi' ) => 'yes' ),
+					'group'       => __( 'Now Pages', 'threadi-now-pages' ),
+					'value'       => array( __( 'Yes', 'threadi-now-pages' ) => 'yes' ),
 					'std'         => 'no',
 				),
 
 				array(
 					'type'        => 'checkbox',
-					'heading'     => __( 'Show times', 'now-pages-threadi' ),
+					'heading'     => __( 'Show times', 'threadi-now-pages' ),
 					'param_name'  => 'show_time',
 					'admin_label' => false,
-					'group'       => __( 'Now Pages', 'now-pages-threadi' ),
-					'value'       => array( __( 'Yes', 'now-pages-threadi' ) => 'yes' ),
+					'group'       => __( 'Now Pages', 'threadi-now-pages' ),
+					'value'       => array( __( 'Yes', 'threadi-now-pages' ) => 'yes' ),
 					'std'         => 'no',
 				),
 
 				array(
 					'type'        => 'checkbox',
-					'heading'     => __( 'Show data source', 'now-pages-threadi' ),
+					'heading'     => __( 'Show data source', 'threadi-now-pages' ),
 					'param_name'  => 'show_source',
 					'admin_label' => false,
-					'group'       => __( 'Now Pages', 'now-pages-threadi' ),
-					'value'       => array( __( 'Yes', 'now-pages-threadi' ) => 'yes' ),
+					'group'       => __( 'Now Pages', 'threadi-now-pages' ),
+					'value'       => array( __( 'Yes', 'threadi-now-pages' ) => 'yes' ),
 					'std'         => 'no',
 				),
 
 				array(
 					'type'        => 'checkbox',
-					'heading'     => __( 'Link the data source', 'now-pages-threadi' ),
+					'heading'     => __( 'Link the data source', 'threadi-now-pages' ),
 					'param_name'  => 'link_source',
 					'admin_label' => false,
-					'group'       => __( 'Now Pages', 'now-pages-threadi' ),
-					'value'       => array( __( 'Yes', 'now-pages-threadi' ) => 'yes' ),
+					'group'       => __( 'Now Pages', 'threadi-now-pages' ),
+					'value'       => array( __( 'Yes', 'threadi-now-pages' ) => 'yes' ),
 					'std'         => 'no',
 				),
 
 				array(
 					'type'        => 'checkbox',
-					'heading'     => __( 'Show period of entries', 'now-pages-threadi' ),
+					'heading'     => __( 'Show period of entries', 'threadi-now-pages' ),
 					'param_name'  => 'show_period',
 					'admin_label' => false,
-					'group'       => __( 'Now Pages', 'now-pages-threadi' ),
-					'value'       => array( __( 'Yes', 'now-pages-threadi' ) => 'yes' ),
+					'group'       => __( 'Now Pages', 'threadi-now-pages' ),
+					'value'       => array( __( 'Yes', 'threadi-now-pages' ) => 'yes' ),
 					'std'         => 'yes',
 				),
 
 				array(
 					'type'        => 'checkbox',
-					'heading'     => __( 'Group by category', 'now-pages-threadi' ),
+					'heading'     => __( 'Group by category', 'threadi-now-pages' ),
 					'param_name'  => 'group_by_category',
 					'admin_label' => false,
-					'group'       => __( 'Now Pages', 'now-pages-threadi' ),
-					'value'       => array( __( 'Yes', 'now-pages-threadi' ) => 'yes' ),
+					'group'       => __( 'Now Pages', 'threadi-now-pages' ),
+					'value'       => array( __( 'Yes', 'threadi-now-pages' ) => 'yes' ),
 					'std'         => 'yes',
 				),
 			),
@@ -196,8 +196,8 @@ class Digest extends WPBakeryShortCode {
 	 *
 	 * @return string
 	 */
-	protected function get_now_pages_threadi_shortcode(): string {
-		return $this->now_pages_threadi_shortcode;
+	protected function get_threadi_now_pages_shortcode(): string {
+		return $this->threadi_now_pages_shortcode;
 	}
 
 	/**
@@ -208,14 +208,14 @@ class Digest extends WPBakeryShortCode {
 	 */
 	public function register(): void {
 		// register the shortcode.
-		add_shortcode( $this->get_now_pages_threadi_shortcode(), array( $this, 'render' ) );
+		add_shortcode( $this->get_threadi_now_pages_shortcode(), array( $this, 'render' ) );
 
 		// get settings and add some global identical settings for all widgets.
 		$settings                      = $this->get_settings();
-		$settings['base']              = $this->get_now_pages_threadi_shortcode();
+		$settings['base']              = $this->get_threadi_now_pages_shortcode();
 		$settings['class']             = '';
 		$settings['icon']              = '';
-		$settings['category']          = __( 'Now Pages', 'now-pages-threadi' );
+		$settings['category']          = __( 'Now Pages', 'threadi-now-pages' );
 		$settings['admin_enqueue_css'] = '';
 		$settings['front_enqueue_css'] = '';
 		$settings['params']            = array_merge(
@@ -223,9 +223,9 @@ class Digest extends WPBakeryShortCode {
 			array(
 				array(
 					'type'       => 'css_editor',
-					'heading'    => esc_html__( 'CSS box', 'now-pages-threadi' ),
+					'heading'    => esc_html__( 'CSS box', 'threadi-now-pages' ),
 					'param_name' => 'css',
-					'group'      => esc_html__( 'Design Options', 'now-pages-threadi' ),
+					'group'      => esc_html__( 'Design Options', 'threadi-now-pages' ),
 				),
 			)
 		);

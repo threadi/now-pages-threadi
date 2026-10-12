@@ -2,17 +2,17 @@
 /**
  * This file contains the Meetup preset.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Presets\Preset;
+namespace ThreadiNowPages\Presets\Preset;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Presets\Preset_Base;
+use ThreadiNowPages\Presets\Preset_Base;
 
 /**
  * Object for the Meetup preset.
@@ -33,7 +33,7 @@ class Meetups extends Preset_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Meetup', 'now-pages-threadi' );
+		return __( 'Meetup', 'threadi-now-pages' );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Meetups extends Preset_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'Show the meetups of a group on meetup.com while they take place, and announce them a week ahead. Uses the public calendar of the group.', 'now-pages-threadi' );
+		return __( 'Show the meetups of a group on meetup.com while they take place, and announce them a week ahead. Uses the public calendar of the group.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -71,10 +71,10 @@ class Meetups extends Preset_Base {
 	public function get_setup_fields(): array {
 		return array(
 			'meetup_group' => array(
-				'label'       => __( 'Which group', 'now-pages-threadi' ),
+				'label'       => __( 'Which group', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => true,
-				'description' => __( 'The address of the group on meetup.com, or just its name from that address, e.g. "leipzig-wordpress-meetup". Every event of this group is imported, whether you attend or not.', 'now-pages-threadi' ),
+				'description' => __( 'The address of the group on meetup.com, or just its name from that address, e.g. "leipzig-wordpress-meetup". Every event of this group is imported, whether you attend or not.', 'threadi-now-pages' ),
 				'placeholder' => 'leipzig-wordpress-meetup',
 			),
 		);

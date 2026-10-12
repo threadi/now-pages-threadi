@@ -2,22 +2,22 @@
 /**
  * This file contains the support for Gutenberg aka Block Editor.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\NowPages\Frontend;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\NowPages\Frontend;
 use WP_Block_Type;
 use WP_Block_Type_Registry;
 use WP_User;
@@ -40,7 +40,7 @@ class Gutenberg extends PageBuilder_Base {
 	 *
 	 * @var string
 	 */
-	public const TEMPLATE_SLUG = 'now-pages-threadi';
+	public const TEMPLATE_SLUG = 'threadi-now-pages';
 
 	/**
 	 * Initialize this object.
@@ -69,7 +69,7 @@ class Gutenberg extends PageBuilder_Base {
 		}
 
 		// bail if the block is already registered.
-		if ( $block_type_registry->is_registered( 'now-pages-threadi/digest' ) ) {
+		if ( $block_type_registry->is_registered( 'threadi-now-pages/digest' ) ) {
 			return;
 		}
 
@@ -119,7 +119,7 @@ class Gutenberg extends PageBuilder_Base {
 
 		wp_localize_script(
 			$block_type->editor_script_handles[0],
-			'nowPagesThreadiDigestBlock',
+			'threadiNowPagesDigestBlock',
 			array(
 				'periods'          => $periods,
 				'formats'          => $formats,
@@ -135,7 +135,7 @@ class Gutenberg extends PageBuilder_Base {
 	 */
 	public function register_block_template(): void {
 		// get the template name.
-		$template_name = 'now-pages-threadi//' . self::TEMPLATE_SLUG;
+		$template_name = 'threadi-now-pages//' . self::TEMPLATE_SLUG;
 
 		// bail if it is already registered.
 		if ( \WP_Block_Templates_Registry::get_instance()->is_registered( $template_name ) ) {
@@ -160,8 +160,8 @@ class Gutenberg extends PageBuilder_Base {
 		register_block_template(
 			$template_name,
 			array(
-				'title'       => __( 'Now', 'now-pages-threadi' ),
-				'description' => __( 'Lists the current activities on /now and /author/…/now.', 'now-pages-threadi' ),
+				'title'       => __( 'Now', 'threadi-now-pages' ),
+				'description' => __( 'Lists the current activities on /now and /author/…/now.', 'threadi-now-pages' ),
 				'post_types'  => array(),
 				'content'     => $content,
 			)
@@ -258,8 +258,8 @@ class Gutenberg extends PageBuilder_Base {
 	public function add_block_category( array $block_categories ): array {
 		// add our custom block category.
 		$block_categories[] = array(
-			'slug'  => 'now-pages-threadi',
-			'title' => __( 'Now Pages', 'now-pages-threadi' ),
+			'slug'  => 'threadi-now-pages',
+			'title' => __( 'Now Pages', 'threadi-now-pages' ),
 		);
 
 		// return resulting list.
@@ -270,7 +270,7 @@ class Gutenberg extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Block editor', 'now-pages-threadi' );
+		return __( 'Block editor', 'threadi-now-pages' );
 	}
 
 	/**
@@ -293,6 +293,6 @@ class Gutenberg extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_page_content(): string {
-		return '<!-- wp:now-pages-threadi/digest {"period":"' . get_option( 'now_pages_threadi_frontend_period', 'live' ) . '"} /-->';
+		return '<!-- wp:threadi-now-pages/digest {"period":"' . get_option( 'threadi_now_pages_frontend_period', 'live' ) . '"} /-->';
 	}
 }

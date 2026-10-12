@@ -5,17 +5,17 @@
  * This is the only publicly reachable entry point of the plugin, so its
  * authentication and validation deserve the closest coverage.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\Providers\Webhook_Controller;
-use NowPagesThreadi\Providers\Webhook_Provider;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\Providers\Webhook_Controller;
+use ThreadiNowPages\Providers\Webhook_Provider;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 use WP_Query;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -29,7 +29,7 @@ class WebhookControllerTest extends NowPagesTestCase {
 	 *
 	 * @var string
 	 */
-	private const ROUTE = '/now-pages-threadi/v1/add';
+	private const ROUTE = '/threadi-now-pages/v1/add';
 
 	/**
 	 * A token the test accepts.
@@ -53,7 +53,7 @@ class WebhookControllerTest extends NowPagesTestCase {
 
 		global $wp_rest_server;
 
-		update_option( 'now_pages_threadi_provider_webhook_enabled', 1 );
+		update_option( 'threadi_now_pages_provider_webhook_enabled', 1 );
 
 		$wp_rest_server = new WP_REST_Server();
 
@@ -68,11 +68,11 @@ class WebhookControllerTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function tear_down(): void {
-		remove_all_filters( 'now_pages_threadi_validate_webhook_token' );
+		remove_all_filters( 'threadi_now_pages_validate_webhook_token' );
 
 		global $wp_rest_server;
 
-		update_option( 'now_pages_threadi_provider_webhook_enabled', 0 );
+		update_option( 'threadi_now_pages_provider_webhook_enabled', 0 );
 
 		$wp_rest_server = null;
 
@@ -86,7 +86,7 @@ class WebhookControllerTest extends NowPagesTestCase {
 	 */
 	private function allow_token(): void {
 		add_filter(
-			'now_pages_threadi_validate_webhook_token',
+			'threadi_now_pages_validate_webhook_token',
 			static fn ( bool $is_valid, string $token ): bool => self::TOKEN === $token,
 			10,
 			2
@@ -123,7 +123,7 @@ class WebhookControllerTest extends NowPagesTestCase {
 	private function get_stored_entries(): array {
 		$query = new WP_Query(
 			array(
-				'post_type'      => 'np_threadi_entry',
+				'post_type'      => 'threadi_np_entry',
 				'post_status'    => array( 'any', 'trash' ),
 				'posts_per_page' => -1,
 				'fields'         => 'ids',
@@ -150,13 +150,13 @@ class WebhookControllerTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_disabled_webhook_is_rejected(): void {
-		update_option( 'now_pages_threadi_provider_webhook_enabled', 0 );
+		update_option( 'threadi_now_pages_provider_webhook_enabled', 0 );
 		$this->allow_token();
 
 		$response = $this->request( array( 'text' => 'Darf nicht gespeichert werden.' ) );
 
 		$this->assertSame( 403, $response->get_status() );
-		$this->assertSame( 'now_pages_threadi_webhook_disabled', $response->get_data()['code'] );
+		$this->assertSame( 'threadi_now_pages_webhook_disabled', $response->get_data()['code'] );
 		$this->assertCount( 0, $this->get_stored_entries() );
 	}
 
@@ -223,7 +223,7 @@ class WebhookControllerTest extends NowPagesTestCase {
 		$response = $this->request();
 
 		$this->assertSame( 400, $response->get_status() );
-		$this->assertSame( 'now_pages_threadi_empty_text', $response->get_data()['code'] );
+		$this->assertSame( 'threadi_now_pages_empty_text', $response->get_data()['code'] );
 	}
 
 	/**
@@ -536,13 +536,13 @@ class WebhookControllerTest extends NowPagesTestCase {
 
 		$source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 			)
 		);
 		update_post_meta( $source_id, 'provider', 'webhook' );
 		update_post_meta( $source_id, 'webhook_slug', 'own' );
-		update_post_meta( $source_id, 'webhook_token', \NowPagesThreadi\Plugin\Crypt::get_instance()->encrypt( self::SOURCE_TOKEN ) );
+		update_post_meta( $source_id, 'webhook_token', \ThreadiNowPages\Plugin\Crypt::get_instance()->encrypt( self::SOURCE_TOKEN ) );
 
 		// the global token is rejected for this source.
 		$response = $this->request(

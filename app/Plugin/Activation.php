@@ -2,18 +2,18 @@
 /**
  * This file defines tasks during the activation of this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\NowPages\Frontend;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\NowPages\Frontend;
 use WP_Site;
 
 /**

@@ -2,15 +2,15 @@
 /**
  * File to test which entries end up in a digest.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 
 /**
  * Object to test Digest_Builder.
@@ -24,7 +24,7 @@ class DigestBuilderTest extends NowPagesTestCase {
 	public function set_up(): void {
 		parent::set_up();
 
-		foreach ( \NowPagesThreadi\Digests\Display_Settings::option_names() as $option ) {
+		foreach ( \ThreadiNowPages\Digests\Display_Settings::option_names() as $option ) {
 			delete_option( $option );
 		}
 	}
@@ -43,7 +43,7 @@ class DigestBuilderTest extends NowPagesTestCase {
 
 		$post_id = self::factory()->post->create(
 			array(
-				'post_type'    => 'np_threadi_entry',
+				'post_type'    => 'threadi_np_entry',
 				'post_status'  => 'publish',
 				'post_title'   => '',
 				'post_content' => $text,
@@ -257,7 +257,7 @@ class DigestBuilderTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_unknown_format_falls_back_to_the_default(): void {
-		update_option( 'now_pages_threadi_frontend_format', 'verbatim' );
+		update_option( 'threadi_now_pages_frontend_format', 'verbatim' );
 
 		$this->create_entry( 2, 'Ein Eintrag.' );
 
@@ -270,7 +270,7 @@ class DigestBuilderTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_unknown_default_format_returns_an_empty_digest(): void {
-		update_option( 'now_pages_threadi_frontend_format', 'does-not-exist-either' );
+		update_option( 'threadi_now_pages_frontend_format', 'does-not-exist-either' );
 
 		$this->create_entry( 2, 'Ein Eintrag.' );
 

@@ -6,16 +6,16 @@
  * open, create the source. The React side is left out: the steps are read
  * the way the setup reads them, the answers are stored the way it stores them.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Plugin\Setup;
-use NowPagesThreadi\Sources\Advisor;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Plugin\Setup;
+use ThreadiNowPages\Sources\Advisor;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 use ReflectionMethod;
 use WP_Query;
 use WP_REST_Request;
@@ -29,7 +29,7 @@ class SetupAdvisorTest extends NowPagesTestCase {
 	 *
 	 * @var string
 	 */
-	private const FEED_URL = 'https://films.now-pages-threadi-test.example.com/jane/rss/';
+	private const FEED_URL = 'https://films.threadi-now-pages-test.example.com/jane/rss/';
 
 	/**
 	 * The answer the model gives in this test.
@@ -57,7 +57,7 @@ class SetupAdvisorTest extends NowPagesTestCase {
 
 		// the advisor is only offered while the setup is shown.
 		set_current_screen( 'dashboard' );
-		$_GET['page'] = 'now_pages_threadi_settings-setup';
+		$_GET['page'] = 'threadi_now_pages_settings-setup';
 
 		\easySetupForWordPress\Setup::get_instance()->set_user_values( true );
 		\easySetupForWordPress\Setup::get_instance()->delete_field_values( Setup::get_instance()->get_setup_name() );
@@ -79,7 +79,7 @@ class SetupAdvisorTest extends NowPagesTestCase {
 						'values'    => array(
 							array(
 								'name'  => 'feed_url',
-								'value' => 'https://films.now-pages-threadi-test.example.com/{username}/rss/',
+								'value' => 'https://films.threadi-now-pages-test.example.com/{username}/rss/',
 							),
 						),
 						'questions' => array(
@@ -94,8 +94,8 @@ class SetupAdvisorTest extends NowPagesTestCase {
 			)
 		);
 
-		add_filter( 'now_pages_threadi_advisor_is_available', '__return_true' );
-		add_filter( 'now_pages_threadi_advisor_pre_request', array( $this, 'get_answer' ) );
+		add_filter( 'threadi_now_pages_advisor_is_available', '__return_true' );
+		add_filter( 'threadi_now_pages_advisor_pre_request', array( $this, 'get_answer' ) );
 		add_filter( 'pre_http_request', array( $this, 'mock_feed' ), 5, 3 );
 	}
 
@@ -132,14 +132,14 @@ class SetupAdvisorTest extends NowPagesTestCase {
 	 */
 	public function mock_feed( mixed $preempt, mixed $parsed_args, string $url ): mixed {
 		if ( self::FEED_URL === $url ) {
-			$feed = '<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Films</title><link>https://films.now-pages-threadi-test.example.com/jane/</link><description>Films</description>'
-				. '<item><title>Watched a film</title><link>https://films.now-pages-threadi-test.example.com/jane/1</link><guid>film-1</guid><pubDate>' . gmdate( 'r', time() - DAY_IN_SECONDS ) . '</pubDate><description>Watched The Third Man</description></item>'
+			$feed = '<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Films</title><link>https://films.threadi-now-pages-test.example.com/jane/</link><description>Films</description>'
+				. '<item><title>Watched a film</title><link>https://films.threadi-now-pages-test.example.com/jane/1</link><guid>film-1</guid><pubDate>' . gmdate( 'r', time() - DAY_IN_SECONDS ) . '</pubDate><description>Watched The Third Man</description></item>'
 				. '</channel></rss>';
 
 			return self::mock_http_response( 200, $feed, array( 'content-type' => 'application/rss+xml; charset=UTF-8' ) );
 		}
 
-		if ( str_contains( $url, 'films.now-pages-threadi-test.example.com' ) ) {
+		if ( str_contains( $url, 'films.threadi-now-pages-test.example.com' ) ) {
 			return self::mock_http_response( 404, 'Not found' );
 		}
 
@@ -213,7 +213,7 @@ class SetupAdvisorTest extends NowPagesTestCase {
 	private function get_sources(): array {
 		$query = new WP_Query(
 			array(
-				'post_type'      => 'np_threadi_source',
+				'post_type'      => 'threadi_np_source',
 				'post_status'    => array( 'any', 'trash' ),
 				'posts_per_page' => -1,
 				'fields'         => 'ids',
@@ -271,7 +271,7 @@ class SetupAdvisorTest extends NowPagesTestCase {
 	 */
 	public function test_the_rebuild_offers_the_advisor(): void {
 		// the first build, before any connector has its key.
-		remove_filter( 'now_pages_threadi_advisor_is_available', '__return_true' );
+		remove_filter( 'threadi_now_pages_advisor_is_available', '__return_true' );
 		Setup::get_instance()->set_config();
 
 		$method = new ReflectionMethod( Setup::get_instance(), 'get_setup' );
@@ -286,7 +286,7 @@ class SetupAdvisorTest extends NowPagesTestCase {
 		$this->assertNotContains( Advisor::SLUG, $early );
 
 		// the connector is ready now.
-		add_filter( 'now_pages_threadi_advisor_is_available', '__return_true' );
+		add_filter( 'threadi_now_pages_advisor_is_available', '__return_true' );
 		Setup::get_instance()->refresh_config();
 
 		$late = array();
@@ -305,7 +305,7 @@ class SetupAdvisorTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_without_ai_service_the_advisor_is_only_named(): void {
-		remove_filter( 'now_pages_threadi_advisor_is_available', '__return_true' );
+		remove_filter( 'threadi_now_pages_advisor_is_available', '__return_true' );
 
 		$step = $this->get_step_with( Setup::OPTION_PRESET );
 
@@ -320,7 +320,7 @@ class SetupAdvisorTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_switched_off_the_advisor_is_not_mentioned(): void {
-		remove_filter( 'now_pages_threadi_advisor_is_available', '__return_true' );
+		remove_filter( 'threadi_now_pages_advisor_is_available', '__return_true' );
 		update_option( Advisor::OPTION_ENABLED, 0 );
 
 		$step = $this->get_step_with( Setup::OPTION_PRESET );
@@ -490,7 +490,7 @@ class SetupAdvisorTest extends NowPagesTestCase {
 		// the import of the setup must have read it.
 		$entries = new WP_Query(
 			array(
-				'post_type'   => 'np_threadi_entry',
+				'post_type'   => 'threadi_np_entry',
 				'post_status' => 'any',
 				'post_parent' => $sources[0],
 				'fields'      => 'ids',
@@ -615,7 +615,7 @@ class SetupAdvisorTest extends NowPagesTestCase {
 		// the import of the setup created its first entry.
 		$entries = new WP_Query(
 			array(
-				'post_type'   => 'np_threadi_entry',
+				'post_type'   => 'threadi_np_entry',
 				'post_status' => 'any',
 				'post_parent' => $sources[0],
 			)

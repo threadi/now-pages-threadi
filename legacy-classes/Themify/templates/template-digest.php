@@ -4,7 +4,7 @@
  *
  * @param array<string,mixed> $args The arguments from the module settings.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
@@ -17,10 +17,10 @@ defined( 'ABSPATH' ) || exit;
 // how it looks. The themify_builder_* hooks belong to Themify: every one of its
 // modules fires them so extensions can hook into the rendering.
 
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
 
-$np_threadi_fields_default = array(
+$threadi_np_fields_default = array(
 	'period'            => Digests::get_instance()->get_default_period(),
 	'format'            => Digests::get_instance()->get_default_format(),
 	'override_display'  => '',
@@ -31,47 +31,47 @@ $np_threadi_fields_default = array(
 	'group_by_category' => '',
 );
 
-$np_threadi_fields_args = wp_parse_args( $args['mod_settings'], $np_threadi_fields_default );
+$threadi_np_fields_args = wp_parse_args( $args['mod_settings'], $threadi_np_fields_default );
 unset( $args['mod_settings'] );
 
 // build the args for the central digest builder, the same way the
 // Elementor widget (app/PageBuilder/Elementor/Digest.php) does it, so both
 // widgets stay behaviourally identical.
-$np_threadi_digest_args = array(
-	'period' => ! empty( $np_threadi_fields_args['period'] ) ? $np_threadi_fields_args['period'] : Digests::get_instance()->get_default_period(),
-	'format' => ! empty( $np_threadi_fields_args['format'] ) ? $np_threadi_fields_args['format'] : Digests::get_instance()->get_default_format(),
+$threadi_np_digest_args = array(
+	'period' => ! empty( $threadi_np_fields_args['period'] ) ? $threadi_np_fields_args['period'] : Digests::get_instance()->get_default_period(),
+	'format' => ! empty( $threadi_np_fields_args['format'] ) ? $threadi_np_fields_args['format'] : Digests::get_instance()->get_default_format(),
 );
 
 // only pass the display settings when the module was told to override them,
 // otherwise this one module would beat the site-wide settings for everyone.
-if ( TB_Digest_Module::is_enabled( $np_threadi_fields_args['override_display'] ) ) {
-	$np_threadi_names = array( 'show_time', 'show_source', 'link_source', 'show_period', 'group_by_category' );
+if ( TB_Digest_Module::is_enabled( $threadi_np_fields_args['override_display'] ) ) {
+	$threadi_np_names = array( 'show_time', 'show_source', 'link_source', 'show_period', 'group_by_category' );
 
-	foreach ( $np_threadi_names as $np_threadi_name ) {
-		$np_threadi_digest_args[ $np_threadi_name ] = TB_Digest_Module::is_enabled( $np_threadi_fields_args[ $np_threadi_name ] );
+	foreach ( $threadi_np_names as $threadi_np_name ) {
+		$threadi_np_digest_args[ $threadi_np_name ] = TB_Digest_Module::is_enabled( $threadi_np_fields_args[ $threadi_np_name ] );
 	}
 }
 
-$np_threadi_content = ( new Digest_Builder() )->build( $np_threadi_digest_args );
+$threadi_np_content = ( new Digest_Builder() )->build( $threadi_np_digest_args );
 
 // nothing to show, e.g. no entries in the selected period.
-if ( '' === $np_threadi_content ) {
+if ( '' === $threadi_np_content ) {
 	return;
 }
 
-$np_threadi_container_class = apply_filters( 'themify_builder_module_classes', array(
+$threadi_np_container_class = apply_filters( 'themify_builder_module_classes', array(
 		'module', 'module-' . $args['mod_name'], $args['module_ID'],
-	), $args['mod_name'], $args['module_ID'], $np_threadi_fields_args );
+	), $args['mod_name'], $args['module_ID'], $threadi_np_fields_args );
 if ( ! empty( $args['element_id'] ) ) {
-	$np_threadi_container_class[] = 'tb_' . $args['element_id'];
+	$threadi_np_container_class[] = 'tb_' . $args['element_id'];
 }
-$np_threadi_container_props = apply_filters( 'themify_builder_module_container_props', array(
+$threadi_np_container_props = apply_filters( 'themify_builder_module_container_props', array(
 	'id'    => $args['module_ID'],
-	'class' => implode( ' ', $np_threadi_container_class ),
-), $np_threadi_fields_args, $args['mod_name'], $args['module_ID'] );
+	'class' => implode( ' ', $threadi_np_container_class ),
+), $threadi_np_fields_args, $args['mod_name'], $args['module_ID'] );
 ?>
-<div <?php echo themify_get_element_attributes( $np_threadi_container_props ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- themify escapes every value with esc_attr(), the return value is a ready-made attribute string. ?>>
+<div <?php echo themify_get_element_attributes( $threadi_np_container_props ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- themify escapes every value with esc_attr(), the return value is a ready-made attribute string. ?>>
 	<?php do_action( 'themify_builder_before_template_content_render' ); ?>
-	<?php echo wp_kses( $np_threadi_content, Digests::get_instance()->get_allowed_html() ); ?>
+	<?php echo wp_kses( $threadi_np_content, Digests::get_instance()->get_allowed_html() ); ?>
 	<?php do_action( 'themify_builder_after_template_content_render' ); ?>
 </div><!-- .module-<?php echo esc_attr( $args['mod_name'] ); ?> -->

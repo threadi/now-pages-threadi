@@ -2,12 +2,12 @@
 /**
  * File for handling the report about the entries.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin\Emails;
+namespace ThreadiNowPages\Plugin\Emails;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -17,11 +17,11 @@ use easySettingsForWordPress\Section;
 use easySettingsForWordPress\Setting;
 use easySettingsForWordPress\Settings;
 use easySettingsForWordPress\Tab;
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\Plugin\Email_Base;
-use NowPagesThreadi\Plugin\Intervals;
-use NowPagesThreadi\Sources\Sources;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\Plugin\Email_Base;
+use ThreadiNowPages\Plugin\Intervals;
+use ThreadiNowPages\Sources\Sources;
 use WP_Query;
 
 /**
@@ -53,7 +53,7 @@ class Report extends Email_Base {
 	 * @return string
 	 */
 	protected function get_title(): string {
-		return __( 'Report about your entries', 'now-pages-threadi' );
+		return __( 'Report about your entries', 'threadi-now-pages' );
 	}
 
 	/**
@@ -62,7 +62,7 @@ class Report extends Email_Base {
 	 * @return string
 	 */
 	protected function get_description(): string {
-		return __( 'If activated, an email is sent to the specified email address with a report about the entries for your now page in your website.', 'now-pages-threadi' );
+		return __( 'If activated, an email is sent to the specified email address with a report about the entries for your now page in your website.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -71,7 +71,7 @@ class Report extends Email_Base {
 	 * @return void
 	 */
 	public function show_description(): void {
-		echo esc_html__( 'The report contains information about the entries on your website.', 'now-pages-threadi' );
+		echo esc_html__( 'The report contains information about the entries on your website.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -98,7 +98,7 @@ class Report extends Email_Base {
 		}
 
 		// get the main setting.
-		$main_setting = $settings_obj->get_setting( 'now_pages_threadi_email_' . $this->get_name() );
+		$main_setting = $settings_obj->get_setting( 'threadi_now_pages_email_' . $this->get_name() );
 
 		// bail if settings could not be loaded.
 		if ( ! $main_setting instanceof Setting ) {
@@ -109,12 +109,12 @@ class Report extends Email_Base {
 		$main_setting->set_save_callback( array( $this, 'save_interval' ) );
 
 		// add setting.
-		$setting = $settings_obj->add_setting( 'now_pages_threadi_email_interval_' . $this->get_name() );
+		$setting = $settings_obj->add_setting( 'threadi_now_pages_email_interval_' . $this->get_name() );
 		$setting->set_section( $email_tab_main );
 		$setting->set_type( 'string' );
-		$setting->set_default( 'now_pages_threadi_weekly' );
+		$setting->set_default( 'threadi_now_pages_weekly' );
 		$field = new Select( $settings_obj );
-		$field->set_title( __( 'Choose interval', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Choose interval', 'threadi-now-pages' ) );
 		$field->set_options( $intervals );
 		$field->add_depend( $main_setting, 1 );
 		$field->set_sanitize_callback( array( $this, 'validate_interval' ) );
@@ -128,7 +128,7 @@ class Report extends Email_Base {
 	 */
 	public function get_subject(): string {
 		// set our custom subject.
-		$this->subject = '[' . wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) . '] ' . __( 'Report about your Now Page entries', 'now-pages-threadi' );
+		$this->subject = '[' . wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) . '] ' . __( 'Report about your Now Page entries', 'threadi-now-pages' );
 
 		// return the parent tasks for the subject.
 		return parent::get_subject();
@@ -145,7 +145,7 @@ class Report extends Email_Base {
 		// intro with the covered period.
 		$body = '<p>' . sprintf(
 			/* translators: %1$s will be replaced by a date, %2$s by a date. */
-			esc_html__( 'This report covers your Now Page entries between %1$s and %2$s.', 'now-pages-threadi' ),
+			esc_html__( 'This report covers your Now Page entries between %1$s and %2$s.', 'threadi-now-pages' ),
 			esc_html( $this->format_date( $start ) ),
 			esc_html( $this->format_date( $end ) )
 		) . '</p>';
@@ -156,7 +156,7 @@ class Report extends Email_Base {
 		$body .= '<p><strong>' . esc_html(
 			sprintf(
 				/* translators: %1$d will be replaced by a number. */
-				_n( '%1$d new entry', '%1$d new entries', $count, 'now-pages-threadi' ),
+				_n( '%1$d new entry', '%1$d new entries', $count, 'threadi-now-pages' ),
 				$count
 			)
 		) . '</strong></p>';
@@ -165,15 +165,15 @@ class Report extends Email_Base {
 		$digest = $this->get_digest( $start, $end );
 
 		if ( '' !== $digest ) {
-			$body .= '<h2>' . esc_html__( 'Your entries', 'now-pages-threadi' ) . '</h2>' . $digest;
+			$body .= '<h2>' . esc_html__( 'Your entries', 'threadi-now-pages' ) . '</h2>' . $digest;
 		}
 
 		// sources which delivered nothing.
 		$silent = $this->get_silent_sources( $start, $end );
 
 		if ( ! empty( $silent ) ) {
-			$body .= '<h2>' . esc_html__( 'Sources without new entries', 'now-pages-threadi' ) . '</h2>';
-			$body .= '<p>' . esc_html__( 'These sources delivered nothing in this period. If that is unexpected, check their configuration.', 'now-pages-threadi' ) . '</p><ul>';
+			$body .= '<h2>' . esc_html__( 'Sources without new entries', 'threadi-now-pages' ) . '</h2>';
+			$body .= '<p>' . esc_html__( 'These sources delivered nothing in this period. If that is unexpected, check their configuration.', 'threadi-now-pages' ) . '</p><ul>';
 
 			foreach ( $silent as $source_id => $title ) {
 				// build the edit link directly, get_edit_post_link() returns nothing without a logged-in user (e.g. in cron).
@@ -199,12 +199,12 @@ class Report extends Email_Base {
 	 */
 	public static function save_interval( mixed $value ): mixed {
 		// bail if the setting has not been changed: keep the existing event and its next run.
-		if ( absint( get_option( 'now_pages_threadi_email_report' ) ) === absint( $value ) ) {
+		if ( absint( get_option( 'threadi_now_pages_email_report' ) ) === absint( $value ) ) {
 			return $value;
 		}
 
 		// let reconcile_events() handle the (re)installation on shutdown.
-		( new \NowPagesThreadi\Plugin\Schedules\Report() )->delete();
+		( new \ThreadiNowPages\Plugin\Schedules\Report() )->delete();
 
 		// return the new value to save it via WP.
 		return $value;
@@ -222,12 +222,12 @@ class Report extends Email_Base {
 		}
 
 		$end   = current_time( 'mysql' );
-		$start = (string) get_option( 'now_pages_threadi_email_report_last_run', '' );
+		$start = (string) get_option( 'threadi_now_pages_email_report_last_run', '' );
 
 		// no last run known (first report or test): derive it from the interval.
 		if ( '' === $start ) {
 			$schedules = wp_get_schedules();
-			$interval  = (string) get_option( 'now_pages_threadi_email_interval_report', 'now_pages_threadi_weekly' );
+			$interval  = (string) get_option( 'threadi_now_pages_email_interval_report', 'threadi_now_pages_weekly' );
 			$seconds   = absint( $schedules[ $interval ]['interval'] ?? WEEK_IN_SECONDS );
 
 			$start = gmdate( 'Y-m-d H:i:s', strtotime( $end ) - $seconds );
@@ -248,7 +248,7 @@ class Report extends Email_Base {
 	protected function after_send(): void {
 		list( , $end ) = $this->get_period();
 
-		update_option( 'now_pages_threadi_email_report_last_run', $end, false );
+		update_option( 'threadi_now_pages_email_report_last_run', $end, false );
 	}
 
 	/**
@@ -379,7 +379,7 @@ class Report extends Email_Base {
 		 * @param string              $start Start of the period.
 		 * @param string              $end   End of the period.
 		 */
-		$args = apply_filters( 'now_pages_threadi_report_digest_args', $args, $start, $end );
+		$args = apply_filters( 'threadi_now_pages_report_digest_args', $args, $start, $end );
 
 		// the report goes to the administrator only: show every entry of the period.
 		return ( new Digest_Builder() )->set_ignore_user_restrictions( true )->build( $args );

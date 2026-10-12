@@ -2,17 +2,17 @@
 /**
  * This file contains the interface for any provider.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Providers;
+namespace ThreadiNowPages\Providers;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\NowPages\Entry;
+use ThreadiNowPages\NowPages\Entry;
 
 /**
  * Interface for any provider.
@@ -91,7 +91,7 @@ interface Provider_Interface {
 	 * Return the entry attributes this provider fills, usable for content filtering.
 	 *
 	 * Keyed by the Entry::$meta key, valued by a human-readable label for
-	 * the admin UI (e.g. array( 'author' => __( 'Author', 'now-pages-threadi' ) )).
+	 * the admin UI (e.g. array( 'author' => __( 'Author', 'threadi-now-pages' ) )).
 	 * Return an empty array if this provider does not offer anything
 	 * filterable beyond the entry text itself.
 	 *

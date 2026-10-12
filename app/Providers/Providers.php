@@ -6,19 +6,19 @@
  * Providers are the source of any entry in now pages.
  * Each provider must return defined values to create an entry.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Providers;
+namespace ThreadiNowPages\Providers;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Plugin\Log;
-use NowPagesThreadi\Plugin\Settings;
-use NowPagesThreadi\Sources\Sources;
+use ThreadiNowPages\Plugin\Log;
+use ThreadiNowPages\Plugin\Settings;
+use ThreadiNowPages\Sources\Sources;
 use WP_Error;
 
 /**
@@ -73,8 +73,8 @@ class Providers {
 	public function init(): void {
 		// use hooks.
 		add_action( 'init', array( $this, 'add_settings' ) );
-		add_filter( 'now_pages_threadi_log_categories', array( $this, 'add_log_category' ) );
-		add_action( 'now_pages_threadi_provider_error', array( $this, 'log_error' ), 10, 2 );
+		add_filter( 'threadi_now_pages_log_categories', array( $this, 'add_log_category' ) );
+		add_action( 'threadi_now_pages_provider_error', array( $this, 'log_error' ), 10, 2 );
 
 		// register our own, built-in providers.
 		$this->register_provider( new RSS_Provider() );
@@ -94,13 +94,13 @@ class Providers {
 		 * clients) from your own code, without touching this plugin.
 		 *
 		 * Example:
-		 * add_action( 'now_pages_threadi_register_providers', function( $providers ) {
+		 * add_action( 'threadi_now_pages_register_providers', function( $providers ) {
 		 *     $providers->register_provider( new My_Provider() );
 		 * } );
 		 *
 		 * @param Providers $interface The providers objects.
 		 */
-		do_action( 'now_pages_threadi_register_providers', $interface );
+		do_action( 'threadi_now_pages_register_providers', $interface );
 
 		// initialize our webhook controller.
 		Webhook_Controller::get_instance()->init();
@@ -118,7 +118,7 @@ class Providers {
 	 */
 	public function add_settings(): void {
 		// bail if the settings are not needed in this request.
-		if ( ! \NowPagesThreadi\Helper\Plugin::is_settings_request() ) {
+		if ( ! \ThreadiNowPages\Helper\Plugin::is_settings_request() ) {
 			return;
 		}
 
@@ -128,8 +128,8 @@ class Providers {
 		/**
 		 * The provider tab.
 		 */
-		$provider_tab = $settings_page->add_tab( 'now_pages_threadi_provider', 35 );
-		$provider_tab->set_title( __( 'Provider', 'now-pages-threadi' ) );
+		$provider_tab = $settings_page->add_tab( 'threadi_now_pages_provider', 35 );
+		$provider_tab->set_title( __( 'Provider', 'threadi-now-pages' ) );
 	}
 
 	/**
@@ -172,7 +172,7 @@ class Providers {
 	 */
 	public function add_log_category( array $categories ): array {
 		// add our category.
-		$categories['provider'] = __( 'Provider', 'now-pages-threadi' );
+		$categories['provider'] = __( 'Provider', 'threadi-now-pages' );
 
 		// return the resulting categories.
 		return $categories;
@@ -210,7 +210,7 @@ class Providers {
 
 			$source_hint = '<br>' . sprintf(
 				/* translators: %1$s will be replaced by a link to a source. */
-				__( 'You can <a href="%1$s">check whether this service can be reached</a> from your website.', 'now-pages-threadi' ),
+				__( 'You can <a href="%1$s">check whether this service can be reached</a> from your website.', 'threadi-now-pages' ),
 				esc_url( Sources::get_instance()->get_check_url( $source_id ) )
 			);
 		}
@@ -226,7 +226,7 @@ class Providers {
 		Log::get_instance()->add(
 			sprintf(
 			/* translators: %1$s will be replaced by a provider name. */
-				__( 'The provider %1$s ran into an error:', 'now-pages-threadi' ),
+				__( 'The provider %1$s ran into an error:', 'threadi-now-pages' ),
 				'<code>' . esc_html( $label ) . '</code>'
 			) . ' <code>' . esc_html( $message ) . '</code>' . $source_hint,
 			'error',

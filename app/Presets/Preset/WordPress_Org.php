@@ -2,17 +2,17 @@
 /**
  * This file contains the WordPress.org profile preset.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Presets\Preset;
+namespace ThreadiNowPages\Presets\Preset;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Presets\Preset_Base;
+use ThreadiNowPages\Presets\Preset_Base;
 
 /**
  * Object for the WordPress.org profile preset.
@@ -33,7 +33,7 @@ class WordPress_Org extends Preset_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'WordPress.org profile', 'now-pages-threadi' );
+		return __( 'WordPress.org profile', 'threadi-now-pages' );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class WordPress_Org extends Preset_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'Your activity in the WordPress project: forum replies, plugin releases, contributions.', 'now-pages-threadi' );
+		return __( 'Your activity in the WordPress project: forum replies, plugin releases, contributions.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -71,11 +71,11 @@ class WordPress_Org extends Preset_Base {
 	public function get_setup_fields(): array {
 		return array(
 			'wporg_username' => array(
-				'label'       => __( 'Username', 'now-pages-threadi' ),
+				'label'       => __( 'Username', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => true,
 				/* translators: %1$s will be replaced by a URL. */
-				'description' => sprintf( __( 'Go to <a href="%1$s" target="_blank">%1$s</a>, and if you are logged in, you will be redirected to your profile. There, you will find your username in the URL.', 'now-pages-threadi' ), 'https://profiles.wordpress.org' ),
+				'description' => sprintf( __( 'Go to <a href="%1$s" target="_blank">%1$s</a>, and if you are logged in, you will be redirected to your profile. There, you will find your username in the URL.', 'threadi-now-pages' ), 'https://profiles.wordpress.org' ),
 				'placeholder' => 'your-wp-org-username',
 			),
 		);

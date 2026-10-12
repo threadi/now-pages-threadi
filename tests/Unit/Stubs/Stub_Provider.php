@@ -5,14 +5,14 @@
  * Lets the import be tested end to end without any network access: the
  * entries it returns are set from the test itself.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
-namespace NowPagesThreadi\Tests\Unit\Stubs;
+namespace ThreadiNowPages\Tests\Unit\Stubs;
 
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Providers\Provider_Base;
-use NowPagesThreadi\Providers\Provider_Context;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Providers\Provider_Base;
+use ThreadiNowPages\Providers\Provider_Context;
 
 /**
  * A provider that returns whatever the test told it to return.

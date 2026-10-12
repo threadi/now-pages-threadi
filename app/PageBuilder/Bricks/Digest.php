@@ -2,20 +2,20 @@
 /**
  * File for the object for the element to display the now page entries in Bricks page builder.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder\Bricks;
+namespace ThreadiNowPages\PageBuilder\Bricks;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use Bricks\Element;
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Display_Settings;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Display_Settings;
 
 /**
  * Object for the element to display the description part in Bricks page builder.
@@ -26,14 +26,14 @@ class Digest extends Element {
 	 *
 	 * @var string
 	 */
-	public $category = 'now-pages-threadi';
+	public $category = 'threadi-now-pages';
 
 	/**
 	 * The name for the element.
 	 *
 	 * @var string
 	 */
-	public $name = 'now-pages-threadi-digest';
+	public $name = 'threadi-now-pages-digest';
 
 	/**
 	 * Set the icon class.
@@ -47,7 +47,7 @@ class Digest extends Element {
 	 *
 	 * @var string
 	 */
-	public $css_selector = '.now-pages-threadi-digest-wrapper';
+	public $css_selector = '.threadi-now-pages-digest-wrapper';
 
 	/**
 	 * Return the label for the element.
@@ -55,7 +55,7 @@ class Digest extends Element {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return esc_html__( 'Digest', 'now-pages-threadi' );
+		return esc_html__( 'Digest', 'threadi-now-pages' );
 	}
 
 	/**
@@ -84,75 +84,75 @@ class Digest extends Element {
 
 		$this->controls['period']            = array(
 			'tab'     => 'content',
-			'label'   => esc_html__( 'Period', 'now-pages-threadi' ),
+			'label'   => esc_html__( 'Period', 'threadi-now-pages' ),
 			'type'    => 'select',
 			'options' => $periods,
 			'default' => Digests::get_instance()->get_default_period(),
 		);
 		$this->controls['format']            = array(
 			'tab'     => 'content',
-			'label'   => esc_html__( 'Format', 'now-pages-threadi' ),
+			'label'   => esc_html__( 'Format', 'threadi-now-pages' ),
 			'type'    => 'select',
 			'options' => $formats,
 			'default' => Digests::get_instance()->get_default_format(),
 		);
 		$this->controls['override_display']  = array(
 			'tab'     => 'content',
-			'label'   => esc_html__( 'Use own display settings', 'now-pages-threadi' ),
+			'label'   => esc_html__( 'Use own display settings', 'threadi-now-pages' ),
 			'type'    => 'select',
 			'options' => array(
-				'yes' => esc_attr__( 'Yes', 'now-pages-threadi' ),
-				'no'  => esc_attr__( 'No', 'now-pages-threadi' ),
+				'yes' => esc_attr__( 'Yes', 'threadi-now-pages' ),
+				'no'  => esc_attr__( 'No', 'threadi-now-pages' ),
 			),
 			'default' => 'no',
 		);
 		$this->controls['show_time']         = array(
 			'tab'     => 'content',
-			'label'   => esc_html__( 'Show times', 'now-pages-threadi' ),
+			'label'   => esc_html__( 'Show times', 'threadi-now-pages' ),
 			'type'    => 'select',
 			'options' => array(
-				'yes' => esc_attr__( 'Yes', 'now-pages-threadi' ),
-				'no'  => esc_attr__( 'No', 'now-pages-threadi' ),
+				'yes' => esc_attr__( 'Yes', 'threadi-now-pages' ),
+				'no'  => esc_attr__( 'No', 'threadi-now-pages' ),
 			),
 			'default' => 'no',
 		);
 		$this->controls['show_source']       = array(
 			'tab'     => 'content',
-			'label'   => esc_html__( 'Show data source', 'now-pages-threadi' ),
+			'label'   => esc_html__( 'Show data source', 'threadi-now-pages' ),
 			'type'    => 'select',
 			'options' => array(
-				'yes' => esc_attr__( 'Yes', 'now-pages-threadi' ),
-				'no'  => esc_attr__( 'No', 'now-pages-threadi' ),
+				'yes' => esc_attr__( 'Yes', 'threadi-now-pages' ),
+				'no'  => esc_attr__( 'No', 'threadi-now-pages' ),
 			),
 			'default' => 'no',
 		);
 		$this->controls['link_source']       = array(
 			'tab'     => 'content',
-			'label'   => esc_html__( 'Link the data source', 'now-pages-threadi' ),
+			'label'   => esc_html__( 'Link the data source', 'threadi-now-pages' ),
 			'type'    => 'select',
 			'options' => array(
-				'yes' => esc_attr__( 'Yes', 'now-pages-threadi' ),
-				'no'  => esc_attr__( 'No', 'now-pages-threadi' ),
+				'yes' => esc_attr__( 'Yes', 'threadi-now-pages' ),
+				'no'  => esc_attr__( 'No', 'threadi-now-pages' ),
 			),
 			'default' => 'no',
 		);
 		$this->controls['show_period']       = array(
 			'tab'     => 'content',
-			'label'   => esc_html__( 'Show period of entries', 'now-pages-threadi' ),
+			'label'   => esc_html__( 'Show period of entries', 'threadi-now-pages' ),
 			'type'    => 'select',
 			'options' => array(
-				'yes' => esc_attr__( 'Yes', 'now-pages-threadi' ),
-				'no'  => esc_attr__( 'No', 'now-pages-threadi' ),
+				'yes' => esc_attr__( 'Yes', 'threadi-now-pages' ),
+				'no'  => esc_attr__( 'No', 'threadi-now-pages' ),
 			),
 			'default' => 'yes',
 		);
 		$this->controls['group_by_category'] = array(
 			'tab'     => 'content',
-			'label'   => esc_html__( 'Group by category', 'now-pages-threadi' ),
+			'label'   => esc_html__( 'Group by category', 'threadi-now-pages' ),
 			'type'    => 'select',
 			'options' => array(
-				'yes' => esc_attr__( 'Yes', 'now-pages-threadi' ),
-				'no'  => esc_attr__( 'No', 'now-pages-threadi' ),
+				'yes' => esc_attr__( 'Yes', 'threadi-now-pages' ),
+				'no'  => esc_attr__( 'No', 'threadi-now-pages' ),
 			),
 			'default' => 'yes',
 		);

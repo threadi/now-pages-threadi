@@ -2,20 +2,20 @@
 /**
  * This file contains the support for Elementor.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use Elementor\Elements_Manager;
 use Elementor\Widgets_Manager;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\PageBuilder\Elementor\Digest;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\PageBuilder\Elementor\Digest;
 
 /**
  * Registers and handles the support for Elementor.
@@ -55,9 +55,9 @@ class Elementor extends PageBuilder_Base {
 	 */
 	public function add_widget_categories( Elements_Manager $elements_manager ): void {
 		$elements_manager->add_category(
-			'now-pages-threadi',
+			'threadi-now-pages',
 			array(
-				'title' => esc_html_x( 'Now Pages', 'Elementor widget category', 'now-pages-threadi' ),
+				'title' => esc_html_x( 'Now Pages', 'Elementor widget category', 'threadi-now-pages' ),
 				'icon'  => 'fa fa-plug',
 			)
 		);
@@ -76,7 +76,7 @@ class Elementor extends PageBuilder_Base {
 			return $black_list;
 		}
 
-		$black_list[] = 'NowPagesThreadi\PageBuilder\WpWidgets\Digest';
+		$black_list[] = 'ThreadiNowPages\PageBuilder\WpWidgets\Digest';
 
 		return $black_list;
 	}
@@ -130,9 +130,9 @@ class Elementor extends PageBuilder_Base {
 						'elements' => array(
 							array(
 								'elType'     => 'widget',
-								'widgetType' => 'now-pages-threadi-digest',
+								'widgetType' => 'threadi-now-pages-digest',
 								'settings'   => array(
-									'period' => get_option( 'now_pages_threadi_frontend_period', 'live' ),
+									'period' => get_option( 'threadi_now_pages_frontend_period', 'live' ),
 								),
 							),
 						),
@@ -155,6 +155,6 @@ class Elementor extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Elementor', 'now-pages-threadi' );
+		return __( 'Elementor', 'threadi-now-pages' );
 	}
 }

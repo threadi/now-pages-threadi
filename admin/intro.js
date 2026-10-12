@@ -2,19 +2,19 @@
   'use strict';
 
   // bail if the tour should not run on this page.
-  if ( ! document.body.classList.contains( 'now-pages-threadi-show-intro' ) ) {
+  if ( ! document.body.classList.contains( 'threadi-now-pages-show-intro' ) ) {
     return;
   }
 
   // bail if the library or our data did not load.
-  if ( typeof window.driver === 'undefined' || typeof nowPagesThreadiIntroVars === 'undefined' ) {
+  if ( typeof window.driver === 'undefined' || typeof threadiNowPagesIntroVars === 'undefined' ) {
     return;
   }
 
   /**
    * Turn our steps into the shape driver.js expects.
    */
-  const steps = nowPagesThreadiIntroVars.steps.map( function ( step ) {
+  const steps = threadiNowPagesIntroVars.steps.map( function ( step ) {
     const result = {
       popover: {
         title: step.title,
@@ -64,10 +64,10 @@
   const markAsClosed = function () {
     const data = new FormData();
 
-    data.append( 'action', 'now_pages_threadi_intro_closed' );
-    data.append( 'nonce', nowPagesThreadiIntroVars.intro_closed_nonce );
+    data.append( 'action', 'threadi_now_pages_intro_closed' );
+    data.append( 'nonce', threadiNowPagesIntroVars.intro_closed_nonce );
 
-    fetch( nowPagesThreadiIntroVars.ajax_url, {
+    fetch( threadiNowPagesIntroVars.ajax_url, {
       method: 'POST',
       credentials: 'same-origin',
       body: data
@@ -78,9 +78,9 @@
 
   const tour = window.driver.js.driver( {
     showProgress: true,
-    nextBtnText: nowPagesThreadiIntroVars.next_button,
-    prevBtnText: nowPagesThreadiIntroVars.prev_button,
-    doneBtnText: nowPagesThreadiIntroVars.done_button,
+    nextBtnText: threadiNowPagesIntroVars.next_button,
+    prevBtnText: threadiNowPagesIntroVars.prev_button,
+    doneBtnText: threadiNowPagesIntroVars.done_button,
     steps: steps,
     onDestroyed: markAsClosed
   } );

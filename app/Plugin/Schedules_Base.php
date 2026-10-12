@@ -2,12 +2,12 @@
 /**
  * File for an object as a base object for each schedule.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -96,7 +96,7 @@ class Schedules_Base {
 		 * @param string $interval The interval.
 		 * @param Schedules_Base $instance The schedule-object.
 		 */
-		return apply_filters( 'now_pages_threadi_schedule_interval', $interval, $instance );
+		return apply_filters( 'threadi_now_pages_schedule_interval', $interval, $instance );
 	}
 
 	/**
@@ -156,7 +156,7 @@ class Schedules_Base {
 
 			// log the re-schedule.
 			/* translators: %1$s will be replaced by the name of the schedule, %2$s by the old interval, %3$s by the new interval. */
-			Log::get_instance()->add( sprintf( __( 'Interval of schedule %1$s changed from %2$s to %3$s - rescheduling.', 'now-pages-threadi' ), $this->get_name(), (string) $current_interval, $interval ), 'info', $this->get_log_category() );
+			Log::get_instance()->add( sprintf( __( 'Interval of schedule %1$s changed from %2$s to %3$s - rescheduling.', 'threadi-now-pages' ), $this->get_name(), (string) $current_interval, $interval ), 'info', $this->get_log_category() );
 		}
 
 		// create the schedule.
@@ -165,7 +165,7 @@ class Schedules_Base {
 		// log event if the schedule could not be created.
 		if ( is_wp_error( $result ) ) { // @phpstan-ignore function.impossibleType
 			/* translators: %1$s will be replaced by the name of the schedule. */
-			Log::get_instance()->add( sprintf( __( 'Error during creation of schedule %1$s:', 'now-pages-threadi' ), $this->get_name() ) . ' <code>' . wp_json_encode( wp_json_encode( $result->get_error_messages() ) ) . '</code>', 'info', $this->get_log_category() );
+			Log::get_instance()->add( sprintf( __( 'Error during creation of schedule %1$s:', 'threadi-now-pages' ), $this->get_name() ) . ' <code>' . wp_json_encode( wp_json_encode( $result->get_error_messages() ) ) . '</code>', 'info', $this->get_log_category() );
 		}
 	}
 
@@ -207,7 +207,7 @@ class Schedules_Base {
 
 		// log event if the schedule could not be deleted.
 		if ( is_wp_error( $result ) ) { // @phpstan-ignore function.impossibleType
-			Log::get_instance()->add( __( 'Error during deleting of schedule:', 'now-pages-threadi' ) . ' <code>' . esc_html( $result->get_error_message() ) . '</code>', 'error', $this->get_log_category() );
+			Log::get_instance()->add( __( 'Error during deleting of schedule:', 'threadi-now-pages' ) . ' <code>' . esc_html( $result->get_error_message() ) . '</code>', 'error', $this->get_log_category() );
 		}
 	}
 
@@ -318,7 +318,7 @@ class Schedules_Base {
 		 *
 		 * @noinspection PhpConditionAlreadyCheckedInspection
 		 */
-		if ( apply_filters( 'now_pages_threadi_schedule_enabling', $false, $instance ) ) {
+		if ( apply_filters( 'threadi_now_pages_schedule_enabling', $false, $instance ) ) {
 			return false;
 		}
 
@@ -362,7 +362,7 @@ class Schedules_Base {
 	 * Return the interval to schedule this event with.
 	 *
 	 * Validates the configured interval (incl. the value returned by the
-	 * "now_pages_threadi_schedule_interval" filter) against the
+	 * "threadi_now_pages_schedule_interval" filter) against the
 	 * registered WP cron-schedules. If the configured interval is not registered
 	 * - e.g. it is left over from another (now inactive) plugin - we fall back to
 	 * the class default so the schedule keeps running instead of failing silently
@@ -388,7 +388,7 @@ class Schedules_Base {
 		if ( isset( $this->default_interval, $schedules[ $this->default_interval ] ) && '' !== $this->default_interval ) {
 			// log the fallback so the misconfiguration is visible.
 			/* translators: %1$s will be replaced by the invalid interval, %2$s by the name of the schedule, %3$s by the fallback interval. */
-			Log::get_instance()->add( sprintf( __( 'The configured interval %1$s for schedule %2$s is not registered - falling back to %3$s.', 'now-pages-threadi' ), '<code>' . $interval . '</code>', '<code>' . $this->get_name() . '</code>', '<code>' . $this->default_interval . '</code>' ), 'info', $this->get_log_category() );
+			Log::get_instance()->add( sprintf( __( 'The configured interval %1$s for schedule %2$s is not registered - falling back to %3$s.', 'threadi-now-pages' ), '<code>' . $interval . '</code>', '<code>' . $this->get_name() . '</code>', '<code>' . $this->default_interval . '</code>' ), 'info', $this->get_log_category() );
 
 			// return the default interval.
 			return $this->default_interval;

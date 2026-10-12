@@ -2,17 +2,17 @@
 /**
  * File to handle a knowledge center entry.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin\KnowledgeCenter;
+namespace ThreadiNowPages\Plugin\KnowledgeCenter;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Plugin\KnowledgeCenter_Base;
+use ThreadiNowPages\Plugin\KnowledgeCenter_Base;
 
 /**
  * Object for a single knowledge center entry.
@@ -29,7 +29,7 @@ class PrettyPermalinks extends KnowledgeCenter_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_title(): string {
-		return __( 'Pretty Permalinks', 'now-pages-threadi' );
+		return __( 'Pretty Permalinks', 'threadi-now-pages' );
 	}
 
 	/**
@@ -37,7 +37,7 @@ class PrettyPermalinks extends KnowledgeCenter_Base {
 	 */
 	public function get_keywords(): array {
 		return array(
-			__( 'The Now Page has a parameterized URL.', 'now-pages-threadi' ),
+			__( 'The Now Page has a parameterized URL.', 'threadi-now-pages' ),
 		);
 	}
 
@@ -45,6 +45,6 @@ class PrettyPermalinks extends KnowledgeCenter_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_text(): string {
-		return '<p class="now-pages-threadi-knowledge-entry">' . __( 'To resolve this, please change your permalink settings to use pretty URLs.', 'now-pages-threadi' ) . '</p>';
+		return '<p class="threadi-now-pages-knowledge-entry">' . __( 'To resolve this, please change your permalink settings to use pretty URLs.', 'threadi-now-pages' ) . '</p>';
 	}
 }

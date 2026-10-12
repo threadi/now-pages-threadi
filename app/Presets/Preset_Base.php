@@ -5,18 +5,18 @@
  * Holds the defaults, so a simple preset only has to name itself and its
  * provider.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Presets;
+namespace ThreadiNowPages\Presets;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Providers\Provider_Interface;
-use NowPagesThreadi\Providers\Providers;
+use ThreadiNowPages\Providers\Provider_Interface;
+use ThreadiNowPages\Providers\Providers;
 
 /**
  * Object which holds the shared behavior of all presets.

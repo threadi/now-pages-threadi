@@ -5,17 +5,17 @@
  * The most damaging case here is fill_page(): it must never touch a page
  * somebody already wrote something into.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\NowPages\Now_Page;
-use NowPagesThreadi\PageBuilder\Page_Builders;
-use NowPagesThreadi\PageBuilder\PageBuilder_Base;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\NowPages\Now_Page;
+use ThreadiNowPages\PageBuilder\Page_Builders;
+use ThreadiNowPages\PageBuilder\PageBuilder_Base;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 use WP_Post;
 
 /**
@@ -33,7 +33,7 @@ class NowPageTest extends NowPagesTestCase {
 		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
 
 		delete_option( Now_Page::OPTION );
-		update_option( 'now_pages_threadi_slug', 'now' );
+		update_option( 'threadi_now_pages_slug', 'now' );
 	}
 
 	/**
@@ -124,7 +124,7 @@ class NowPageTest extends NowPagesTestCase {
 		$this->assertInstanceOf( PageBuilder_Base::class, $breakdance );
 
 		add_filter(
-			'now_pages_threadi_page_builder_for_page',
+			'threadi_now_pages_page_builder_for_page',
 			static function () use ( $breakdance ) {
 				return $breakdance;
 			}
@@ -152,11 +152,11 @@ class NowPageTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_creating_a_page_triggers_the_rewrite_update(): void {
-		update_option( 'now_pages_threadi_update_slugs', 0 );
+		update_option( 'threadi_now_pages_update_slugs', 0 );
 
 		Now_Page::get_instance()->create_page();
 
-		$this->assertSame( 1, absint( get_option( 'now_pages_threadi_update_slugs' ) ) );
+		$this->assertSame( 1, absint( get_option( 'threadi_now_pages_update_slugs' ) ) );
 	}
 
 	/**

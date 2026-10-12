@@ -2,21 +2,21 @@
 /**
  * File to test entries which wait for the confirmation of the user.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
 use DateTimeImmutable;
-use NowPagesThreadi\Dependencies\easyTransientsForWordPress\Transients;
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\NowPages\Confirmation;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Sources\Sources;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Dependencies\easyTransientsForWordPress\Transients;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\NowPages\Confirmation;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Sources\Sources;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 use WP_Post;
 use WPDieException;
 
@@ -60,13 +60,13 @@ class ConfirmationTest extends NowPagesTestCase {
 
 		add_filter( 'pre_wp_mail', array( $this, 'catch_mail' ), 10, 2 );
 
-		update_option( 'now_pages_threadi_email_confirm_entry', 1 );
-		update_option( 'now_pages_threadi_email_recipients_confirm_entry', array() );
+		update_option( 'threadi_now_pages_email_confirm_entry', 1 );
+		update_option( 'threadi_now_pages_email_recipients_confirm_entry', array() );
 		delete_option( Entries::OPTION_DELETED );
 
 		$this->source_id = $this->create_source();
 
-		Transients::get_instance()->get_transient_by_name( 'now_pages_threadi_entry_decision' )->delete();
+		Transients::get_instance()->get_transient_by_name( 'threadi_now_pages_entry_decision' )->delete();
 	}
 
 	/**
@@ -113,7 +113,7 @@ class ConfirmationTest extends NowPagesTestCase {
 	private function create_source(): int {
 		return self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'Sports',
 			)
@@ -138,7 +138,7 @@ class ConfirmationTest extends NowPagesTestCase {
 		$entry->external_id = $external_id;
 		$entry->status      = $status;
 
-		do_action( 'now_pages_threadi_entry_received', $entry, $source_id > 0 ? $source_id : $this->source_id );
+		do_action( 'threadi_now_pages_entry_received', $entry, $source_id > 0 ? $source_id : $this->source_id );
 
 		$result = Entries::get_instance()->pull_last_add_result();
 
@@ -184,7 +184,7 @@ class ConfirmationTest extends NowPagesTestCase {
 			$_POST = array(
 				'token'                    => $query['token'] ?? '',
 				'decision'                 => $query['decision'] ?? '',
-				'now_pages_threadi_decide' => '1',
+				'threadi_now_pages_decide' => '1',
 			);
 
 			$_REQUEST = array_merge( $query, $_POST );
@@ -339,7 +339,7 @@ class ConfirmationTest extends NowPagesTestCase {
 		$confirm = $this->get_link_from_mail( 'Yes, show this entry' );
 		$discard = $this->get_link_from_mail( 'No, discard it' );
 
-		$this->assertStringContainsString( 'now_pages_threadi_confirm=' . $entry_id, $confirm );
+		$this->assertStringContainsString( 'threadi_now_pages_confirm=' . $entry_id, $confirm );
 		$this->assertStringContainsString( 'decision=confirm', $confirm );
 		$this->assertStringContainsString( 'decision=discard', $discard );
 	}
@@ -351,11 +351,11 @@ class ConfirmationTest extends NowPagesTestCase {
 	 */
 	public function test_the_token_is_not_part_of_the_visible_text(): void {
 		// sent emails are only logged in debug mode.
-		update_option( 'now_pages_threadi_debug', 1 );
+		update_option( 'threadi_now_pages_debug', 1 );
 
 		$this->add_entry( 'recurring-2025-10-06' );
 
-		delete_option( 'now_pages_threadi_debug' );
+		delete_option( 'threadi_now_pages_debug' );
 
 		$this->assertStringNotContainsString( 'token', wp_strip_all_tags( (string) $this->mails[0]['message'] ) );
 
@@ -365,12 +365,12 @@ class ConfirmationTest extends NowPagesTestCase {
 		global $wpdb;
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- reading the log of this test.
-		$logged = (array) $wpdb->get_col( "SELECT log FROM {$wpdb->prefix}now_pages_threadi_logs WHERE category = 'emails'" );
+		$logged = (array) $wpdb->get_col( "SELECT log FROM {$wpdb->prefix}threadi_now_pages_logs WHERE category = 'emails'" );
 
 		$this->assertNotEmpty( $logged );
 		$this->assertStringContainsString( 'Went to the gym', implode( ' ', $logged ) );
 		$this->assertStringNotContainsString( 'token', implode( ' ', $logged ) );
-		$this->assertStringNotContainsString( 'now_pages_threadi_confirm', implode( ' ', $logged ) );
+		$this->assertStringNotContainsString( 'threadi_now_pages_confirm', implode( ' ', $logged ) );
 	}
 
 	/**
@@ -383,7 +383,7 @@ class ConfirmationTest extends NowPagesTestCase {
 
 		$this->assertCount( 0, $this->mails );
 
-		update_option( 'now_pages_threadi_email_confirm_entry', 0 );
+		update_option( 'threadi_now_pages_email_confirm_entry', 0 );
 
 		$entry_id = $this->add_entry( 'recurring-2025-10-06' );
 
@@ -397,7 +397,7 @@ class ConfirmationTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_the_email_is_enabled_by_default(): void {
-		delete_option( 'now_pages_threadi_email_confirm_entry' );
+		delete_option( 'threadi_now_pages_email_confirm_entry' );
 
 		$this->add_entry( 'recurring-2025-10-06' );
 
@@ -493,7 +493,7 @@ class ConfirmationTest extends NowPagesTestCase {
 
 		$second = $this->add_entry( 'recurring-2025-10-06', Confirmation::STATUS, $other_source );
 
-		$page = $this->open_link( str_replace( 'now_pages_threadi_confirm=' . $first, 'now_pages_threadi_confirm=' . $second, $link ), true );
+		$page = $this->open_link( str_replace( 'threadi_now_pages_confirm=' . $first, 'threadi_now_pages_confirm=' . $second, $link ), true );
 
 		$this->assertSame( 404, $page['code'] );
 		$this->assertSame( Confirmation::STATUS, get_post_status( $second ) );
@@ -531,7 +531,7 @@ class ConfirmationTest extends NowPagesTestCase {
 
 		$source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'Owned',
 				'post_author' => $owner,
@@ -570,10 +570,10 @@ class ConfirmationTest extends NowPagesTestCase {
 
 		$actions = Confirmation::get_instance()->add_row_actions( array( 'edit' => 'Edit' ), $waiting );
 
-		$this->assertSame( array( 'now_pages_threadi_confirm', 'now_pages_threadi_discard', 'edit' ), array_keys( $actions ) );
-		$this->assertStringContainsString( 'action=now_pages_threadi_confirm_entry', $actions['now_pages_threadi_confirm'] );
-		$this->assertStringContainsString( 'entry=' . $waiting->ID, $actions['now_pages_threadi_confirm'] );
-		$this->assertStringContainsString( '_wpnonce=', $actions['now_pages_threadi_confirm'] );
+		$this->assertSame( array( 'threadi_now_pages_confirm', 'threadi_now_pages_discard', 'edit' ), array_keys( $actions ) );
+		$this->assertStringContainsString( 'action=threadi_now_pages_confirm_entry', $actions['threadi_now_pages_confirm'] );
+		$this->assertStringContainsString( 'entry=' . $waiting->ID, $actions['threadi_now_pages_confirm'] );
+		$this->assertStringContainsString( '_wpnonce=', $actions['threadi_now_pages_confirm'] );
 
 		$this->assertSame( array( 'edit' => 'Edit' ), Confirmation::get_instance()->add_row_actions( array( 'edit' => 'Edit' ), $published ) );
 	}
@@ -603,7 +603,7 @@ class ConfirmationTest extends NowPagesTestCase {
 		$this->assertTrue( Confirmation::get_instance()->decide( $entry_id, Confirmation::CONFIRM ) );
 		$this->assertSame( 'publish', get_post_status( $entry_id ) );
 
-		$note = Transients::get_instance()->get_transient_by_name( 'now_pages_threadi_entry_decision' );
+		$note = Transients::get_instance()->get_transient_by_name( 'threadi_now_pages_entry_decision' );
 
 		$this->assertTrue( $note->is_set() );
 		$this->assertStringContainsString( 'has been confirmed', $note->get_message() );
@@ -611,7 +611,7 @@ class ConfirmationTest extends NowPagesTestCase {
 		// a second click on an old link.
 		$this->assertFalse( Confirmation::get_instance()->decide( $entry_id, Confirmation::DISCARD ) );
 		$this->assertSame( 'publish', get_post_status( $entry_id ) );
-		$this->assertStringContainsString( 'not waiting', Transients::get_instance()->get_transient_by_name( 'now_pages_threadi_entry_decision' )->get_message() );
+		$this->assertStringContainsString( 'not waiting', Transients::get_instance()->get_transient_by_name( 'threadi_now_pages_entry_decision' )->get_message() );
 	}
 
 	/**
@@ -629,7 +629,7 @@ class ConfirmationTest extends NowPagesTestCase {
 		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- a menu of our own for this test, restored below.
 		$menu = array(
 			5  => array( 'Posts', 'edit_posts', 'edit.php' ),
-			26 => array( 'Now Page Entries', 'edit_posts', 'edit.php?post_type=np_threadi_entry' ),
+			26 => array( 'Now Page Entries', 'edit_posts', 'edit.php?post_type=threadi_np_entry' ),
 		);
 
 		Confirmation::get_instance()->add_menu_count();
@@ -679,7 +679,7 @@ class ConfirmationTest extends NowPagesTestCase {
 
 		$entries = get_posts(
 			array(
-				'post_type'   => 'np_threadi_entry',
+				'post_type'   => 'threadi_np_entry',
 				'post_status' => 'any',
 				'post_parent' => $this->source_id,
 			)
@@ -706,7 +706,7 @@ class ConfirmationTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_the_test_email_has_an_example(): void {
-		( new \NowPagesThreadi\Plugin\Emails\ConfirmEntry() )->send_test();
+		( new \ThreadiNowPages\Plugin\Emails\ConfirmEntry() )->send_test();
 
 		$this->assertCount( 1, $this->mails );
 		$this->assertStringContainsString( 'This is what an entry waiting for your confirmation looks like.', (string) $this->mails[0]['message'] );

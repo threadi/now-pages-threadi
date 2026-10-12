@@ -9,27 +9,27 @@
  * need a dedicated client for every possible source - only one endpoint,
  * plus the connection logic lives in the external automation tool.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Providers;
+namespace ThreadiNowPages\Providers;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use DateTimeImmutable;
 use Exception;
-use NowPagesThreadi\Helper\Languages;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\NowPages\Categories;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Plugin\Crypt;
-use NowPagesThreadi\Plugin\Log;
-use NowPagesThreadi\Plugin\Settings;
-use NowPagesThreadi\Sources\Sources;
+use ThreadiNowPages\Helper\Languages;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\NowPages\Categories;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Plugin\Crypt;
+use ThreadiNowPages\Plugin\Log;
+use ThreadiNowPages\Plugin\Settings;
+use ThreadiNowPages\Sources\Sources;
 use WP_Error;
 use WP_Query;
 use WP_REST_Request;
@@ -44,7 +44,7 @@ class Webhook_Controller {
 	/**
 	 * Route namespace.
 	 */
-	public const NAMESPACE = 'now-pages-threadi/v1';
+	public const NAMESPACE = 'threadi-now-pages/v1';
 
 	/**
 	 * Route path.
@@ -54,7 +54,7 @@ class Webhook_Controller {
 	/**
 	 * Option name for token value.
 	 */
-	public const OPTION_TOKEN = 'now_pages_threadi_webhook_token';
+	public const OPTION_TOKEN = 'threadi_now_pages_webhook_token';
 
 	/**
 	 * Number of failed attempts per hour before a client is blocked.
@@ -103,9 +103,9 @@ class Webhook_Controller {
 	 */
 	public function init(): void {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
-		add_action( 'admin_action_now_pages_threadi_generate_webhook_token', array( $this, 'generate_token' ) );
-		add_filter( 'now_pages_threadi_validate_webhook_token', array( $this, 'validate_token' ), 10, 2 );
-		add_filter( 'now_pages_threadi_log_categories', array( $this, 'add_log_category' ) );
+		add_action( 'admin_action_threadi_now_pages_generate_webhook_token', array( $this, 'generate_token' ) );
+		add_filter( 'threadi_now_pages_validate_webhook_token', array( $this, 'validate_token' ), 10, 2 );
+		add_filter( 'threadi_now_pages_log_categories', array( $this, 'add_log_category' ) );
 	}
 
 	/**
@@ -160,7 +160,7 @@ class Webhook_Controller {
 	 *
 	 * Validation is deliberately filterable: once the per-source
 	 * configuration (author, secret token, allowed category, ...) exists,
-	 * hook into `now_pages_threadi_validate_webhook_token` there and look the
+	 * hook into `threadi_now_pages_validate_webhook_token` there and look the
 	 * token up against the matching automation config, instead of a
 	 * single shared secret.
 	 *
@@ -177,7 +177,7 @@ class Webhook_Controller {
 			! $provider instanceof Provider_Interface
 			|| ! $provider->is_enabled()
 		) {
-			return new WP_Error( 'now_pages_threadi_webhook_disabled', __( 'The webhook is disabled.', 'now-pages-threadi' ), array( 'status' => 403 ) );
+			return new WP_Error( 'threadi_now_pages_webhook_disabled', __( 'The webhook is disabled.', 'threadi-now-pages' ), array( 'status' => 403 ) );
 		}
 
 		// check whether this client already failed too often. the check is
@@ -200,10 +200,10 @@ class Webhook_Controller {
 			$this->count_failure();
 
 			// log this event.
-			Log::get_instance()->add( __( 'A webhook request without a token was rejected.', 'now-pages-threadi' ), 'error', 'webhook' );
+			Log::get_instance()->add( __( 'A webhook request without a token was rejected.', 'threadi-now-pages' ), 'error', 'webhook' );
 
 			// return error.
-			return new WP_Error( 'now_pages_threadi_missing_token', __( 'Missing authentication token.', 'now-pages-threadi' ), array( 'status' => 401 ) );
+			return new WP_Error( 'threadi_now_pages_missing_token', __( 'Missing authentication token.', 'threadi-now-pages' ), array( 'status' => 401 ) );
 		}
 
 		// get the own token of the requested source, if it has one.
@@ -212,16 +212,16 @@ class Webhook_Controller {
 		// bail if the source has an own token which can not be decrypted (e.g. changed
 		// encryption key): falling back to the global token would open the source.
 		if ( null === $source_token ) {
-			Log::get_instance()->add( __( 'A webhook request was rejected because the token of its source could not be decrypted. Please save the token of this source again.', 'now-pages-threadi' ), 'error', 'webhook' );
+			Log::get_instance()->add( __( 'A webhook request was rejected because the token of its source could not be decrypted. Please save the token of this source again.', 'threadi-now-pages' ), 'error', 'webhook' );
 
-			return new WP_Error( 'now_pages_threadi_invalid_token', __( 'Invalid authentication token.', 'now-pages-threadi' ), array( 'status' => 403 ) );
+			return new WP_Error( 'threadi_now_pages_invalid_token', __( 'Invalid authentication token.', 'threadi-now-pages' ), array( 'status' => 403 ) );
 		}
 
 		// bail if the token of the source is too short to be safe against guessing.
 		if ( '' !== $source_token && ! $this->is_usable_token( $source_token ) ) {
-			Log::get_instance()->add( __( 'A webhook request was rejected because the token of its source is too short. Please use a token with at least 32 characters.', 'now-pages-threadi' ), 'error', 'webhook' );
+			Log::get_instance()->add( __( 'A webhook request was rejected because the token of its source is too short. Please use a token with at least 32 characters.', 'threadi-now-pages' ), 'error', 'webhook' );
 
-			return new WP_Error( 'now_pages_threadi_invalid_token', __( 'Invalid authentication token.', 'now-pages-threadi' ), array( 'status' => 403 ) );
+			return new WP_Error( 'threadi_now_pages_invalid_token', __( 'Invalid authentication token.', 'threadi-now-pages' ), array( 'status' => 403 ) );
 		}
 
 		$is_valid = false;
@@ -242,7 +242,7 @@ class Webhook_Controller {
 			 *
 			 * @noinspection PhpConditionAlreadyCheckedInspection
 			 */
-			$is_valid = apply_filters( 'now_pages_threadi_validate_webhook_token', $is_valid, $token, $request );
+			$is_valid = apply_filters( 'threadi_now_pages_validate_webhook_token', $is_valid, $token, $request );
 		}
 
 		if ( ! $is_valid ) {
@@ -255,10 +255,10 @@ class Webhook_Controller {
 			$this->count_failure();
 
 			// log this event.
-			Log::get_instance()->add( __( 'A webhook request with an invalid token was rejected.', 'now-pages-threadi' ), 'error', 'webhook' );
+			Log::get_instance()->add( __( 'A webhook request with an invalid token was rejected.', 'threadi-now-pages' ), 'error', 'webhook' );
 
 			// return error.
-			return new WP_Error( 'now_pages_threadi_invalid_token', __( 'Invalid authentication token.', 'now-pages-threadi' ), array( 'status' => 403 ) );
+			return new WP_Error( 'threadi_now_pages_invalid_token', __( 'Invalid authentication token.', 'threadi-now-pages' ), array( 'status' => 403 ) );
 		}
 
 		// a valid request clears the counter of this client.
@@ -326,8 +326,8 @@ class Webhook_Controller {
 	 */
 	private function get_blocked_error(): WP_Error {
 		return new WP_Error(
-			'now_pages_threadi_too_many_attempts',
-			__( 'Too many failed attempts. Try again later.', 'now-pages-threadi' ),
+			'threadi_now_pages_too_many_attempts',
+			__( 'Too many failed attempts. Try again later.', 'threadi-now-pages' ),
 			array( 'status' => 429 )
 		);
 	}
@@ -346,7 +346,7 @@ class Webhook_Controller {
 	 */
 	public function handle_request( WP_REST_Request $request ): WP_REST_Response|WP_Error {
 		// get the limit for the text, which site owners may adjust.
-		$max_text = absint( apply_filters( 'now_pages_threadi_webhook_max_text_length', self::MAX_TEXT_LENGTH ) );
+		$max_text = absint( apply_filters( 'threadi_now_pages_webhook_max_text_length', self::MAX_TEXT_LENGTH ) );
 
 		$limits = array(
 			'text'        => $max_text,
@@ -363,10 +363,10 @@ class Webhook_Controller {
 			// the REST arguments already ensure strings, so anything else is not our concern here.
 			if ( is_string( $value ) && mb_strlen( $value ) > $max ) {
 				return new WP_Error(
-					'now_pages_threadi_field_too_long',
+					'threadi_now_pages_field_too_long',
 					sprintf(
 					/* translators: %1$s will be replaced by a field name, %2$d by a number. */
-						__( 'The "%1$s" field must not be longer than %2$d characters.', 'now-pages-threadi' ),
+						__( 'The "%1$s" field must not be longer than %2$d characters.', 'threadi-now-pages' ),
 						$field,
 						$max
 					),
@@ -379,7 +379,7 @@ class Webhook_Controller {
 		$text = trim( wp_strip_all_tags( (string) $request->get_param( 'text' ) ) );
 
 		if ( '' === $text ) {
-			return new WP_Error( 'now_pages_threadi_empty_text', __( 'The "text" field must not be empty.', 'now-pages-threadi' ), array( 'status' => 400 ) );
+			return new WP_Error( 'threadi_now_pages_empty_text', __( 'The "text" field must not be empty.', 'threadi-now-pages' ), array( 'status' => 400 ) );
 		}
 
 		// get the given date from request.
@@ -389,20 +389,20 @@ class Webhook_Controller {
 			$date = $date_param ? new DateTimeImmutable( (string) $date_param ) : new DateTimeImmutable();
 		} catch ( Exception $e ) {
 			// log this event.
-			Log::get_instance()->add( __( 'The "date" field could not be parsed. Error:', 'now-pages-threadi' ) . ' <code>' . esc_html( $e->getMessage() ) . '</code>', 'error', 'system' );
+			Log::get_instance()->add( __( 'The "date" field could not be parsed. Error:', 'threadi-now-pages' ) . ' <code>' . esc_html( $e->getMessage() ) . '</code>', 'error', 'system' );
 
 			// return error.
-			return new WP_Error( 'now_pages_threadi_invalid_date', __( 'The "date" field could not be parsed.', 'now-pages-threadi' ), array( 'status' => 400 ) );
+			return new WP_Error( 'threadi_now_pages_invalid_date', __( 'The "date" field could not be parsed.', 'threadi-now-pages' ), array( 'status' => 400 ) );
 		}
 
 		// bail if the date is in the future: entries from the future would stay on top of the now page.
 		if ( $date->getTimestamp() > time() + self::MAX_FUTURE_SECONDS ) {
-			return new WP_Error( 'now_pages_threadi_future_date', __( 'The "date" field must not be in the future.', 'now-pages-threadi' ), array( 'status' => 400 ) );
+			return new WP_Error( 'threadi_now_pages_future_date', __( 'The "date" field must not be in the future.', 'threadi-now-pages' ), array( 'status' => 400 ) );
 		}
 
 		// bail if the date is implausibly old.
 		if ( $date < new DateTimeImmutable( self::MIN_DATE ) ) {
-			return new WP_Error( 'now_pages_threadi_old_date', __( 'The "date" field is too old.', 'now-pages-threadi' ), array( 'status' => 400 ) );
+			return new WP_Error( 'threadi_now_pages_old_date', __( 'The "date" field is too old.', 'threadi-now-pages' ), array( 'status' => 400 ) );
 		}
 
 		// get the source from request.
@@ -417,8 +417,8 @@ class Webhook_Controller {
 		// bail if given term ID is not ours or does not exist.
 		if ( $term_id > 0 && ! term_exists( $term_id, Categories::get_instance()->get_slug() ) ) {
 			return new WP_Error(
-				'now_pages_threadi_unknown_category',
-				__( 'The given "category_term_id" does not exist in the now pages categories.', 'now-pages-threadi' ),
+				'threadi_now_pages_unknown_category',
+				__( 'The given "category_term_id" does not exist in the now pages categories.', 'threadi-now-pages' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -431,7 +431,7 @@ class Webhook_Controller {
 			Log::get_instance()->add(
 				sprintf(
 				/* translators: %1$s will be replaced by a slug. */
-					__( 'No source is configured for the webhook slug %1$s. The entry was stored without a source.', 'now-pages-threadi' ),
+					__( 'No source is configured for the webhook slug %1$s. The entry was stored without a source.', 'threadi-now-pages' ),
 					'<code>' . esc_html( $source_slug ) . '</code>'
 				),
 				'info',
@@ -463,7 +463,7 @@ class Webhook_Controller {
 		 * @param Entry            $entry   The normalized entry.
 		 * @param int  $source_id The ID of the source.
 		 */
-		do_action( 'now_pages_threadi_entry_received', $entry, $source_id );
+		do_action( 'threadi_now_pages_entry_received', $entry, $source_id );
 
 		// return the result.
 		return $this->get_response( Entries::get_instance()->pull_last_add_result() );
@@ -506,7 +506,7 @@ class Webhook_Controller {
 
 		// the entry could not be stored.
 		if ( 'insert_failed' === $result['reason'] ) {
-			return new WP_Error( 'now_pages_threadi_insert_failed', __( 'The entry could not be stored.', 'now-pages-threadi' ), array( 'status' => 500 ) );
+			return new WP_Error( 'threadi_now_pages_insert_failed', __( 'The entry could not be stored.', 'threadi-now-pages' ), array( 'status' => 500 ) );
 		}
 
 		// the entry has been skipped on purpose.
@@ -528,23 +528,23 @@ class Webhook_Controller {
 	 */
 	public function generate_token(): void {
 		// check token.
-		check_admin_referer( 'now-pages-threadi-generate-webhook-token', 'nonce' );
+		check_admin_referer( 'threadi-now-pages-generate-webhook-token', 'nonce' );
 
 		// bail if capability is missing.
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Sorry, you are not allowed to manage webhooks.', 'now-pages-threadi' ), '', array( 'response' => 403 ) );
+			wp_die( esc_html__( 'Sorry, you are not allowed to manage webhooks.', 'threadi-now-pages' ), '', array( 'response' => 403 ) );
 		}
 
 		// use only alphanumeric characters, the value travels in an HTTP header.
 		update_option( self::OPTION_TOKEN, wp_generate_password( 40, false ) );
 
 		// enable the webhooks.
-		update_option( 'now_pages_threadi_provider_webhook_enabled', 1 );
+		update_option( 'threadi_now_pages_provider_webhook_enabled', 1 );
 
 		// log this event.
-		Log::get_instance()->add( __( 'A new webhook token has been generated.', 'now-pages-threadi' ), 'info', 'webhook' );
+		Log::get_instance()->add( __( 'A new webhook token has been generated.', 'threadi-now-pages' ), 'info', 'webhook' );
 
-		wp_safe_redirect( Settings::get_instance()->get_url( 'now_pages_threadi_import' ) );
+		wp_safe_redirect( Settings::get_instance()->get_url( 'threadi_now_pages_import' ) );
 		exit;
 	}
 
@@ -588,7 +588,7 @@ class Webhook_Controller {
 	 */
 	public function add_log_category( array $categories ): array {
 		// add our category.
-		$categories['webhook'] = __( 'Webhook', 'now-pages-threadi' );
+		$categories['webhook'] = __( 'Webhook', 'threadi-now-pages' );
 
 		// return the resulting categories.
 		return $categories;
@@ -613,9 +613,9 @@ class Webhook_Controller {
 		 *
 		 * @param string $ip The client address, empty if it could not be determined.
 		 */
-		$ip = (string) apply_filters( 'now_pages_threadi_webhook_client_ip', $ip );
+		$ip = (string) apply_filters( 'threadi_now_pages_webhook_client_ip', $ip );
 
-		return 'now_pages_threadi_webhook_fails_' . md5( $ip );
+		return 'threadi_now_pages_webhook_fails_' . md5( $ip );
 	}
 
 	/**

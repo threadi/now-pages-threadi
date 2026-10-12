@@ -2,29 +2,29 @@
 /**
  * File for digest widget.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 // prevent direct access.
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\PageBuilder\Divi4\Render;
-use NowPagesThreadi\PageBuilder\Shortcode;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\PageBuilder\Divi4\Render;
+use ThreadiNowPages\PageBuilder\Shortcode;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Initialize the filter linklist-widget for Divi.
  */
-class NowPagesThreadiDivi4Digest extends ET_Builder_Module {
+class ThreadiNowPagesDivi4Digest extends ET_Builder_Module {
 
 	/**
 	 * Set widget-slug.
 	 *
 	 * @var string
 	 */
-	public $slug = 'now_pages_threadi_digest';
+	public $slug = 'threadi_now_pages_digest';
 
 	/**
 	 * Enable visual editor support.
@@ -51,7 +51,7 @@ class NowPagesThreadiDivi4Digest extends ET_Builder_Module {
 	 */
 	public function init(): void {
 		$this->module_credits['author_uri'] = Plugin::get_plugin_support_url();
-		$this->name                         = esc_html__( 'Digest', 'now-pages-threadi' );
+		$this->name                         = esc_html__( 'Digest', 'threadi-now-pages' );
 	}
 
 	/**
@@ -80,94 +80,94 @@ class NowPagesThreadiDivi4Digest extends ET_Builder_Module {
 
 		return array(
 			'period' => array(
-				'label'           => esc_html__( 'Period', 'now-pages-threadi' ),
+				'label'           => esc_html__( 'Period', 'threadi-now-pages' ),
 				'type'            => 'select',
 				'option_category' => 'layout',
 				'options'         => $periods,
 				'default'         => Digests::get_instance()->get_default_period(),
-				'toggle_slug'     => 'now_pages_threadi',
+				'toggle_slug'     => 'threadi_now_pages',
 				'sub_toggle'      => 'settings',
 			),
 			'format'     => array(
-				'label'           => esc_html__( 'Format', 'now-pages-threadi' ),
+				'label'           => esc_html__( 'Format', 'threadi-now-pages' ),
 				'type'            => 'select',
 				'option_category' => 'layout',
 				'options'         => $formats,
 				'default'         => Digests::get_instance()->get_default_format(),
-				'toggle_slug'     => 'now_pages_threadi',
+				'toggle_slug'     => 'threadi_now_pages',
 				'sub_toggle'      => 'settings',
 			),
 			'override_display'               => array(
-				'label'           => esc_html__( 'Use own display settings', 'now-pages-threadi' ),
+				'label'           => esc_html__( 'Use own display settings', 'threadi-now-pages' ),
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'now-pages-threadi' ),
-					'off' => esc_html__( 'No', 'now-pages-threadi' ),
+					'on'  => esc_html__( 'Yes', 'threadi-now-pages' ),
+					'off' => esc_html__( 'No', 'threadi-now-pages' ),
 				),
 				'default'         => 'off',
-				'toggle_slug'     => 'now_pages_threadi',
+				'toggle_slug'     => 'threadi_now_pages',
 				'sub_toggle'      => 'settings',
 			),
 
 			'show_time'               => array(
-				'label'           => esc_html__( 'Show times', 'now-pages-threadi' ),
+				'label'           => esc_html__( 'Show times', 'threadi-now-pages' ),
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'now-pages-threadi' ),
-					'off' => esc_html__( 'No', 'now-pages-threadi' ),
+					'on'  => esc_html__( 'Yes', 'threadi-now-pages' ),
+					'off' => esc_html__( 'No', 'threadi-now-pages' ),
 				),
 				'default'         => 'off',
-				'toggle_slug'     => 'now_pages_threadi',
+				'toggle_slug'     => 'threadi_now_pages',
 				'sub_toggle'      => 'settings',
 			),
 			'show_source'               => array(
-				'label'           => esc_html__( 'Show data source', 'now-pages-threadi' ),
+				'label'           => esc_html__( 'Show data source', 'threadi-now-pages' ),
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'now-pages-threadi' ),
-					'off' => esc_html__( 'No', 'now-pages-threadi' ),
+					'on'  => esc_html__( 'Yes', 'threadi-now-pages' ),
+					'off' => esc_html__( 'No', 'threadi-now-pages' ),
 				),
 				'default'         => 'off',
-				'toggle_slug'     => 'now_pages_threadi',
+				'toggle_slug'     => 'threadi_now_pages',
 				'sub_toggle'      => 'settings',
 			),
 			'link_source'               => array(
-				'label'           => esc_html__( 'Link the data source', 'now-pages-threadi' ),
+				'label'           => esc_html__( 'Link the data source', 'threadi-now-pages' ),
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'now-pages-threadi' ),
-					'off' => esc_html__( 'No', 'now-pages-threadi' ),
+					'on'  => esc_html__( 'Yes', 'threadi-now-pages' ),
+					'off' => esc_html__( 'No', 'threadi-now-pages' ),
 				),
 				'default'         => 'off',
-				'toggle_slug'     => 'now_pages_threadi',
+				'toggle_slug'     => 'threadi_now_pages',
 				'sub_toggle'      => 'settings',
 			),
 			'show_period'               => array(
-				'label'           => esc_html__( 'Show period of entries', 'now-pages-threadi' ),
+				'label'           => esc_html__( 'Show period of entries', 'threadi-now-pages' ),
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'now-pages-threadi' ),
-					'off' => esc_html__( 'No', 'now-pages-threadi' ),
+					'on'  => esc_html__( 'Yes', 'threadi-now-pages' ),
+					'off' => esc_html__( 'No', 'threadi-now-pages' ),
 				),
 				'default'         => 'on',
-				'toggle_slug'     => 'now_pages_threadi',
+				'toggle_slug'     => 'threadi_now_pages',
 				'sub_toggle'      => 'settings',
 			),
 			'group_by_category'               => array(
-				'label'           => esc_html__( 'Group by category', 'now-pages-threadi' ),
+				'label'           => esc_html__( 'Group by category', 'threadi-now-pages' ),
 				'type'            => 'yes_no_button',
 				'option_category' => 'layout',
 				'options'         => array(
-					'on'  => esc_html__( 'Yes', 'now-pages-threadi' ),
-					'off' => esc_html__( 'No', 'now-pages-threadi' ),
+					'on'  => esc_html__( 'Yes', 'threadi-now-pages' ),
+					'off' => esc_html__( 'No', 'threadi-now-pages' ),
 				),
 				'default'         => 'on',
-				'toggle_slug'     => 'now_pages_threadi',
+				'toggle_slug'     => 'threadi_now_pages',
 				'sub_toggle'      => 'settings',
 			),
 		);
@@ -182,10 +182,10 @@ class NowPagesThreadiDivi4Digest extends ET_Builder_Module {
 		return array(
 			'advanced' => array(
 				'toggles' => array(
-					'now_pages_threadi' => array(
+					'threadi_now_pages' => array(
 						'priority'          => 24,
 						'tabbed_subtoggles' => false,
-						'title'             => __( 'Digest', 'now-pages-threadi' ),
+						'title'             => __( 'Digest', 'threadi-now-pages' ),
 					),
 				),
 			),
@@ -243,4 +243,4 @@ class NowPagesThreadiDivi4Digest extends ET_Builder_Module {
 /**
  * Initialize the widget.
  */
-new NowPagesThreadiDivi4Digest();
+new ThreadiNowPagesDivi4Digest();

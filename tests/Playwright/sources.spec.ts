@@ -11,7 +11,7 @@ test.describe('Sources', () => {
     // @ts-ignore
     test('Adding a source offers the known services', async ({ page, cli }) => {
         // @ts-ignore
-        await page.goto(`${cli.serverUrl}/wp-admin/post-new.php?post_type=np_threadi_source`);
+        await page.goto(`${cli.serverUrl}/wp-admin/post-new.php?post_type=threadi_np_source`);
 
         for (const service of ['This website', 'Mastodon', 'GitHub', 'Last.fm', 'Steam', 'Goodreads', 'Something I do regularly']) {
             await expect(page.getByRole('button', { name: new RegExp(`^${service.replace('.', '\\.')}`) })).toBeVisible();
@@ -24,7 +24,7 @@ test.describe('Sources', () => {
     // @ts-ignore
     test('Without an AI service the advice is explained instead of offered', async ({ page, cli }) => {
         // @ts-ignore
-        await page.goto(`${cli.serverUrl}/wp-admin/post-new.php?post_type=np_threadi_source`);
+        await page.goto(`${cli.serverUrl}/wp-admin/post-new.php?post_type=threadi_np_source`);
 
         await expect(page.getByRole('button', { name: /^This website/ })).toBeVisible();
         await expect(page.getByRole('button', { name: /^Get advice/ })).toHaveCount(0);
@@ -35,7 +35,7 @@ test.describe('Sources', () => {
     // @ts-ignore
     test('A source added through the assistant is imported at once', async ({ page, cli }) => {
         // @ts-ignore
-        await page.goto(`${cli.serverUrl}/wp-admin/post-new.php?post_type=np_threadi_source`);
+        await page.goto(`${cli.serverUrl}/wp-admin/post-new.php?post_type=threadi_np_source`);
 
         const continueButton = page.getByRole('button', { name: 'Continue' });
 
@@ -50,19 +50,19 @@ test.describe('Sources', () => {
         await expect(completedButton).toBeEnabled({ timeout: 90_000 });
         await completedButton.click();
 
-        await expect(page).toHaveURL(/edit\.php\?post_type=np_threadi_source/);
+        await expect(page).toHaveURL(/edit\.php\?post_type=threadi_np_source/);
         await expect(page.locator('#the-list tr')).toHaveCount(1);
         await expect(page.locator('#the-list tr')).toContainText('This website');
 
         // the posts of this website have become entries.
-        const entries = await php(cli, `echo count( get_posts( array( 'post_type' => 'np_threadi_entry', 'post_status' => 'publish', 'numberposts' => -1 ) ) );`);
+        const entries = await php(cli, `echo count( get_posts( array( 'post_type' => 'threadi_np_entry', 'post_status' => 'publish', 'numberposts' => -1 ) ) );`);
         expect(parseInt(entries, 10)).toBeGreaterThan(0);
     });
 
     // @ts-ignore
     test('The form for a source by hand asks for a provider first', async ({ page, cli }) => {
         // @ts-ignore
-        await page.goto(`${cli.serverUrl}/wp-admin/post-new.php?post_type=np_threadi_source&now_pages_threadi_manual=1`);
+        await page.goto(`${cli.serverUrl}/wp-admin/post-new.php?post_type=threadi_np_source&threadi_now_pages_manual=1`);
 
         await expect(page.getByRole('heading', { level: 1 })).toContainText('Add New Now Page Source');
 
@@ -76,13 +76,13 @@ test.describe('Sources', () => {
         // a source which is not published, so saving it does not start an import.
         const sourceId = await php(
             cli,
-            `$taxonomy = \\NowPagesThreadi\\NowPages\\Categories::TAXONOMY;
+            `$taxonomy = \\ThreadiNowPages\\NowPages\\Categories::TAXONOMY;
             $forum     = wp_insert_term( 'Forum', $taxonomy );
             wp_insert_term( 'Translations', $taxonomy );
 
             $source_id = wp_insert_post(
                 array(
-                    'post_type'   => 'np_threadi_source',
+                    'post_type'   => 'threadi_np_source',
                     'post_status' => 'draft',
                     'post_title'  => 'A feed',
                     'meta_input'  => array(
@@ -96,7 +96,7 @@ test.describe('Sources', () => {
             foreach ( array( 'First entry', 'Second entry' ) as $text ) {
                 $entry_id = wp_insert_post(
                     array(
-                        'post_type'    => 'np_threadi_entry',
+                        'post_type'    => 'threadi_np_entry',
                         'post_status'  => 'publish',
                         'post_parent'  => $source_id,
                         'post_content' => $text,
@@ -114,7 +114,7 @@ test.describe('Sources', () => {
         // the place where the categories are managed is one click away.
         await expect(page.getByRole('link', { name: /^Manage the categories/ })).toHaveAttribute(
             'href',
-            /edit-tags\.php\?taxonomy=now_pages_threadi_category&post_type=np_threadi_entry/
+            /edit-tags\.php\?taxonomy=threadi_now_pages_category&post_type=threadi_np_entry/
         );
 
         await page.getByLabel('Default category for imported entries').selectOption({ label: 'Translations' });
@@ -125,8 +125,8 @@ test.describe('Sources', () => {
 
         const categories = await php(
             cli,
-            `foreach ( get_posts( array( 'post_type' => 'np_threadi_entry', 'post_parent' => (int) $args['source'], 'numberposts' => -1 ) ) as $entry ) {
-                echo implode( ',', wp_get_object_terms( $entry->ID, \\NowPagesThreadi\\NowPages\\Categories::TAXONOMY, array( 'fields' => 'names' ) ) ) . ';';
+            `foreach ( get_posts( array( 'post_type' => 'threadi_np_entry', 'post_parent' => (int) $args['source'], 'numberposts' => -1 ) ) as $entry ) {
+                echo implode( ',', wp_get_object_terms( $entry->ID, \\ThreadiNowPages\\NowPages\\Categories::TAXONOMY, array( 'fields' => 'names' ) ) ) . ';';
             }`,
             { source: parseInt(sourceId, 10) }
         );
@@ -139,7 +139,7 @@ test.describe('Sources', () => {
 
         // the list of the sources names the category as well.
         // @ts-ignore
-        await page.goto(`${cli.serverUrl}/wp-admin/edit.php?post_type=np_threadi_source`);
-        await expect(page.locator('#the-list td.column-now_pages_threadi_category')).toHaveText('Translations');
+        await page.goto(`${cli.serverUrl}/wp-admin/edit.php?post_type=threadi_np_source`);
+        await expect(page.locator('#the-list td.column-threadi_now_pages_category')).toHaveText('Translations');
     });
 });

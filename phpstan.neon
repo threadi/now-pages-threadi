@@ -18,7 +18,7 @@ parameters:
     - "#PackageBuildManager#"
     - "#Bricks#"
     - "#WP_PLUGIN_DIR#"
-    - "#bb_now_pages_threadi_digest#"
+    - "#bb_threadi_now_pages_digest#"
     - "#fsn_map#"
     - "#Themify_Builder_Model#"
     - "#pagelayer_#"
@@ -26,7 +26,7 @@ parameters:
     - wp_send_json
   paths:
     - app
-    - now-pages-threadi.php
+    - threadi-now-pages.php
     - uninstall.php
   excludePaths:
     - app/Dependencies/*

@@ -2,12 +2,12 @@
 /**
  * File for the base object for each page builder support.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -104,7 +104,7 @@ class PageBuilder_Base {
 	 * @return string
 	 */
 	public function get_page_content(): string {
-		return '[now_pages_threadi_digest]';
+		return '[threadi_now_pages_digest]';
 	}
 
 	/**

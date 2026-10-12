@@ -5,11 +5,11 @@
     "steps": [
         {
             "step": "activatePlugin",
-            "pluginPath": "now-pages-threadi/now-pages-threadi.php"
+            "pluginPath": "threadi-now-pages/threadi-now-pages.php"
         },
         {
             "step": "runPHP",
-            "code": "<?php require_once '/wordpress/wp-load.php'; if ( ! defined( 'NOWPAGES_PLUGIN_VERSION' ) ) { throw new Exception( 'plugin constants missing' ); } file_put_contents( '/wordpress/wp-content/plugins/now-pages-threadi/smoke-result.txt', 'SMOKE_OK' );"
+            "code": "<?php require_once '/wordpress/wp-load.php'; if ( ! defined( 'NOWPAGES_PLUGIN_VERSION' ) ) { throw new Exception( 'plugin constants missing' ); } file_put_contents( '/wordpress/wp-content/plugins/threadi-now-pages/smoke-result.txt', 'SMOKE_OK' );"
         }
     ]
 }

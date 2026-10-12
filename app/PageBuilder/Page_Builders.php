@@ -2,18 +2,18 @@
 /**
  * File to handle our page builder support.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Instance_Registry;
-use NowPagesThreadi\Helper\Singleton_Trait;
+use ThreadiNowPages\Helper\Instance_Registry;
+use ThreadiNowPages\Helper\Singleton_Trait;
 
 /**
  * Object to handle page builder support.
@@ -33,7 +33,7 @@ class Page_Builders {
 		}
 
 		// use hooks.
-		add_filter( 'now_pages_threadi_log_categories', array( $this, 'add_log_category' ) );
+		add_filter( 'threadi_now_pages_log_categories', array( $this, 'add_log_category' ) );
 	}
 
 	/**
@@ -43,27 +43,27 @@ class Page_Builders {
 	 */
 	public function get_page_builders(): array {
 		$list = array(
-			'\NowPagesThreadi\PageBuilder\Avada',
-			'\NowPagesThreadi\PageBuilder\Avia',
-			'\NowPagesThreadi\PageBuilder\Beaver',
-			'\NowPagesThreadi\PageBuilder\BoldBuilder',
-			'\NowPagesThreadi\PageBuilder\Breakdance',
-			'\NowPagesThreadi\PageBuilder\Bricks',
-			'\NowPagesThreadi\PageBuilder\Brizy',
-			'\NowPagesThreadi\PageBuilder\Divi4',
-			'\NowPagesThreadi\PageBuilder\Divi5',
-			'\NowPagesThreadi\PageBuilder\Elementor',
-			'\NowPagesThreadi\PageBuilder\FusionBuilder',
-			'\NowPagesThreadi\PageBuilder\Gutenberg',
-			'\NowPagesThreadi\PageBuilder\LiveComposer',
-			'\NowPagesThreadi\PageBuilder\Oxygen',
-			'\NowPagesThreadi\PageBuilder\Pagelayer',
-			'\NowPagesThreadi\PageBuilder\Shortcode',
-			'\NowPagesThreadi\PageBuilder\SiteOrigin',
-			'\NowPagesThreadi\PageBuilder\Themify',
-			'\NowPagesThreadi\PageBuilder\WpBakery',
-			'\NowPagesThreadi\PageBuilder\Wp_Widget',
-			'\NowPagesThreadi\PageBuilder\ZionBuilder',
+			'\ThreadiNowPages\PageBuilder\Avada',
+			'\ThreadiNowPages\PageBuilder\Avia',
+			'\ThreadiNowPages\PageBuilder\Beaver',
+			'\ThreadiNowPages\PageBuilder\BoldBuilder',
+			'\ThreadiNowPages\PageBuilder\Breakdance',
+			'\ThreadiNowPages\PageBuilder\Bricks',
+			'\ThreadiNowPages\PageBuilder\Brizy',
+			'\ThreadiNowPages\PageBuilder\Divi4',
+			'\ThreadiNowPages\PageBuilder\Divi5',
+			'\ThreadiNowPages\PageBuilder\Elementor',
+			'\ThreadiNowPages\PageBuilder\FusionBuilder',
+			'\ThreadiNowPages\PageBuilder\Gutenberg',
+			'\ThreadiNowPages\PageBuilder\LiveComposer',
+			'\ThreadiNowPages\PageBuilder\Oxygen',
+			'\ThreadiNowPages\PageBuilder\Pagelayer',
+			'\ThreadiNowPages\PageBuilder\Shortcode',
+			'\ThreadiNowPages\PageBuilder\SiteOrigin',
+			'\ThreadiNowPages\PageBuilder\Themify',
+			'\ThreadiNowPages\PageBuilder\WpBakery',
+			'\ThreadiNowPages\PageBuilder\Wp_Widget',
+			'\ThreadiNowPages\PageBuilder\ZionBuilder',
 		);
 
 		/**
@@ -73,7 +73,7 @@ class Page_Builders {
 		 *
 		 * @param array<int,class-string<PageBuilder_Base>> $list List of the handler.
 		 */
-		return apply_filters( 'now_pages_threadi_pagebuilder', $list );
+		return apply_filters( 'threadi_now_pages_pagebuilder', $list );
 	}
 
 	/**
@@ -84,7 +84,7 @@ class Page_Builders {
 	 * @return array<string,string>
 	 */
 	public function add_log_category( array $categories ): array {
-		$categories['pagebuilder'] = __( 'Page Builder', 'now-pages-threadi' );
+		$categories['pagebuilder'] = __( 'Page Builder', 'threadi-now-pages' );
 		return $categories;
 	}
 

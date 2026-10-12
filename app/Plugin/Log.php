@@ -2,12 +2,12 @@
 /**
  * File for handling logging in this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -21,14 +21,14 @@ class Log {
 	 *
 	 * @var string
 	 */
-	public const OPTION_DB_VERSION = 'now_pages_threadi_log_db_version';
+	public const OPTION_DB_VERSION = 'threadi_now_pages_log_db_version';
 
 	/**
 	 * The option holding the time of the last cleanup of the log.
 	 *
 	 * @var string
 	 */
-	public const OPTION_LAST_CLEANUP = 'now_pages_threadi_log_last_cleanup';
+	public const OPTION_LAST_CLEANUP = 'threadi_now_pages_log_last_cleanup';
 
 	/**
 	 * The actual version of the table schema.
@@ -95,7 +95,7 @@ class Log {
 	public function create_table(): void {
 		global $wpdb;
 		$charset_collate = $wpdb->get_charset_collate();
-		$table_name      = $wpdb->prefix . 'now_pages_threadi_logs';
+		$table_name      = $wpdb->prefix . 'threadi_now_pages_logs';
 
 		// definition for the table for log-entries.
 		// the primary key is needed on databases with "sql_require_primary_key", dbDelta() needs the two spaces.
@@ -148,7 +148,7 @@ class Log {
 	public function delete_table(): void {
 		global $wpdb;
 
-		$table_name = (string) esc_sql( $wpdb->prefix . 'now_pages_threadi_logs' ); // @phpstan-ignore cast.string
+		$table_name = (string) esc_sql( $wpdb->prefix . 'threadi_now_pages_logs' ); // @phpstan-ignore cast.string
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.NotPrepared -- Custom log table; fixed table name, esc_sql-escaped, identifier can't be a placeholder.
 		$wpdb->query( sprintf( 'DROP TABLE IF EXISTS %s', $table_name ) );
@@ -175,7 +175,7 @@ class Log {
 		global $wpdb;
 
 		// if debug is disabled, we only log errors.
-		if ( 1 !== absint( get_option( 'now_pages_threadi_debug' ) ) ) {
+		if ( 1 !== absint( get_option( 'threadi_now_pages_debug' ) ) ) {
 			$is_error          = 'error' === $state;
 			$is_import_success = ( 'import' === $category && 'success' === $state ) || ( 'system' === $category && 'info' === $state );
 
@@ -191,10 +191,10 @@ class Log {
 			 * @param string $log        The log message.
 			 * @param string $md5        The unique marker.
 			 */
-			$should_log = apply_filters( 'now_pages_threadi_log_without_debug', $should_log, $category, $state, $log, $md5 );
+			$should_log = apply_filters( 'threadi_now_pages_log_without_debug', $should_log, $category, $state, $log, $md5 );
 		} else {
 			// get the debug categories.
-			$log_categories = get_option( 'now_pages_threadi_debug_categories' );
+			$log_categories = get_option( 'threadi_now_pages_debug_categories' );
 
 			// check if it is an array.
 			if ( ! is_array( $log_categories ) ) {
@@ -218,7 +218,7 @@ class Log {
 			 * @param string $log        The log message.
 			 * @param string $md5        The unique marker.
 			 */
-			$should_log = apply_filters( 'now_pages_threadi_log_with_debug', $should_log, $category, $state, $log, $md5 );
+			$should_log = apply_filters( 'threadi_now_pages_log_with_debug', $should_log, $category, $state, $log, $md5 );
 		}
 
 		// bail if we should not log.
@@ -228,14 +228,14 @@ class Log {
 
 		// add error counter if this is an error.
 		if ( 'error' === $state ) {
-			$error_counter = absint( get_option( 'now_pages_threadi_log_error_count' ) );
+			$error_counter = absint( get_option( 'threadi_now_pages_log_error_count' ) );
 			++$error_counter;
-			update_option( 'now_pages_threadi_log_error_count', $error_counter );
+			update_option( 'threadi_now_pages_log_error_count', $error_counter );
 		}
 
 		// insert the log entry.
 		$wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-			$wpdb->prefix . 'now_pages_threadi_logs',
+			$wpdb->prefix . 'threadi_now_pages_logs',
 			array(
 				'time'     => gmdate( 'Y-m-d H:i:s' ),
 				'log'      => $log,
@@ -289,10 +289,10 @@ class Log {
 
 		$is_running = true;
 
-		$table_name = (string) esc_sql( $wpdb->prefix . 'now_pages_threadi_logs' ); // @phpstan-ignore cast.string
+		$table_name = (string) esc_sql( $wpdb->prefix . 'threadi_now_pages_logs' ); // @phpstan-ignore cast.string
 
 		// get the max age in days, keep the entries at least one day: 0 would otherwise delete every entry.
-		$max_age = max( 1, absint( get_option( 'now_pages_threadi_max_age_log_entries', 20 ) ) );
+		$max_age = max( 1, absint( get_option( 'threadi_now_pages_max_age_log_entries', 20 ) ) );
 
 		// calculate the limit in GMT, as the entries are saved in GMT.
 		$cutoff = gmdate( 'Y-m-d H:i:s', time() - ( $max_age * DAY_IN_SECONDS ) );
@@ -303,7 +303,7 @@ class Log {
 		// log if any error occurred.
 		if ( ! empty( $wpdb->last_error ) ) {
 			/* translators: %1$s will be replaced by a DB-error-message. */
-			$this->add( sprintf( __( 'Database error: %1$s - This usually indicates that the database system of your hosting does not meet the minimum requirements of WordPress. Please contact your hosts support team for clarification.', 'now-pages-threadi' ), '<code>' . esc_html( $wpdb->last_error ) . '</code>' ), 'error', 'system' );
+			$this->add( sprintf( __( 'Database error: %1$s - This usually indicates that the database system of your hosting does not meet the minimum requirements of WordPress. Please contact your hosts support team for clarification.', 'threadi-now-pages' ), '<code>' . esc_html( $wpdb->last_error ) . '</code>' ), 'error', 'system' );
 		}
 
 		$is_running = false;
@@ -316,7 +316,7 @@ class Log {
 	 */
 	public function get_categories(): array {
 		$list = array(
-			'system' => __( 'System', 'now-pages-threadi' ),
+			'system' => __( 'System', 'threadi-now-pages' ),
 		);
 
 		/**
@@ -326,7 +326,7 @@ class Log {
 		 *
 		 * @param array<string,string> $list List of categories.
 		 */
-		return apply_filters( 'now_pages_threadi_log_categories', $list );
+		return apply_filters( 'threadi_now_pages_log_categories', $list );
 	}
 
 	/**
@@ -356,7 +356,7 @@ class Log {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param int $limit The actual limit.
 		 */
-		$limit = apply_filters( 'now_pages_threadi_log_limit', $limit );
+		$limit = apply_filters( 'threadi_now_pages_log_limit', $limit );
 
 		// get filter.
 		$category = (string) filter_input( INPUT_GET, 'category', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
@@ -367,7 +367,7 @@ class Log {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param string $category The category to use.
 		 */
-		$category = (string) apply_filters( 'now_pages_threadi_log_category', $category );
+		$category = (string) apply_filters( 'threadi_now_pages_log_category', $category );
 
 		// get md5.
 		$md5 = (string) filter_input( INPUT_GET, 'md5', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
@@ -383,7 +383,7 @@ class Log {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param string $md5 The md5 to use.
 		 */
-		$md5 = (string) apply_filters( 'now_pages_threadi_log_md5', $md5 );
+		$md5 = (string) apply_filters( 'threadi_now_pages_log_md5', $md5 );
 
 		// get errors.
 		$errors = absint( filter_input( INPUT_GET, 'errors', FILTER_SANITIZE_NUMBER_INT ) );
@@ -394,7 +394,7 @@ class Log {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param int $errors Should be 1 to filter only for errors.
 		 */
-		$errors = apply_filters( 'now_pages_threadi_log_errors', $errors );
+		$errors = apply_filters( 'threadi_now_pages_log_errors', $errors );
 
 		// add where-condition for errors.
 		$where = '';
@@ -409,7 +409,7 @@ class Log {
 			return $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 				$wpdb->prepare(
 					'SELECT `state`, `time` AS `date`, `log`, `category`
-                    FROM `' . $wpdb->prefix . 'now_pages_threadi_logs`
+                    FROM `' . $wpdb->prefix . 'threadi_now_pages_logs`
                     WHERE `category` = %s' . $where . '
                     ORDER BY ' . $order_by . ' ' . $order . ', `id` ' . $order . '
                     LIMIT %d',
@@ -427,7 +427,7 @@ class Log {
 			return $wpdb->get_results(
 				$wpdb->prepare(
 					'SELECT `state`, `time` AS `date`, `log`, `category`
-                    FROM `' . $wpdb->prefix . 'now_pages_threadi_logs`
+                    FROM `' . $wpdb->prefix . 'threadi_now_pages_logs`
                     WHERE `md5` = %s' . $where . '
                     ORDER BY ' . $order_by . ' ' . $order . ', `id` ' . $order . '
                     LIMIT %d',
@@ -445,7 +445,7 @@ class Log {
 			return $wpdb->get_results(
 				$wpdb->prepare(
 					'SELECT `state`, `time` AS `date`, `log`, `category`
-                    FROM `' . $wpdb->prefix . 'now_pages_threadi_logs`
+                    FROM `' . $wpdb->prefix . 'threadi_now_pages_logs`
                     WHERE `md5` = %s AND `category` = %s' . $where . '
                     ORDER BY ' . $order_by . ' ' . $order . ', `id` ' . $order . '
                     LIMIT %d',
@@ -462,7 +462,7 @@ class Log {
 			return $wpdb->get_results(
 				$wpdb->prepare(
 					'SELECT `state`, `time` AS `date`, `log`, `category`
-                FROM `' . $wpdb->prefix . 'now_pages_threadi_logs`
+                FROM `' . $wpdb->prefix . 'threadi_now_pages_logs`
                 WHERE `state` = "error"
                 ORDER BY ' . $order_by . ' ' . $order . ', `id` ' . $order . '
                 LIMIT %d',
@@ -478,7 +478,7 @@ class Log {
 		return $wpdb->get_results(
 			$wpdb->prepare(
 				'SELECT `state`, `time` AS `date`, `log`, `category`
-                FROM `' . $wpdb->prefix . 'now_pages_threadi_logs`
+                FROM `' . $wpdb->prefix . 'threadi_now_pages_logs`
                 ORDER BY ' . $order_by . ' ' . $order . ', `id` ' . $order . '
                 LIMIT %d',
 				array( $limit )

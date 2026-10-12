@@ -3,14 +3,14 @@
  * Public /now and /author/{name}/now routes.
  *
  * Renders through the theme (get_header / get_footer) via template_include.
- * Themes may override with now-pages-threadi.php or now.php in the theme root.
+ * Themes may override with threadi-now-pages.php or now.php in the theme root.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\NowPages;
+namespace ThreadiNowPages\NowPages;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -21,19 +21,19 @@ use easySettingsForWordPress\Fields\PermalinkSlug;
 use easySettingsForWordPress\Fields\Select;
 use easySettingsForWordPress\Page;
 use easySettingsForWordPress\Tab;
-use NowPagesThreadi\Digests\Diagnostics;
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Digests\Summarizers;
-use NowPagesThreadi\Helper\Format;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Interface;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\PageBuilder\Gutenberg;
-use NowPagesThreadi\Plugin\Init;
-use NowPagesThreadi\Plugin\Settings;
-use NowPagesThreadi\Plugin\Setup;
+use ThreadiNowPages\Digests\Diagnostics;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Digests\Summarizers;
+use ThreadiNowPages\Helper\Format;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Interface;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\PageBuilder\Gutenberg;
+use ThreadiNowPages\Plugin\Init;
+use ThreadiNowPages\Plugin\Settings;
+use ThreadiNowPages\Plugin\Setup;
 use WP_Block_Template;
 use WP_Post;
 use WP_Query;
@@ -51,7 +51,7 @@ class Frontend implements Singleton_Interface {
 	 *
 	 * @var string
 	 */
-	public const QUERY_VAR = 'now_pages_threadi_now';
+	public const QUERY_VAR = 'threadi_now_pages_now';
 
 	/**
 	 * Version of our rewrite rules. Change it whenever the rules change, so they
@@ -120,7 +120,7 @@ class Frontend implements Singleton_Interface {
 		add_filter( 'template_include', array( $this, 'template_include' ) );
 		add_filter( 'document_title_parts', array( $this, 'document_title' ) );
 		add_filter( 'body_class', array( $this, 'body_class' ) );
-		add_filter( 'now_pages_threadi_dashboard_widgets', array( $this, 'add_dashboard_widget' ) );
+		add_filter( 'threadi_now_pages_dashboard_widgets', array( $this, 'add_dashboard_widget' ) );
 
 		// hide the page behind the now route, if it is not public.
 		add_action( 'template_redirect', array( $this, 'hide_now_page' ), 5 );
@@ -134,12 +134,12 @@ class Frontend implements Singleton_Interface {
 		add_action( 'added_user_meta', array( $this, 'clear_sitemap_cache_on_meta_change' ), 10, 3 );
 		add_action( 'updated_user_meta', array( $this, 'clear_sitemap_cache_on_meta_change' ), 10, 3 );
 		add_action( 'deleted_user_meta', array( $this, 'clear_sitemap_cache_on_meta_change' ), 10, 3 );
-		foreach ( array( 'now_pages_threadi_frontend_global_url', 'now_pages_threadi_frontend_user_url', 'now_pages_threadi_slug', 'now_pages_threadi_delay_hours', 'now_pages_threadi_disable_now_page', 'now_pages_threadi_frontend_period', 'now_pages_threadi_frontend_format', Now_Page::OPTION ) as $option ) {
+		foreach ( array( 'threadi_now_pages_frontend_global_url', 'threadi_now_pages_frontend_user_url', 'threadi_now_pages_slug', 'threadi_now_pages_delay_hours', 'threadi_now_pages_disable_now_page', 'threadi_now_pages_frontend_period', 'threadi_now_pages_frontend_format', Now_Page::OPTION ) as $option ) {
 			add_action( 'update_option_' . $option, array( Sitemap::class, 'clear_cache' ) );
 		}
 
 		// use actions.
-		add_action( 'admin_action_now_pages_threadi_create_page', array( $this, 'create_page' ) );
+		add_action( 'admin_action_threadi_now_pages_create_page', array( $this, 'create_page' ) );
 	}
 
 	/**
@@ -163,36 +163,36 @@ class Frontend implements Singleton_Interface {
 		}
 
 		// add tab for frontend settings.
-		$now_page_tab = $settings_page->get_tab( 'now_pages_threadi_now_page' );
+		$now_page_tab = $settings_page->get_tab( 'threadi_now_pages_now_page' );
 		if ( ! $now_page_tab instanceof Tab ) {
 			return;
 		}
 
 		// add section.
-		$availability_section = $now_page_tab->add_section( 'now_pages_threadi_availability', 10 );
-		$availability_section->set_title( __( 'Availability', 'now-pages-threadi' ) );
+		$availability_section = $now_page_tab->add_section( 'threadi_now_pages_availability', 10 );
+		$availability_section->set_title( __( 'Availability', 'threadi-now-pages' ) );
 		$availability_section->set_callback( array( $this, 'show_availability_hint' ) );
 
 		// add section.
-		$content_section = $now_page_tab->add_section( 'now_pages_threadi_content', 20 );
-		$content_section->set_title( __( 'Content', 'now-pages-threadi' ) );
+		$content_section = $now_page_tab->add_section( 'threadi_now_pages_content', 20 );
+		$content_section->set_title( __( 'Content', 'threadi-now-pages' ) );
 
 		// add section.
-		$preview_section = $now_page_tab->add_section( 'now_pages_threadi_preview', 30 );
-		$preview_section->set_title( __( 'Preview', 'now-pages-threadi' ) );
+		$preview_section = $now_page_tab->add_section( 'threadi_now_pages_preview', 30 );
+		$preview_section->set_title( __( 'Preview', 'threadi-now-pages' ) );
 		$preview_section->set_callback( array( $this, 'show_preview' ) );
 		if ( method_exists( $preview_section, 'set_collapsible' ) ) { // @phpstan-ignore function.alreadyNarrowedType
 			$preview_section->set_collapsible( true );
 		}
 
 		// add setting.
-		$setting = $settings_obj->add_setting( 'now_pages_threadi_frontend_period' );
+		$setting = $settings_obj->add_setting( 'threadi_now_pages_frontend_period' );
 		$setting->set_section( $content_section );
 		$setting->set_type( 'string' );
 		$setting->set_default( 'live' );
 		$field = new Select( $settings_obj );
-		$field->set_title( __( 'Period', 'now-pages-threadi' ) );
-		$field->set_description( __( 'Specifies the period covered by the Now page. "Live" shows the last 24 hours; the other values show the current day, hour, week or month.', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Period', 'threadi-now-pages' ) );
+		$field->set_description( __( 'Specifies the period covered by the Now page. "Live" shows the last 24 hours; the other values show the current day, hour, week or month.', 'threadi-now-pages' ) );
 		$field->set_options( Digests::get_instance()->get_periods() );
 		$setting->set_field( $field );
 
@@ -203,13 +203,13 @@ class Frontend implements Singleton_Interface {
 		}
 
 		// add setting.
-		$format_setting = $settings_obj->add_setting( 'now_pages_threadi_frontend_format' );
+		$format_setting = $settings_obj->add_setting( 'threadi_now_pages_frontend_format' );
 		$format_setting->set_section( $content_section );
 		$format_setting->set_type( 'string' );
 		$format_setting->set_default( 'verbatim' );
 		$field = new Select( $settings_obj );
-		$field->set_title( __( 'Format', 'now-pages-threadi' ) );
-		$field->set_description( __( 'Defines how entries are rendered on the now page.<br>"1:1 list" lists them chronologically, one line per entry.<br>"Narrative" has the configured summarizer turn them into a continuous text.<br>This setting only applies to the generic Now Page.', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Format', 'threadi-now-pages' ) );
+		$field->set_description( __( 'Defines how entries are rendered on the now page.<br>"1:1 list" lists them chronologically, one line per entry.<br>"Narrative" has the configured summarizer turn them into a continuous text.<br>This setting only applies to the generic Now Page.', 'threadi-now-pages' ) );
 		$field->set_options( $formats );
 		$format_setting->set_field( $field );
 
@@ -220,10 +220,10 @@ class Frontend implements Singleton_Interface {
 
 			// mark summarizers which cannot run on this site.
 			if ( ! $summarizer->is_available() ) {
-				$label .= ' - ' . __( 'no provider configured', 'now-pages-threadi' );
+				$label .= ' - ' . __( 'no provider configured', 'threadi-now-pages' );
 				$reason = $summarizer->get_unavailable_reason();
-				if ( '' !== $reason && get_option( 'now_pages_threadi_summarizer' ) === $summarizer->get_slug() ) {
-					$hints[] = '<div class="now-pages-threadi-warning">' . wp_kses_post( $reason ) . '</div>';
+				if ( '' !== $reason && get_option( 'threadi_now_pages_summarizer' ) === $summarizer->get_slug() ) {
+					$hints[] = '<div class="threadi-now-pages-warning">' . wp_kses_post( $reason ) . '</div>';
 				}
 			}
 
@@ -231,37 +231,37 @@ class Frontend implements Singleton_Interface {
 		}
 
 		// build the description, including the hints.
-		$description = __( 'Defines, which service turns imported entries into a continuous text.', 'now-pages-threadi' );
+		$description = __( 'Defines, which service turns imported entries into a continuous text.', 'threadi-now-pages' );
 		foreach ( $hints as $hint ) {
 			$description .= '<br><br>' . $hint;
 		}
 
 		// add setting.
-		$setting = $settings_obj->add_setting( 'now_pages_threadi_summarizer' );
+		$setting = $settings_obj->add_setting( 'threadi_now_pages_summarizer' );
 		$setting->set_section( $content_section );
 		$setting->set_type( 'string' );
 		$setting->set_default( 'template' );
 		$setting->set_soft_reload_on_save( true );
 		$field = new Select( $settings_obj );
-		$field->set_title( __( 'Default summarizer', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Default summarizer', 'threadi-now-pages' ) );
 		$field->set_description( $description );
 		$field->set_options( $summarizers );
 		$field->add_depend( $format_setting, 'narrative' );
 		$setting->set_field( $field );
 
 		// add setting.
-		$global_url_setting = $settings_obj->add_setting( 'now_pages_threadi_frontend_global_url' );
+		$global_url_setting = $settings_obj->add_setting( 'threadi_now_pages_frontend_global_url' );
 		$global_url_setting->set_section( $availability_section );
 		$global_url_setting->set_default( 1 );
 		$global_url_setting->set_save_callback( array( $this, 'save_url_slugs' ) );
 		$field = new Checkbox( $settings_obj );
-		$field->set_title( __( 'Global URL', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Global URL', 'threadi-now-pages' ) );
 		/* translators: %1$s will be replaced by a URL */
-		$field->set_description( sprintf( __( 'If enabled, your now page will be available under <a href="%1$s" target="_blank">%1$s%2$s</a>.', 'now-pages-threadi' ), $this->get_global_now_page_url(), Plugin::get_a11n_window_hint() ) );
+		$field->set_description( sprintf( __( 'If enabled, your now page will be available under <a href="%1$s" target="_blank">%1$s%2$s</a>.', 'threadi-now-pages' ), $this->get_global_now_page_url(), Plugin::get_a11n_window_hint() ) );
 		$global_url_setting->set_field( $field );
 
 		// add setting.
-		$setting = $settings_obj->add_setting( 'now_pages_threadi_frontend_user_url' );
+		$setting = $settings_obj->add_setting( 'threadi_now_pages_frontend_user_url' );
 		$setting->set_section( $availability_section );
 		$setting->set_default( 0 );
 		$setting->set_save_callback( array( $this, 'save_url_slugs' ) );
@@ -269,8 +269,8 @@ class Frontend implements Singleton_Interface {
 			$setting->set_soft_reload_on_save( true );
 		}
 		$field = new Checkbox( $settings_obj );
-		$field->set_title( __( 'User URL', 'now-pages-threadi' ) );
-		$field->set_description( __( 'If enabled, every user will get their own "now page" under their profile URL. They can opt out in their profile settings, if you allow this in the permissions.', 'now-pages-threadi' ) );
+		$field->set_title( __( 'User URL', 'threadi-now-pages' ) );
+		$field->set_description( __( 'If enabled, every user will get their own "now page" under their profile URL. They can opt out in their profile settings, if you allow this in the permissions.', 'threadi-now-pages' ) );
 		$setting->set_field( $field );
 
 		// add setting to show which page backs the route, if any.
@@ -284,8 +284,8 @@ class Frontend implements Singleton_Interface {
 			$setting->set_soft_reload_on_save( true );
 		}
 		$field = new Select( $settings_obj );
-		$field->set_title( __( 'Page for the Now Page', 'now-pages-threadi' ) );
-		$field->set_description( __( 'Without a page the route is virtual and rendered by the plugin. With one, it is a normal page, so your theme and your page builder can design it.', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Page for the Now Page', 'threadi-now-pages' ) );
+		$field->set_description( __( 'Without a page the route is virtual and rendered by the plugin. With one, it is a normal page, so your theme and your page builder can design it.', 'threadi-now-pages' ) );
 		$field->set_options( $this->get_page_options() );
 		$field->add_depend( $global_url_setting, 1 );
 		$setting->set_field( $field );
@@ -293,41 +293,41 @@ class Frontend implements Singleton_Interface {
 		// create the URL to create a page.
 		$create_page_url = add_query_arg(
 			array(
-				'action' => 'now_pages_threadi_create_page',
-				'nonce'  => wp_create_nonce( 'now-pages-threadi-create-page' ),
+				'action' => 'threadi_now_pages_create_page',
+				'nonce'  => wp_create_nonce( 'threadi-now-pages-create-page' ),
 			),
 			get_admin_url() . 'admin.php'
 		);
 
 		// create dialog.
 		$dialog = array(
-			'title'   => __( 'Create a new Now Page', 'now-pages-threadi' ),
+			'title'   => __( 'Create a new Now Page', 'threadi-now-pages' ),
 			'texts'   => array(
-				'<p><strong>' . __( 'Do you really want to create a new Now Page?', 'now-pages-threadi' ) . '</strong></p>',
-				'<p>' . __( 'We will create the page for you using the block, widget or shortcode provided by your PageBuilder. You can start using it right away and continue customizing it.', 'now-pages-threadi' ) . '</p>',
-				'<p>' . __( 'If a Now page already exists, it will neither be modified nor removed, and no new one will be created.', 'now-pages-threadi' ) . '</p>',
+				'<p><strong>' . __( 'Do you really want to create a new Now Page?', 'threadi-now-pages' ) . '</strong></p>',
+				'<p>' . __( 'We will create the page for you using the block, widget or shortcode provided by your PageBuilder. You can start using it right away and continue customizing it.', 'threadi-now-pages' ) . '</p>',
+				'<p>' . __( 'If a Now page already exists, it will neither be modified nor removed, and no new one will be created.', 'threadi-now-pages' ) . '</p>',
 			),
 			'buttons' => array(
 				array(
 					'action'  => 'location.href="' . $create_page_url . '";',
 					'variant' => 'primary',
-					'text'    => __( 'Yes, create it', 'now-pages-threadi' ),
+					'text'    => __( 'Yes, create it', 'threadi-now-pages' ),
 				),
 				array(
 					'action'  => 'closeDialog();',
 					'variant' => 'primary',
-					'text'    => __( 'Cancel', 'now-pages-threadi' ),
+					'text'    => __( 'Cancel', 'threadi-now-pages' ),
 				),
 			),
 		);
 
 		// add setting.
-		$setting = $settings_obj->add_setting( 'now_pages_threadi_create_page' );
+		$setting = $settings_obj->add_setting( 'threadi_now_pages_create_page' );
 		$setting->set_section( $availability_section );
 		$setting->prevent_export( true );
 		$field = new Button( $settings_obj );
-		$field->set_title( __( 'New page', 'now-pages-threadi' ) );
-		$field->set_button_title( __( 'Create page', 'now-pages-threadi' ) );
+		$field->set_title( __( 'New page', 'threadi-now-pages' ) );
+		$field->set_button_title( __( 'Create page', 'threadi-now-pages' ) );
 		$field->set_button_url( $create_page_url );
 		$field->add_data( 'dialog', Format::get_json( $dialog ) );
 		$field->add_class( 'easy-dialog-for-wordpress' );
@@ -341,18 +341,18 @@ class Frontend implements Singleton_Interface {
 		$permalinks_tab = $permalink_page->add_tab( 'permalink', 10 );
 
 		// add the section in this tab.
-		$permalink_section = $permalinks_tab->add_section( 'now_pages_threadi', 10 );
-		$permalink_section->set_title( __( 'Now Pages', 'now-pages-threadi' ) );
+		$permalink_section = $permalinks_tab->add_section( 'threadi_now_pages', 10 );
+		$permalink_section->set_title( __( 'Now Pages', 'threadi-now-pages' ) );
 
 		// add setting.
-		$setting = $settings_obj->add_setting( 'now_pages_threadi_slug' );
+		$setting = $settings_obj->add_setting( 'threadi_now_pages_slug' );
 		$setting->set_type( 'string' );
 		$setting->set_default( 'now' );
 		$setting->set_section( $permalink_section );
 		$field = new PermalinkSlug( $settings_obj );
-		$field->set_title( __( 'Slug', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Slug', 'threadi-now-pages' ) );
 		/* translators: %1$s will be replaced by a URL. */
-		$field->set_description( sprintf( __( 'Define the slug of your now page. Only usable with pretty permalinks. Empty values are not possible. If you want to disable this slug, disable the global URL <a href="%1$s">in the plugin settings</a>.', 'now-pages-threadi' ), Settings::get_instance()->get_url() ) );
+		$field->set_description( sprintf( __( 'Define the slug of your now page. Only usable with pretty permalinks. Empty values are not possible. If you want to disable this slug, disable the global URL <a href="%1$s">in the plugin settings</a>.', 'threadi-now-pages' ), Settings::get_instance()->get_url() ) );
 		$field->set_readonly( ! $this->using_pretty_permalinks() );
 		$setting->set_field( $field );
 	}
@@ -368,11 +368,11 @@ class Frontend implements Singleton_Interface {
 
 		// a real page for the Now Page URL brings its own rule.
 		// the default has to match is_public(): the option does not exist until the settings are saved for the first time.
-		if ( 1 === absint( get_option( 'now_pages_threadi_frontend_global_url', 1 ) ) && ! Now_Page::get_instance()->get_page() instanceof WP_Post ) {
+		if ( 1 === absint( get_option( 'threadi_now_pages_frontend_global_url', 1 ) ) && ! Now_Page::get_instance()->get_page() instanceof WP_Post ) {
 			add_rewrite_rule( '^' . $slug . '/?$', 'index.php?' . self::QUERY_VAR . '=1', 'top' );
 		}
 
-		if ( 1 === absint( get_option( 'now_pages_threadi_frontend_user_url' ) ) ) {
+		if ( 1 === absint( get_option( 'threadi_now_pages_frontend_user_url' ) ) ) {
 			$author_base = $this->get_author_base();
 			add_rewrite_rule(
 				'^' . preg_quote( $author_base, '/' ) . '/([^/]+)/' . $slug . '/?$',
@@ -391,7 +391,7 @@ class Frontend implements Singleton_Interface {
 	 * @return string
 	 */
 	public function get_slug(): string {
-		$slug = get_option( 'now_pages_threadi_slug', 'now' );
+		$slug = get_option( 'threadi_now_pages_slug', 'now' );
 
 		// use the fallback for empty or invalid values.
 		if ( ! is_string( $slug ) || '' === trim( $slug, '/ ' ) ) {
@@ -459,12 +459,12 @@ class Frontend implements Singleton_Interface {
 	 * @return bool
 	 */
 	public function is_public( bool $for_author = false ): bool {
-		$option  = 'now_pages_threadi_frontend_global_url';
+		$option  = 'threadi_now_pages_frontend_global_url';
 		$default = 1;
 
 		// the author route is disabled by default, also if the option is missing.
 		if ( $for_author ) {
-			$option  = 'now_pages_threadi_frontend_user_url';
+			$option  = 'threadi_now_pages_frontend_user_url';
 			$default = 0;
 		}
 
@@ -478,7 +478,7 @@ class Frontend implements Singleton_Interface {
 		 * @param bool $is_public  True if the page may be shown.
 		 * @param bool $for_author True if the author route is meant.
 		 */
-		return (bool) apply_filters( 'now_pages_threadi_is_public', $is_public, $for_author );
+		return (bool) apply_filters( 'threadi_now_pages_is_public', $is_public, $for_author );
 	}
 
 	/**
@@ -519,8 +519,8 @@ class Frontend implements Singleton_Interface {
 		}
 
 		$args = array(
-			'period' => get_option( 'now_pages_threadi_frontend_period' ),
-			'format' => get_option( 'now_pages_threadi_frontend_format' ),
+			'period' => get_option( 'threadi_now_pages_frontend_period' ),
+			'format' => get_option( 'threadi_now_pages_frontend_format' ),
 		);
 
 		if ( $this->user instanceof WP_User ) {
@@ -533,7 +533,7 @@ class Frontend implements Singleton_Interface {
 		 * @param array<string,mixed> $args Builder args.
 		 * @param WP_User|null        $user Author for /author/…/now, null for global /now.
 		 */
-		$this->args = apply_filters( 'now_pages_threadi_frontend_digest_args', $args, $this->user );
+		$this->args = apply_filters( 'threadi_now_pages_frontend_digest_args', $args, $this->user );
 
 		// bail if a real page backs the global route. WordPress already resolved
 		// it as a page, and the digest comes from the block, widget or shortcode
@@ -547,22 +547,22 @@ class Frontend implements Singleton_Interface {
 
 		// tell an administrator if the page is empty.
 		if ( empty( $this->content ) && $this->is_public( $is_author_request ) && current_user_can( 'manage_options' ) ) {
-			$this->content = '<p class="now-pages-threadi-not-public">'
+			$this->content = '<p class="threadi-now-pages-not-public">'
 							. sprintf(
 							/* translators: %1$s will be replaced by a URL. */
-								esc_html__( 'Only you can see this page. You have no entries imported to use for this page. Add now your sources %1$s.', 'now-pages-threadi' ),
-								'<a href="' . esc_url( Setup::get_instance()->get_setup_link() ) . '">' . esc_html__( 'here', 'now-pages-threadi' ) . '</a>'
+								esc_html__( 'Only you can see this page. You have no entries imported to use for this page. Add now your sources %1$s.', 'threadi-now-pages' ),
+								'<a href="' . esc_url( Setup::get_instance()->get_setup_link() ) . '">' . esc_html__( 'here', 'threadi-now-pages' ) . '</a>'
 							)
 							. '</p>' . $this->content;
 		}
 
 		// tell an administrator why nobody else sees this page.
 		if ( ! $this->is_public( $is_author_request ) && current_user_can( 'manage_options' ) ) {
-			$this->content = '<p class="now-pages-threadi-not-public">'
+			$this->content = '<p class="threadi-now-pages-not-public">'
 							. sprintf(
 							/* translators: %1$s will be replaced by a URL. */
-								esc_html__( 'Only you can see this page. It becomes public once you finish the %1$s.', 'now-pages-threadi' ),
-								'<a href="' . esc_url( Setup::get_instance()->get_setup_link() ) . '">' . esc_html__( 'setup', 'now-pages-threadi' ) . '</a>'
+								esc_html__( 'Only you can see this page. It becomes public once you finish the %1$s.', 'threadi-now-pages' ),
+								'<a href="' . esc_url( Setup::get_instance()->get_setup_link() ) . '">' . esc_html__( 'setup', 'threadi-now-pages' ) . '</a>'
 							)
 							. '</p>' . $this->content;
 		}
@@ -574,12 +574,12 @@ class Frontend implements Singleton_Interface {
 		 * @param WP_User|null $user    Author or null.
 		 * @param array        $args    Digest args used.
 		 */
-		$this->content = apply_filters( 'now_pages_threadi_frontend_content', $this->content, $this->user, $this->args );
+		$this->content = apply_filters( 'threadi_now_pages_frontend_content', $this->content, $this->user, $this->args );
 
 		// Backward compatibility for theme overrides written against get_query_var().
-		set_query_var( 'now_pages_threadi_content', $this->content );
-		set_query_var( 'now_pages_threadi_user', $this->user );
-		set_query_var( 'now_pages_threadi_args', $this->args );
+		set_query_var( 'threadi_now_pages_content', $this->content );
+		set_query_var( 'threadi_now_pages_user', $this->user );
+		set_query_var( 'threadi_now_pages_args', $this->args );
 
 		// Avoid a 404 body class / status when WP thinks nothing matched.
 		global $wp_query;
@@ -843,10 +843,10 @@ class Frontend implements Singleton_Interface {
 		 * @param WP_User|null      $user      Author or null.
 		 */
 		$templates = apply_filters(
-			'now_pages_threadi_frontend_templates',
+			'threadi_now_pages_frontend_templates',
 			array(
-				'now-pages-threadi/now-pages-threadi.php',
-				'now-pages-threadi.php',
+				'threadi-now-pages/threadi-now-pages.php',
+				'threadi-now-pages.php',
 				'now.php',
 			),
 			$this->user
@@ -876,7 +876,7 @@ class Frontend implements Singleton_Interface {
 		 * @param array<int,string> $templates Candidate file names.
 		 * @param WP_User|null      $user      Author or null.
 		 */
-		return (string) apply_filters( 'now_pages_threadi_frontend_template', $located, $templates, $this->user );
+		return (string) apply_filters( 'threadi_now_pages_frontend_template', $located, $templates, $this->user );
 	}
 
 	/**
@@ -899,10 +899,10 @@ class Frontend implements Singleton_Interface {
 		$parts['title'] = $this->user instanceof WP_User
 			? sprintf(
 			/* translators: %s: display name */
-				__( 'Now – %s', 'now-pages-threadi' ),
+				__( 'Now – %s', 'threadi-now-pages' ),
 				$this->user->display_name
 			)
-			: __( 'Now', 'now-pages-threadi' );
+			: __( 'Now', 'threadi-now-pages' );
 
 		return $parts;
 	}
@@ -919,9 +919,9 @@ class Frontend implements Singleton_Interface {
 			return $classes;
 		}
 
-		$classes[] = 'now-pages-threadi-now';
+		$classes[] = 'threadi-now-pages-now';
 		if ( $this->user instanceof WP_User ) {
-			$classes[] = 'now-pages-threadi-now-author';
+			$classes[] = 'threadi-now-pages-now-author';
 		}
 
 		return $classes;
@@ -1017,7 +1017,7 @@ class Frontend implements Singleton_Interface {
 	 */
 	public function save_slug(): void {
 		// bail if this is not the permalink page being saved.
-		if ( ! isset( $_POST['now_pages_threadi_slug'] ) ) {
+		if ( ! isset( $_POST['threadi_now_pages_slug'] ) ) {
 			return;
 		}
 
@@ -1030,7 +1030,7 @@ class Frontend implements Singleton_Interface {
 		check_admin_referer( 'update-permalink' );
 
 		// get the given slug from request.
-		$slug = sanitize_title( wp_unslash( $_POST['now_pages_threadi_slug'] ) );
+		$slug = sanitize_title( wp_unslash( $_POST['threadi_now_pages_slug'] ) );
 
 		// fall back to the default: an empty slug would make the route
 		// answer on the front page.
@@ -1039,11 +1039,11 @@ class Frontend implements Singleton_Interface {
 		}
 
 		// bail if nothing changed.
-		if ( (string) get_option( 'now_pages_threadi_slug' ) === $slug ) {
+		if ( (string) get_option( 'threadi_now_pages_slug' ) === $slug ) {
 			return;
 		}
 
-		update_option( 'now_pages_threadi_slug', $slug );
+		update_option( 'threadi_now_pages_slug', $slug );
 
 		// the route moved, so the rules have to be rebuilt.
 		self::trigger_slug_update();
@@ -1068,7 +1068,7 @@ class Frontend implements Singleton_Interface {
 		if ( ! $this->using_pretty_permalinks() ) {
 			echo '<p class="notice notice-warning inline" style="margin-left:0;padding:8px 12px;">';
 			/* translators: %1$s will be replaced by a URL, %2$s by the query-var fallback URL. */
-			echo wp_kses_post( sprintf( __( 'Your site uses plain permalinks. The pretty URL below will not work until you choose a different permalink structure under <a href="%1$s">Settings > Permalinks</a>. Until then, your now page is reachable at <code>%2$s</code> instead.', 'now-pages-threadi' ), $permalink_url, esc_url( $this->get_global_now_page_url() ) ) );
+			echo wp_kses_post( sprintf( __( 'Your site uses plain permalinks. The pretty URL below will not work until you choose a different permalink structure under <a href="%1$s">Settings > Permalinks</a>. Until then, your now page is reachable at <code>%2$s</code> instead.', 'threadi-now-pages' ), $permalink_url, esc_url( $this->get_global_now_page_url() ) ) );
 			echo '</p>';
 		}
 
@@ -1081,7 +1081,7 @@ class Frontend implements Singleton_Interface {
 			echo wp_kses_post(
 				sprintf(
 				/* translators: %1$s will be replaced by a link to a page. */
-					__( 'Your now page is backed by the page %1$s. Design it with your theme or page builder - the entries come from the block, widget or shortcode you place inside it.', 'now-pages-threadi' ),
+					__( 'Your now page is backed by the page %1$s. Design it with your theme or page builder - the entries come from the block, widget or shortcode you place inside it.', 'threadi-now-pages' ),
 					'<a href="' . esc_url( (string) get_edit_post_link( $page->ID, '' ) ) . '">' . esc_html( get_the_title( $page ) ) . '</a>'
 				)
 			);
@@ -1099,7 +1099,7 @@ class Frontend implements Singleton_Interface {
 			echo wp_kses_post(
 				sprintf(
 				/* translators: %1$s will be replaced by an address, %2$s by a URL. */
-					__( 'The address %1$s is already used by something else, so your now page may not be reachable there. Change it in <a href="%2$s">Settings > Permalinks</a>, or create a page for your now page below.', 'now-pages-threadi' ),
+					__( 'The address %1$s is already used by something else, so your now page may not be reachable there. Change it in <a href="%2$s">Settings > Permalinks</a>, or create a page for your now page below.', 'threadi-now-pages' ),
 					'<code>/' . esc_html( $slug ) . '/</code>',
 					$permalink_url
 				)
@@ -1109,7 +1109,7 @@ class Frontend implements Singleton_Interface {
 
 		// show the hint for the virtual route.
 		/* translators: %1$s will be replaced by a URL */
-		echo wp_kses_post( sprintf( __( 'If enabled, the now pages will be automatically published using the display options here. Change the URL slug in <a href="%1$s">Settings > Permalinks</a>.', 'now-pages-threadi' ), $permalink_url ) );
+		echo wp_kses_post( sprintf( __( 'If enabled, the now pages will be automatically published using the display options here. Change the URL slug in <a href="%1$s">Settings > Permalinks</a>.', 'threadi-now-pages' ), $permalink_url ) );
 	}
 
 	/**
@@ -1118,7 +1118,7 @@ class Frontend implements Singleton_Interface {
 	 * @return void
 	 */
 	public static function trigger_slug_update(): void {
-		update_option( 'now_pages_threadi_update_slugs', 1 );
+		update_option( 'threadi_now_pages_update_slugs', 1 );
 	}
 
 	/**
@@ -1144,12 +1144,12 @@ class Frontend implements Singleton_Interface {
 	 */
 	public function update_slugs(): void {
 		// the rules of this plugin changed with an update: flush them once, too.
-		$rules_outdated = self::REWRITE_VERSION !== get_option( 'now_pages_threadi_rewrite_version' );
+		$rules_outdated = self::REWRITE_VERSION !== get_option( 'threadi_now_pages_rewrite_version' );
 		if ( $rules_outdated ) {
-			update_option( 'now_pages_threadi_rewrite_version', self::REWRITE_VERSION );
+			update_option( 'threadi_now_pages_rewrite_version', self::REWRITE_VERSION );
 		}
 
-		if ( ! $rules_outdated && 1 !== absint( get_option( 'now_pages_threadi_update_slugs' ) ) ) {
+		if ( ! $rules_outdated && 1 !== absint( get_option( 'threadi_now_pages_update_slugs' ) ) ) {
 			return;
 		}
 
@@ -1160,7 +1160,7 @@ class Frontend implements Singleton_Interface {
 		Init::get_instance()->delete_option_caches();
 
 		// disable the flag to update them.
-		update_option( 'now_pages_threadi_update_slugs', 0 );
+		update_option( 'threadi_now_pages_update_slugs', 0 );
 	}
 
 	/**
@@ -1179,22 +1179,22 @@ class Frontend implements Singleton_Interface {
 	 */
 	public function show_preview(): void {
 		$args = array(
-			'period' => get_option( 'now_pages_threadi_frontend_period' ),
-			'format' => get_option( 'now_pages_threadi_frontend_format' ),
+			'period' => get_option( 'threadi_now_pages_frontend_period' ),
+			'format' => get_option( 'threadi_now_pages_frontend_format' ),
 		);
 
 		$builder = new Digest_Builder();
 		$content = $builder->build( $args );
 
 		// show description.
-		echo '<p><strong>' . esc_html__( 'This is a preview based on the plugin settings. The information displayed in your widget, block, or shortcode may differ from this. Reload the settings after changing any settings to show the actual preview.', 'now-pages-threadi' ) . '</strong></p>';
+		echo '<p><strong>' . esc_html__( 'This is a preview based on the plugin settings. The information displayed in your widget, block, or shortcode may differ from this. Reload the settings after changing any settings to show the actual preview.', 'threadi-now-pages' ) . '</strong></p>';
 
 		// show a hint if the preview is empty.
 		if ( '' === $content ) {
-			echo '<p>' . wp_kses_post( __( 'The <em>now page</em> would now be empty.', 'now-pages-threadi' ) ) . '</p>';
+			echo '<p>' . wp_kses_post( __( 'The <em>now page</em> would now be empty.', 'threadi-now-pages' ) ) . '</p>';
 		}
 
-		echo '<div class="now-pages-threadi-preview">' . wp_kses_post( $content ) . '</div>';
+		echo '<div class="threadi-now-pages-preview">' . wp_kses_post( $content ) . '</div>';
 
 		// show the same panel as on the frontend.
 		echo wp_kses_post( Diagnostics::get_instance()->render_panel( $builder->get_trace(), null ) );
@@ -1203,7 +1203,7 @@ class Frontend implements Singleton_Interface {
 	/**
 	 * Return the global now page URL.
 	 *
-	 * Falls back to the query-var form (?now_pages_threadi_now=1) when pretty
+	 * Falls back to the query-var form (?threadi_now_pages_now=1) when pretty
 	 * permalinks are disabled - the rewrite rule from
 	 * Frontend::register_rewrites() is inert in that case, since
 	 * WP_Rewrite::rewrite_rules() returns an empty array whenever
@@ -1269,8 +1269,8 @@ class Frontend implements Singleton_Interface {
 		}
 
 		$dashboard_widgets[] = array(
-			'id'       => 'dashboard_now_pages_threadi_state',
-			'label'    => __( 'Your Now Page', 'now-pages-threadi' ),
+			'id'       => 'dashboard_threadi_now_pages_state',
+			'label'    => __( 'Your Now Page', 'threadi-now-pages' ),
 			'callback' => array( $this, 'get_dashboard_widget_content' ),
 		);
 
@@ -1291,15 +1291,15 @@ class Frontend implements Singleton_Interface {
 		}
 
 		// show hint if the global now page is disabled.
-		if ( 1 !== absint( get_option( 'now_pages_threadi_frontend_global_url', 1 ) ) ) {
+		if ( 1 !== absint( get_option( 'threadi_now_pages_frontend_global_url', 1 ) ) ) {
 			/* translators: %1$s will be replaced by a URL. */
-			echo '<p>' . wp_kses_post( sprintf( __( 'Your Now Page is disabled. Change this <a href="%1$s">in the settings</a>.', 'now-pages-threadi' ), Settings::get_instance()->get_url() ) ) . '</p>';
+			echo '<p>' . wp_kses_post( sprintf( __( 'Your Now Page is disabled. Change this <a href="%1$s">in the settings</a>.', 'threadi-now-pages' ), Settings::get_instance()->get_url() ) ) . '</p>';
 			return;
 		}
 
 		$args = array(
-			'period' => get_option( 'now_pages_threadi_frontend_period' ),
-			'format' => get_option( 'now_pages_threadi_frontend_format' ),
+			'period' => get_option( 'threadi_now_pages_frontend_period' ),
+			'format' => get_option( 'threadi_now_pages_frontend_format' ),
 		);
 		$user = null;
 		/**
@@ -1308,18 +1308,18 @@ class Frontend implements Singleton_Interface {
 		 * @param array<string,mixed> $args Builder args.
 		 * @param WP_User|null        $user Author for /author/…/now, null for global /now.
 		 */
-		$args = apply_filters( 'now_pages_threadi_frontend_digest_args', $args, $user );
+		$args = apply_filters( 'threadi_now_pages_frontend_digest_args', $args, $user );
 
 		// get the timestamp of the last change.
 		$timestamp = ( new Digest_Builder() )->get_last_entry_date( $args );
 
 		echo '<p>';
 		if ( null === $timestamp ) {
-			echo esc_html__( 'Your now page has no entries yet.', 'now-pages-threadi' );
+			echo esc_html__( 'Your now page has no entries yet.', 'threadi-now-pages' );
 		} else {
 			printf(
 				/* translators: %1$s will be replaced by a date. */
-				esc_html__( 'Last updated %s ago.', 'now-pages-threadi' ),
+				esc_html__( 'Last updated %s ago.', 'threadi-now-pages' ),
 				esc_html( human_time_diff( $timestamp ) )
 			);
 		}
@@ -1328,13 +1328,13 @@ class Frontend implements Singleton_Interface {
 		printf(
 			'<p><a href="%1$s" target="_blank">%2$s%3$s</a></p>',
 			esc_url( self::get_instance()->get_global_now_page_url() ),
-			esc_html__( 'View your now page', 'now-pages-threadi' ),
+			esc_html__( 'View your now page', 'threadi-now-pages' ),
 			wp_kses_post( Plugin::get_a11n_window_hint() )
 		);
 	}
 
 	/**
-	 * Add our own sitemap provider to add the now-pages-threadi in the sitemap.
+	 * Add our own sitemap provider to add the threadi-now-pages in the sitemap.
 	 *
 	 * @return void
 	 */
@@ -1353,7 +1353,7 @@ class Frontend implements Singleton_Interface {
 			return array();
 		}
 
-		$cache_key = 'now_pages_threadi_wp_pages';
+		$cache_key = 'threadi_now_pages_wp_pages';
 		$pages     = get_transient( $cache_key );
 
 		// return the cached list, extended by the saved page.
@@ -1362,7 +1362,7 @@ class Frontend implements Singleton_Interface {
 		}
 
 		$options = array(
-			'0' => __( '- none, render the route directly -', 'now-pages-threadi' ),
+			'0' => __( '- none, render the route directly -', 'threadi-now-pages' ),
 		);
 
 		// query for the pages in portions of 100, up to 1.000 pages.
@@ -1443,17 +1443,17 @@ class Frontend implements Singleton_Interface {
 	 */
 	public function create_page(): void {
 		// check the nonce.
-		check_admin_referer( 'now-pages-threadi-create-page', 'nonce' );
+		check_admin_referer( 'threadi-now-pages-create-page', 'nonce' );
 
 		// bail if the capability is missing.
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Sorry, you are not allowed to do this.', 'now-pages-threadi' ), '', array( 'response' => 403 ) );
+			wp_die( esc_html__( 'Sorry, you are not allowed to do this.', 'threadi-now-pages' ), '', array( 'response' => 403 ) );
 		}
 
 		// create it, prefilled for the active page builder.
 		Now_Page::get_instance()->create_page();
 
-		wp_safe_redirect( Settings::get_instance()->get_url( 'now_pages_threadi_now_page' ) );
+		wp_safe_redirect( Settings::get_instance()->get_url( 'threadi_now_pages_now_page' ) );
 		exit;
 	}
 

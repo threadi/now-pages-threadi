@@ -2,18 +2,18 @@
 /**
  * This file contains the support for Breakdance.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
 use function Breakdance\Util\getDirectoryPathRelativeToPluginFolder;
 use function Breakdance\ElementStudio\registerSaveLocation;
 use function Breakdance\Elements\registerCategory;
@@ -80,8 +80,8 @@ class Breakdance extends PageBuilder_Base {
 
 		// register our own category.
 		registerCategory(
-			'now-pages-threadi',
-			__( 'Now Pages', 'now-pages-threadi' )
+			'threadi-now-pages',
+			__( 'Now Pages', 'threadi-now-pages' )
 		);
 	}
 
@@ -89,7 +89,7 @@ class Breakdance extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Breakdance', 'now-pages-threadi' );
+		return __( 'Breakdance', 'threadi-now-pages' );
 	}
 
 	/**
@@ -114,7 +114,7 @@ class Breakdance extends PageBuilder_Base {
 	public function add_styles(): void {
 		// enqueue our own styles.
 		wp_enqueue_style(
-			'now-pages-threadi-breakdance-elements',
+			'threadi-now-pages-breakdance-elements',
 			Plugin::get_plugin_url() . 'css/style.css',
 			array(),
 			Plugin::get_file_version( Plugin::get_plugin_path() . '/css/style.css' ),
@@ -155,8 +155,8 @@ class Breakdance extends PageBuilder_Base {
 									'properties' => array(
 										'content' => array(
 											'digest' => array(
-												'period' => get_option( 'now_pages_threadi_frontend_period', 'live' ),
-												'format' => get_option( 'now_pages_threadi_frontend_format', 'verbatim' ),
+												'period' => get_option( 'threadi_now_pages_frontend_period', 'live' ),
+												'format' => get_option( 'threadi_now_pages_frontend_format', 'verbatim' ),
 												'override_display' => false,
 											),
 										),

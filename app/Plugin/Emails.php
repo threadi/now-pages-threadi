@@ -2,19 +2,19 @@
 /**
  * File with the main handler for all emails this plugin will generate.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use easySettingsForWordPress\Page;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
 
 /**
  * Object for all emails this plugin will generate.
@@ -32,12 +32,12 @@ class Emails {
 		add_action( 'init', array( $this, 'add_the_settings' ), 20 );
 
 		// use our own hooks.
-		add_filter( 'now_pages_threadi_log_categories', array( $this, 'add_log_category' ) );
-		add_filter( 'now_pages_threadi_schedules', array( $this, 'add_schedule' ) );
+		add_filter( 'threadi_now_pages_log_categories', array( $this, 'add_log_category' ) );
+		add_filter( 'threadi_now_pages_schedules', array( $this, 'add_schedule' ) );
 
 		// use actions.
-		add_action( 'admin_action_now_pages_threadi_email_test', array( $this, 'send_test_email_by_request' ) );
-		add_action( 'wp_ajax_now_pages_threadi_sent_test_email', array( $this, 'send_test_email_by_ajax' ) );
+		add_action( 'admin_action_threadi_now_pages_email_test', array( $this, 'send_test_email_by_request' ) );
+		add_action( 'wp_ajax_threadi_now_pages_sent_test_email', array( $this, 'send_test_email_by_ajax' ) );
 
 		// add our email template.
 		add_filter( 'wp_mail', array( $this, 'set_email_template' ) );
@@ -67,7 +67,7 @@ class Emails {
 
 		// the email tab.
 		$email_tab = $settings_page->add_tab( 'emails', 50 );
-		$email_tab->set_title( __( 'Emails', 'now-pages-threadi' ) );
+		$email_tab->set_title( __( 'Emails', 'threadi-now-pages' ) );
 
 		// add a setting for each supported trigger.
 		foreach ( $this->get_email_trigger() as $email_class_name ) {
@@ -96,9 +96,9 @@ class Emails {
 	 */
 	private function get_email_trigger(): array {
 		$trigger = array(
-			'\NowPagesThreadi\Plugin\Emails\EmptyNowPages',
-			'\NowPagesThreadi\Plugin\Emails\Report',
-			'\NowPagesThreadi\Plugin\Emails\ConfirmEntry',
+			'\ThreadiNowPages\Plugin\Emails\EmptyNowPages',
+			'\ThreadiNowPages\Plugin\Emails\Report',
+			'\ThreadiNowPages\Plugin\Emails\ConfirmEntry',
 		);
 
 		/**
@@ -107,7 +107,7 @@ class Emails {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param array<int,string> $trigger List of Email trigger objects.
 		 */
-		return apply_filters( 'now_pages_threadi_emails', $trigger );
+		return apply_filters( 'threadi_now_pages_emails', $trigger );
 	}
 
 	/**
@@ -154,7 +154,7 @@ class Emails {
 	 */
 	public function add_log_category( array $categories ): array {
 		// add categories we need for our settings.
-		$categories['emails'] = __( 'Emails', 'now-pages-threadi' );
+		$categories['emails'] = __( 'Emails', 'threadi-now-pages' );
 
 		// return the resulting list.
 		return $categories;
@@ -169,7 +169,7 @@ class Emails {
 	 */
 	public function add_schedule( array $list_of_schedules ): array {
 		// add the schedule-object if the report is enabled.
-		$list_of_schedules[] = '\NowPagesThreadi\Plugin\Schedules\Report';
+		$list_of_schedules[] = '\ThreadiNowPages\Plugin\Schedules\Report';
 
 		// return the resulting list.
 		return $list_of_schedules;
@@ -182,7 +182,7 @@ class Emails {
 	 */
 	public function send_test_email_by_request(): void {
 		// check nonce.
-		check_admin_referer( 'now-pages-threadi-email-test', 'nonce' );
+		check_admin_referer( 'threadi-now-pages-email-test', 'nonce' );
 
 		// bail if capability is missing.
 		if ( ! current_user_can( Settings::get_instance()->get_settings_obj()->get_capability() ) ) {
@@ -222,19 +222,19 @@ class Emails {
 	 */
 	public function send_test_email_by_ajax(): void {
 		// check nonce.
-		check_ajax_referer( 'now-pages-threadi-test-email', 'nonce' );
+		check_ajax_referer( 'threadi-now-pages-test-email', 'nonce' );
 
 		// prepare the answer.
 		$answer_dialog = array(
-			'title'   => __( 'Error sending test email', 'now-pages-threadi' ),
+			'title'   => __( 'Error sending test email', 'threadi-now-pages' ),
 			'texts'   => array(
-				'<p>' . __( 'An error occurred during sending the test email.', 'now-pages-threadi' ) . '</p>',
+				'<p>' . __( 'An error occurred during sending the test email.', 'threadi-now-pages' ) . '</p>',
 			),
 			'buttons' => array(
 				array(
 					'action'  => 'closeDialog();',
 					'variant' => 'secondary',
-					'text'    => __( 'OK', 'now-pages-threadi' ),
+					'text'    => __( 'OK', 'threadi-now-pages' ),
 				),
 			),
 		);
@@ -267,16 +267,16 @@ class Emails {
 
 		// prepare the answer.
 		$answer_dialog = array(
-			'title'   => __( 'Test-Email has been sent', 'now-pages-threadi' ),
+			'title'   => __( 'Test-Email has been sent', 'threadi-now-pages' ),
 			'texts'   => array(
 				/* translators: %1$s will be replaced with an email or list of emails. */
-				'<p>' . sprintf( __( 'Check now your inbox in %1$s.', 'now-pages-threadi' ), '<code>' . implode( ',', $email_obj->get_recipients() ) . '</code>' ) . '</p>',
+				'<p>' . sprintf( __( 'Check now your inbox in %1$s.', 'threadi-now-pages' ), '<code>' . implode( ',', $email_obj->get_recipients() ) . '</code>' ) . '</p>',
 			),
 			'buttons' => array(
 				array(
 					'action'  => 'closeDialog();',
 					'variant' => 'primary',
-					'text'    => __( 'OK', 'now-pages-threadi' ),
+					'text'    => __( 'OK', 'threadi-now-pages' ),
 				),
 			),
 		);

@@ -2,20 +2,20 @@
 /**
  * File to handle a widget for Brizy.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder\Brizy;
+namespace ThreadiNowPages\PageBuilder\Brizy;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use Brizy_Content_Placeholders_Simple;
 use Brizy_Content_Providers_AbstractProvider;
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
 
 /**
  * Object for a widget for Brizy.
@@ -26,7 +26,7 @@ class Digest extends Brizy_Content_Providers_AbstractProvider {
 	 *
 	 * @var string
 	 */
-	protected string $placeholder = 'now_pages_threadi_digest';
+	protected string $placeholder = 'threadi_now_pages_digest';
 
 	/**
 	 * The name for REST API.
@@ -69,7 +69,7 @@ class Digest extends Brizy_Content_Providers_AbstractProvider {
 	 * @return string
 	 */
 	protected function get_title(): string {
-		return __( 'Digest', 'now-pages-threadi' );
+		return __( 'Digest', 'threadi-now-pages' );
 	}
 
 	/**

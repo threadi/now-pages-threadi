@@ -2,7 +2,7 @@
 /**
  * File for an Element in Breakdance.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 namespace NowPageBreakdanceElements;
@@ -10,9 +10,9 @@ namespace NowPageBreakdanceElements;
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Helper\Plugin;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Helper\Plugin;
 use function Breakdance\Elements\c;
 
 /**
@@ -34,7 +34,7 @@ class Digest extends \Breakdance\Elements\Element {
 	 * @return string
 	 */
 	static function name(): string {
-		return __( 'Digest', 'now-pages-threadi' );
+		return __( 'Digest', 'threadi-now-pages' );
 	}
 
 	/**
@@ -43,7 +43,7 @@ class Digest extends \Breakdance\Elements\Element {
 	 * @return string
 	 */
 	static function className(): string {
-		return 'now-pages-threadi-digest';
+		return 'threadi-now-pages-digest';
 	}
 
 	/**
@@ -270,7 +270,7 @@ class Digest extends \Breakdance\Elements\Element {
 	 * @return string
 	 */
 	static function category(): string {
-		return 'now-pages-threadi';
+		return 'threadi-now-pages';
 	}
 
 	/**

@@ -5,25 +5,25 @@
  * This is deliberately the ONLY place with actual query/render logic, so
  * any page-builder widgets can all be thin adapters that call build() and nothing else.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests;
+namespace ThreadiNowPages\Digests;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Languages;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\NowPages\Categories;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\NowPages\Frontend;
-use NowPagesThreadi\PageBuilder\Page_Builders;
-use NowPagesThreadi\Plugin\Log;
-use NowPagesThreadi\Plugin\Settings;
-use NowPagesThreadi\Plugin\Templates;
+use ThreadiNowPages\Helper\Languages;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\NowPages\Categories;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\NowPages\Frontend;
+use ThreadiNowPages\PageBuilder\Page_Builders;
+use ThreadiNowPages\Plugin\Log;
+use ThreadiNowPages\Plugin\Settings;
+use ThreadiNowPages\Plugin\Templates;
 use WP_Post;
 use WP_Query;
 
@@ -35,7 +35,7 @@ class Digest_Builder {
 	 * Maximum number of entries loaded for one digest.
 	 *
 	 * Protects the page against huge queries (e.g. a range starting in 1970).
-	 * Can be changed via the filter "now_pages_threadi_digest_query_args".
+	 * Can be changed via the filter "threadi_now_pages_digest_query_args".
 	 */
 	private const MAX_ENTRIES = 1000;
 
@@ -107,7 +107,7 @@ class Digest_Builder {
 	 *     @type string $end               Y-m-d H:i:s end, used when period=range.
 	 *     @type string $format            Digest_Format_Interface slug. Default 'verbatim'.
 	 *     @type string $language          Language code. Default: current language.
-	 *     @type int    $category          now_pages_threadi_category term ID, 0 = all categories.
+	 *     @type int    $category          threadi_now_pages_category term ID, 0 = all categories.
 	 *     @type int|string $user User ID, login or slug whose entries to show.
 	 *     @type int $user_id Resolved user ID (set internally).
 	 *     @type bool   $show_time         Show timestamps in the verbatim format. Default false.
@@ -127,7 +127,7 @@ class Digest_Builder {
 			if ( ! self::$build_error_logged ) {
 				self::$build_error_logged = true;
 				Log::get_instance()->add(
-					__( 'The digest could not be built:', 'now-pages-threadi' ) . ' <code>' . esc_html( $e->getMessage() ) . '</code>',
+					__( 'The digest could not be built:', 'threadi-now-pages' ) . ' <code>' . esc_html( $e->getMessage() ) . '</code>',
 					'error',
 					'system'
 				);
@@ -149,7 +149,7 @@ class Digest_Builder {
 	 *     @type string $end               Y-m-d H:i:s end, used when period=range.
 	 *     @type string $format            Digest_Format_Interface slug. Default 'verbatim'.
 	 *     @type string $language          Language code. Default: current language.
-	 *     @type int    $category          now_pages_threadi_category term ID, 0 = all categories.
+	 *     @type int    $category          threadi_now_pages_category term ID, 0 = all categories.
 	 *     @type int|string $user User ID, login or slug whose entries to show.
 	 *     @type int $user_id Resolved user ID (set internally).
 	 *     @type bool   $show_time         Show timestamps in the verbatim format. Default false.
@@ -174,7 +174,7 @@ class Digest_Builder {
 		// add the public CSS, if no block theme is used.
 		if ( ! wp_is_block_theme() ) {
 			wp_enqueue_style(
-				'now-pages-threadi',
+				'threadi-now-pages',
 				Plugin::get_plugin_url() . 'css/style.css',
 				array(),
 				Plugin::get_file_version( Plugin::get_plugin_path() . 'css/style.css' )
@@ -214,7 +214,7 @@ class Digest_Builder {
 			if ( ! self::$format_error_logged ) {
 				self::$format_error_logged = true;
 				/* translators: %1$s will be replaced by a format name */
-				Log::get_instance()->add( sprintf( __( 'The configured format %1$s could not be found.', 'now-pages-threadi' ), '<code>' . esc_html( (string) $args['format'] ) . '</code>' ), 'error', 'system' );
+				Log::get_instance()->add( sprintf( __( 'The configured format %1$s could not be found.', 'threadi-now-pages' ), '<code>' . esc_html( (string) $args['format'] ) . '</code>' ), 'error', 'system' );
 			}
 			return '';
 		}
@@ -271,7 +271,7 @@ class Digest_Builder {
 	}
 
 	/**
-	 * Query the np_threadi_entry posts matching the given digest args.
+	 * Query the threadi_np_entry posts matching the given digest args.
 	 *
 	 * @param array<string,mixed> $args The resolved digest args, see build().
 	 *
@@ -350,7 +350,7 @@ class Digest_Builder {
 			}
 		}
 
-		$range = apply_filters( 'now_pages_threadi_digest_range', array( $after, $before ), $args );
+		$range = apply_filters( 'threadi_now_pages_digest_range', array( $after, $before ), $args );
 
 		$this->trace['range'] = $range;
 
@@ -378,7 +378,7 @@ class Digest_Builder {
 		if ( $newest instanceof WP_Post ) {
 			$parts[] = sprintf(
 			/* translators: %1$s will be replaced by a relative time, e.g. "3 hours". */
-				__( 'last updated %1$s ago', 'now-pages-threadi' ),
+				__( 'last updated %1$s ago', 'threadi-now-pages' ),
 				human_time_diff( (int) get_post_time( 'U', true, $newest ) )
 			);
 		}
@@ -393,7 +393,7 @@ class Digest_Builder {
 		 * @param string              $text The text, already assembled.
 		 * @param array<string,mixed> $args The resolved args.
 		 */
-		$text = (string) apply_filters( 'now_pages_threadi_digest_period_text', $text, $args );
+		$text = (string) apply_filters( 'threadi_now_pages_digest_period_text', $text, $args );
 
 		if ( '' === $text ) {
 			return '';
@@ -526,7 +526,7 @@ class Digest_Builder {
 		 * @param array<string,mixed> $query_args The query args, as passed to WP_Query.
 		 * @param array<string,mixed> $args       The resolved digest args, see Digest_Builder::build().
 		 */
-		return apply_filters( 'now_pages_threadi_digest_query_args', $query_args, $args );
+		return apply_filters( 'threadi_now_pages_digest_query_args', $query_args, $args );
 	}
 
 	/**
@@ -697,7 +697,7 @@ class Digest_Builder {
 				'Entries from the last %1$d hour are not shown yet (privacy delay).',
 				'Entries from the last %1$d hours are not shown yet (privacy delay).',
 				$delay_hours,
-				'now-pages-threadi'
+				'threadi-now-pages'
 			),
 			$delay_hours
 		);
@@ -708,7 +708,7 @@ class Digest_Builder {
 		 * @param string              $text
 		 * @param array<string,mixed> $args
 		 */
-		$text = (string) apply_filters( 'now_pages_threadi_digest_delay_notice', $text, $args );
+		$text = (string) apply_filters( 'threadi_now_pages_digest_delay_notice', $text, $args );
 
 		if ( '' === $text ) {
 			return '';
@@ -716,10 +716,10 @@ class Digest_Builder {
 
 		// add link to settings for users.
 		if ( current_user_can( 'manage_options' ) ) {
-			$text .= '[<a href="' . esc_url( Settings::get_instance()->get_url( 'now_pages_threadi_display' ) ) . '">' . esc_html__( 'Settings', 'now-pages-threadi' ) . '</a>]';
+			$text .= '[<a href="' . esc_url( Settings::get_instance()->get_url( 'threadi_now_pages_display' ) ) . '">' . esc_html__( 'Settings', 'threadi-now-pages' ) . '</a>]';
 		}
 
 		// return resulting text.
-		return '<p class="now-pages-threadi-digest-delay">' . wp_kses_post( $text ) . '</p>';
+		return '<p class="threadi-now-pages-digest-delay">' . wp_kses_post( $text ) . '</p>';
 	}
 }

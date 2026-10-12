@@ -4,21 +4,21 @@
  *
  * Same keys as the global options; empty = inherit from global / default.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\NowPages\Frontend;
-use NowPagesThreadi\Sources\Sources;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\NowPages\Frontend;
+use ThreadiNowPages\Sources\Sources;
 use WP_User;
 
 /**
@@ -113,26 +113,26 @@ class User_Settings {
 		$user_url = $this->get_user_now_page_url( $user->ID );
 
 		?>
-		<h2><?php esc_html_e( 'Now Pages – Display settings', 'now-pages-threadi' ); ?></h2>
+		<h2><?php esc_html_e( 'Now Pages – Display settings', 'threadi-now-pages' ); ?></h2>
 		<?php
 		if ( $show_display ) {
 			?>
 			<p class="description">
 				<?php
 				/* translators: %1$s will be replaced by an URL. */
-				echo wp_kses_post( sprintf( __( 'When enabled, the content of your Now Page will be displayed under %1$s. Adjust the settings below to suit your needs.', 'now-pages-threadi' ), '<a href="' . esc_url( $user_url ) . '" target="_blank">' . esc_url( $user_url ) . '</a>' ) );
+				echo wp_kses_post( sprintf( __( 'When enabled, the content of your Now Page will be displayed under %1$s. Adjust the settings below to suit your needs.', 'threadi-now-pages' ), '<a href="' . esc_url( $user_url ) . '" target="_blank">' . esc_url( $user_url ) . '</a>' ) );
 				?>
 			</p>
 			<?php
 		}
 		// mark this form as ours, the settings are only saved if this field is sent.
-		wp_nonce_field( 'now-pages-threadi-user-settings', 'now_pages_threadi_user_settings_nonce', false );
+		wp_nonce_field( 'threadi-now-pages-user-settings', 'threadi_now_pages_user_settings_nonce', false );
 		?>
 		<table class="form-table" role="presentation">
 			<tr>
-				<th><label for="now_pages_threadi_disable_now_page"><?php esc_html_e( 'Disable my now page', 'now-pages-threadi' ); ?></label></th>
+				<th><label for="threadi_now_pages_disable_now_page"><?php esc_html_e( 'Disable my now page', 'threadi-now-pages' ); ?></label></th>
 				<td>
-					<input type="checkbox" name="now_pages_threadi_disable_now_page" id="now_pages_threadi_disable_now_page" value="1"<?php echo esc_attr( $disabled_val ); ?>>
+					<input type="checkbox" name="threadi_now_pages_disable_now_page" id="threadi_now_pages_disable_now_page" value="1"<?php echo esc_attr( $disabled_val ); ?>>
 				</td>
 			</tr>
 			<?php
@@ -145,24 +145,24 @@ class User_Settings {
 			}
 			?>
 			<tr>
-				<th><label for="now_pages_threadi_show_time"><?php esc_html_e( 'Show times', 'now-pages-threadi' ); ?></label></th>
+				<th><label for="threadi_now_pages_show_time"><?php esc_html_e( 'Show times', 'threadi-now-pages' ); ?></label></th>
 				<td>
-					<select name="now_pages_threadi_show_time" id="now_pages_threadi_show_time">
-						<option value="" <?php selected( $show_time_val, '' ); ?>><?php esc_html_e( '- inherit global -', 'now-pages-threadi' ); ?></option>
-						<option value="1" <?php selected( $show_time_val, '1' ); ?>><?php esc_html_e( 'Yes', 'now-pages-threadi' ); ?></option>
-						<option value="0" <?php selected( $show_time_val, '0' ); ?>><?php esc_html_e( 'No', 'now-pages-threadi' ); ?></option>
+					<select name="threadi_now_pages_show_time" id="threadi_now_pages_show_time">
+						<option value="" <?php selected( $show_time_val, '' ); ?>><?php esc_html_e( '- inherit global -', 'threadi-now-pages' ); ?></option>
+						<option value="1" <?php selected( $show_time_val, '1' ); ?>><?php esc_html_e( 'Yes', 'threadi-now-pages' ); ?></option>
+						<option value="0" <?php selected( $show_time_val, '0' ); ?>><?php esc_html_e( 'No', 'threadi-now-pages' ); ?></option>
 					</select>
 				</td>
 			</tr>
 			<tr>
-				<th><label for="now_pages_threadi_delay_hours"><?php esc_html_e( 'Delay (hours)', 'now-pages-threadi' ); ?></label></th>
+				<th><label for="threadi_now_pages_delay_hours"><?php esc_html_e( 'Delay (hours)', 'threadi-now-pages' ); ?></label></th>
 				<td>
-					<input type="number" min="0" step="1" name="now_pages_threadi_delay_hours" id="now_pages_threadi_delay_hours"
+					<input type="number" min="0" step="1" name="threadi_now_pages_delay_hours" id="threadi_now_pages_delay_hours"
 						value="<?php echo esc_attr( $delay_hours_val ); ?>"
 						placeholder="<?php echo esc_attr( (string) $defaults['delay_hours'] ); ?>"
 						max="<?php echo esc_attr( (string) Display_Settings::MAX_HOURS ); ?>"
 						class="small-text" />
-					<p class="description"><?php esc_html_e( 'Leave empty to inherit the site-wide delay. 0 = live.', 'now-pages-threadi' ); ?></p>
+					<p class="description"><?php esc_html_e( 'Leave empty to inherit the site-wide delay. 0 = live.', 'threadi-now-pages' ); ?></p>
 				</td>
 			</tr>
 			<?php
@@ -175,42 +175,42 @@ class User_Settings {
 			}
 			?>
 			<tr>
-				<th><label for="now_pages_threadi_show_source"><?php esc_html_e( 'Show data source', 'now-pages-threadi' ); ?></label></th>
+				<th><label for="threadi_now_pages_show_source"><?php esc_html_e( 'Show data source', 'threadi-now-pages' ); ?></label></th>
 				<td>
-					<select name="now_pages_threadi_show_source" id="now_pages_threadi_show_source">
-						<option value="" <?php selected( $show_source_val, '' ); ?>><?php esc_html_e( '- inherit global -', 'now-pages-threadi' ); ?></option>
-						<option value="1" <?php selected( $show_source_val, '1' ); ?>><?php esc_html_e( 'Yes', 'now-pages-threadi' ); ?></option>
-						<option value="0" <?php selected( $show_source_val, '0' ); ?>><?php esc_html_e( 'No', 'now-pages-threadi' ); ?></option>
+					<select name="threadi_now_pages_show_source" id="threadi_now_pages_show_source">
+						<option value="" <?php selected( $show_source_val, '' ); ?>><?php esc_html_e( '- inherit global -', 'threadi-now-pages' ); ?></option>
+						<option value="1" <?php selected( $show_source_val, '1' ); ?>><?php esc_html_e( 'Yes', 'threadi-now-pages' ); ?></option>
+						<option value="0" <?php selected( $show_source_val, '0' ); ?>><?php esc_html_e( 'No', 'threadi-now-pages' ); ?></option>
 					</select>
 				</td>
 			</tr>
 			<tr>
-				<th><label for="now_pages_threadi_link_source"><?php esc_html_e( 'Link data source', 'now-pages-threadi' ); ?></label></th>
+				<th><label for="threadi_now_pages_link_source"><?php esc_html_e( 'Link data source', 'threadi-now-pages' ); ?></label></th>
 				<td>
-					<select name="now_pages_threadi_link_source" id="now_pages_threadi_link_source">
-						<option value="" <?php selected( $link_source_val, '' ); ?>><?php esc_html_e( '- inherit global -', 'now-pages-threadi' ); ?></option>
-						<option value="1" <?php selected( $link_source_val, '1' ); ?>><?php esc_html_e( 'Yes', 'now-pages-threadi' ); ?></option>
-						<option value="0" <?php selected( $link_source_val, '0' ); ?>><?php esc_html_e( 'No', 'now-pages-threadi' ); ?></option>
+					<select name="threadi_now_pages_link_source" id="threadi_now_pages_link_source">
+						<option value="" <?php selected( $link_source_val, '' ); ?>><?php esc_html_e( '- inherit global -', 'threadi-now-pages' ); ?></option>
+						<option value="1" <?php selected( $link_source_val, '1' ); ?>><?php esc_html_e( 'Yes', 'threadi-now-pages' ); ?></option>
+						<option value="0" <?php selected( $link_source_val, '0' ); ?>><?php esc_html_e( 'No', 'threadi-now-pages' ); ?></option>
 					</select>
 				</td>
 			</tr>
 			<tr>
-				<th><label for="now_pages_threadi_group_by_category"><?php esc_html_e( 'Group by category', 'now-pages-threadi' ); ?></label></th>
+				<th><label for="threadi_now_pages_group_by_category"><?php esc_html_e( 'Group by category', 'threadi-now-pages' ); ?></label></th>
 				<td>
-					<select name="now_pages_threadi_group_by_category" id="now_pages_threadi_group_by_category">
-						<option value="" <?php selected( $group_by_category_val, '' ); ?>><?php esc_html_e( '- inherit global -', 'now-pages-threadi' ); ?></option>
-						<option value="1" <?php selected( $group_by_category_val, '1' ); ?>><?php esc_html_e( 'Yes', 'now-pages-threadi' ); ?></option>
-						<option value="0" <?php selected( $group_by_category_val, '0' ); ?>><?php esc_html_e( 'No', 'now-pages-threadi' ); ?></option>
+					<select name="threadi_now_pages_group_by_category" id="threadi_now_pages_group_by_category">
+						<option value="" <?php selected( $group_by_category_val, '' ); ?>><?php esc_html_e( '- inherit global -', 'threadi-now-pages' ); ?></option>
+						<option value="1" <?php selected( $group_by_category_val, '1' ); ?>><?php esc_html_e( 'Yes', 'threadi-now-pages' ); ?></option>
+						<option value="0" <?php selected( $group_by_category_val, '0' ); ?>><?php esc_html_e( 'No', 'threadi-now-pages' ); ?></option>
 					</select>
 				</td>
 			</tr>
 			<tr>
-				<th><label for="now_pages_threadi_order"><?php esc_html_e( 'Order of entries', 'now-pages-threadi' ); ?></label></th>
+				<th><label for="threadi_now_pages_order"><?php esc_html_e( 'Order of entries', 'threadi-now-pages' ); ?></label></th>
 				<td>
-					<select name="now_pages_threadi_order" id="now_pages_threadi_order">
-						<option value="" <?php selected( $order_val, '' ); ?>><?php esc_html_e( '- inherit global -', 'now-pages-threadi' ); ?></option>
-						<option value="ASC" <?php selected( $order_val, 'ASC' ); ?>><?php esc_html_e( 'Oldest first', 'now-pages-threadi' ); ?></option>
-						<option value="DESC" <?php selected( $order_val, 'DESC' ); ?>><?php esc_html_e( 'Newest first', 'now-pages-threadi' ); ?></option>
+					<select name="threadi_now_pages_order" id="threadi_now_pages_order">
+						<option value="" <?php selected( $order_val, '' ); ?>><?php esc_html_e( '- inherit global -', 'threadi-now-pages' ); ?></option>
+						<option value="ASC" <?php selected( $order_val, 'ASC' ); ?>><?php esc_html_e( 'Oldest first', 'threadi-now-pages' ); ?></option>
+						<option value="DESC" <?php selected( $order_val, 'DESC' ); ?>><?php esc_html_e( 'Newest first', 'threadi-now-pages' ); ?></option>
 					</select>
 				</td>
 			</tr>
@@ -234,7 +234,7 @@ class User_Settings {
 		}
 
 		// bail if our fields were not part of the sent form (e.g. a profile form of another plugin).
-		if ( ! isset( $_POST['now_pages_threadi_user_settings_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['now_pages_threadi_user_settings_nonce'] ) ), 'now-pages-threadi-user-settings' ) ) {
+		if ( ! isset( $_POST['threadi_now_pages_user_settings_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['threadi_now_pages_user_settings_nonce'] ) ), 'threadi-now-pages-user-settings' ) ) {
 			return;
 		}
 
@@ -300,8 +300,8 @@ class User_Settings {
 	 * @return bool
 	 */
 	public function current_user_can_display(): bool {
-		// bail if user-now-pages-threadi are disabled.
-		if ( 1 !== absint( get_option( 'now_pages_threadi_frontend_user_url' ) ) ) {
+		// bail if user-threadi-now-pages are disabled.
+		if ( 1 !== absint( get_option( 'threadi_now_pages_frontend_user_url' ) ) ) {
 			return false;
 		}
 
@@ -348,7 +348,7 @@ class User_Settings {
 	 * @return array<string,string>
 	 */
 	public function manage_users_columns( array $columns ): array {
-		$columns['now-page-url'] = esc_html__( 'Now Page', 'now-pages-threadi' );
+		$columns['now-page-url'] = esc_html__( 'Now Page', 'threadi-now-pages' );
 		return $columns;
 	}
 
@@ -367,12 +367,12 @@ class User_Settings {
 			return $output;
 		}
 
-		// bail if user-now-pages-threadi are disabled.
-		if ( 1 !== absint( get_option( 'now_pages_threadi_frontend_user_url' ) ) ) {
+		// bail if user-threadi-now-pages are disabled.
+		if ( 1 !== absint( get_option( 'threadi_now_pages_frontend_user_url' ) ) ) {
 			// show hint for admins.
 			$settings_obj = Settings::get_instance();
 			if ( current_user_can( $settings_obj->get_settings_obj()->get_capability() ) ) {
-				return '<a href="' . esc_url( $settings_obj->get_url() ) . '" title="' . esc_attr__( 'Enable Now Pages for users', 'now-pages-threadi' ) . '"><span class="dashicons dashicons-dismiss"></span></a>';
+				return '<a href="' . esc_url( $settings_obj->get_url() ) . '" title="' . esc_attr__( 'Enable Now Pages for users', 'threadi-now-pages' ) . '"><span class="dashicons dashicons-dismiss"></span></a>';
 			}
 
 			// show hint vor all others.
@@ -382,7 +382,7 @@ class User_Settings {
 		// bail if user has disabled its now page.
 		$keys = Display_Settings::user_meta_keys();
 		if ( 1 === absint( get_user_meta( $user_id, $keys['disabled'], true ) ) ) {
-			return '<span class="dashicons dashicons-dismiss" title="' . esc_attr__( 'Disabled by user', 'now-pages-threadi' ) . '"></span>';
+			return '<span class="dashicons dashicons-dismiss" title="' . esc_attr__( 'Disabled by user', 'threadi-now-pages' ) . '"></span>';
 		}
 
 		// get the user object.
@@ -397,6 +397,6 @@ class User_Settings {
 		$url = Frontend::get_instance()->get_author_now_page_url( $user );
 
 		// return the user URL.
-		return '<a href="' . esc_url( $url ) . '" target="_blank" title="' . esc_attr__( 'View the Now Page', 'now-pages-threadi' ) . '"><span class="dashicons dashicons-admin-links"></span>' . Plugin::get_a11n_window_hint() . '</a>';
+		return '<a href="' . esc_url( $url ) . '" target="_blank" title="' . esc_attr__( 'View the Now Page', 'threadi-now-pages' ) . '"><span class="dashicons dashicons-admin-links"></span>' . Plugin::get_a11n_window_hint() . '</a>';
 	}
 }

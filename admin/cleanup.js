@@ -4,7 +4,7 @@
  * The function has to live on window: the dialog runs a button's action
  * through new Function(), which only sees globals.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 ( function () {
@@ -19,7 +19,7 @@
 	 * @param {Object} dialog The dialog configuration.
 	 */
 	const showDialog = function ( dialog ) {
-		now_pages_threadi_create_dialog( { detail: dialog } );
+		threadi_now_pages_create_dialog( { detail: dialog } );
 	};
 
 	/**
@@ -29,13 +29,13 @@
 	 */
 	const showMessage = function ( text ) {
 		showDialog( {
-			title: nowPagesThreadiCleanupVars.title,
+			title: threadiNowPagesCleanupVars.title,
 			texts: [ '<p>' + text + '</p>' ],
 			buttons: [
 				{
 					action: 'closeDialog();',
 					variant: 'primary',
-					text: nowPagesThreadiCleanupVars.ok
+					text: threadiNowPagesCleanupVars.ok
 				}
 			]
 		} );
@@ -44,12 +44,12 @@
 	/**
 	 * Delete every entry older than the age given in the dialog.
 	 */
-	window.now_pages_threadi_cleanup_entries = function () {
-		const field = document.getElementById( 'now-pages-threadi-cleanup-days' );
+	window.threadi_now_pages_cleanup_entries = function () {
+		const field = document.getElementById( 'threadi-now-pages-cleanup-days' );
 
 		// bail if the dialog is not the one we expect.
 		if ( ! field ) {
-			showMessage( nowPagesThreadiCleanupVars.error );
+			showMessage( threadiNowPagesCleanupVars.error );
 
 			return;
 		}
@@ -59,7 +59,7 @@
 
 		// bail on an age nobody can have meant.
 		if ( '' === field.value.trim() || ! Number.isInteger( days ) || days < 1 ) {
-			showMessage( nowPagesThreadiCleanupVars.invalid );
+			showMessage( threadiNowPagesCleanupVars.invalid );
 
 			return;
 		}
@@ -69,22 +69,22 @@
 		// reports no intermediate state, so an indeterminate bar is the
 		// honest one.
 		showDialog( {
-			id: 'now-pages-threadi-cleanup-running',
-			title: nowPagesThreadiCleanupVars.title,
-			texts: [ '<p>' + nowPagesThreadiCleanupVars.running + '</p>' ],
+			id: 'threadi-now-pages-cleanup-running',
+			title: threadiNowPagesCleanupVars.title,
+			texts: [ '<p>' + threadiNowPagesCleanupVars.running + '</p>' ],
 			progressbar: {
 				active: true,
-				id: 'now-pages-threadi-cleanup-progress'
+				id: 'threadi-now-pages-cleanup-progress'
 			}
 		} );
 
 		const data = new FormData();
 
-		data.append( 'action', 'now_pages_threadi_cleanup' );
-		data.append( 'nonce', nowPagesThreadiCleanupVars.nonce );
+		data.append( 'action', 'threadi_now_pages_cleanup' );
+		data.append( 'nonce', threadiNowPagesCleanupVars.nonce );
 		data.append( 'days', days );
 
-		fetch( nowPagesThreadiCleanupVars.ajax_url, {
+		fetch( threadiNowPagesCleanupVars.ajax_url, {
 			method: 'POST',
 			credentials: 'same-origin',
 			body: data
@@ -100,7 +100,7 @@
 				// the answer carries a ready-made dialog, so the counts and
 				// their plural forms are built where the numbers are known.
 				if ( ! result.success || ! result.data ) {
-					showMessage( nowPagesThreadiCleanupVars.error );
+					showMessage( threadiNowPagesCleanupVars.error );
 
 					return;
 				}
@@ -108,7 +108,7 @@
 				showDialog( result.data );
 			} )
 			.catch( function () {
-				showMessage( nowPagesThreadiCleanupVars.error );
+				showMessage( threadiNowPagesCleanupVars.error );
 			} );
 	};
 } )();

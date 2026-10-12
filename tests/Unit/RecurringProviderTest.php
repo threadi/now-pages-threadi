@@ -2,22 +2,22 @@
 /**
  * File to test the provider for recurring entries.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
 use DateTimeImmutable;
-use NowPagesThreadi\NowPages\Confirmation;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\Providers\Provider_Context;
-use NowPagesThreadi\Providers\Providers;
-use NowPagesThreadi\Providers\Recurring_Provider;
-use NowPagesThreadi\Sources\Source_Builder;
-use NowPagesThreadi\Sources\Sources;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\NowPages\Confirmation;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\Providers\Provider_Context;
+use ThreadiNowPages\Providers\Providers;
+use ThreadiNowPages\Providers\Recurring_Provider;
+use ThreadiNowPages\Sources\Source_Builder;
+use ThreadiNowPages\Sources\Sources;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 use WP_Post;
 
 /**
@@ -32,8 +32,8 @@ class RecurringProviderTest extends NowPagesTestCase {
 	public function set_up(): void {
 		parent::set_up();
 
-		update_option( 'now_pages_threadi_frontend_period', 'week' );
-		update_option( 'now_pages_threadi_email_confirm_entry', 0 );
+		update_option( 'threadi_now_pages_frontend_period', 'week' );
+		update_option( 'threadi_now_pages_email_confirm_entry', 0 );
 		delete_option( Entries::OPTION_DELETED );
 	}
 
@@ -72,7 +72,7 @@ class RecurringProviderTest extends NowPagesTestCase {
 	private function create_source( array $config = array() ): int {
 		$source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'Sports',
 			)
@@ -97,7 +97,7 @@ class RecurringProviderTest extends NowPagesTestCase {
 	private function get_entries( int $source_id ): array {
 		return get_posts(
 			array(
-				'post_type'   => 'np_threadi_entry',
+				'post_type'   => 'threadi_np_entry',
 				'post_status' => array( 'any', 'trash' ),
 				'post_parent' => $source_id,
 				'numberposts' => -1,
@@ -205,13 +205,13 @@ class RecurringProviderTest extends NowPagesTestCase {
 	public function test_the_default_rhythm_follows_the_period_of_the_now_page(): void {
 		$now = new DateTimeImmutable( 'now', wp_timezone() );
 
-		update_option( 'now_pages_threadi_frontend_period', 'week' );
+		update_option( 'threadi_now_pages_frontend_period', 'week' );
 		$this->assertSame( $now->modify( 'monday this week' )->format( 'Y-m-d' ), $this->get_provider()->get_occurrence( array(), $now )->format( 'Y-m-d' ) );
 
-		update_option( 'now_pages_threadi_frontend_period', 'month' );
+		update_option( 'threadi_now_pages_frontend_period', 'month' );
 		$this->assertSame( $now->format( 'Y-m-01' ), $this->get_provider()->get_occurrence( array(), $now )->format( 'Y-m-d' ) );
 
-		update_option( 'now_pages_threadi_frontend_period', 'day' );
+		update_option( 'threadi_now_pages_frontend_period', 'day' );
 		$this->assertSame( $now->format( 'Y-m-d' ), $this->get_provider()->get_occurrence( array(), $now )->format( 'Y-m-d' ) );
 	}
 
@@ -224,7 +224,7 @@ class RecurringProviderTest extends NowPagesTestCase {
 		$now = new DateTimeImmutable( 'now', wp_timezone() );
 
 		foreach ( array( 'hour', 'live' ) as $period ) {
-			update_option( 'now_pages_threadi_frontend_period', $period );
+			update_option( 'threadi_now_pages_frontend_period', $period );
 
 			$this->assertSame( $now->format( 'Y-m-d 00:00' ), $this->get_provider()->get_occurrence( array(), $now )->format( 'Y-m-d H:i' ) );
 		}
@@ -328,15 +328,15 @@ class RecurringProviderTest extends NowPagesTestCase {
 	public function test_the_entry_gets_the_category_of_its_source(): void {
 		$term_id   = self::factory()->term->create(
 			array(
-				'taxonomy' => \NowPagesThreadi\NowPages\Categories::TAXONOMY,
+				'taxonomy' => \ThreadiNowPages\NowPages\Categories::TAXONOMY,
 				'name'     => 'Sports',
 			)
 		);
-		$source_id = $this->create_source( array( \NowPagesThreadi\NowPages\Categories::SOURCE_DEFAULT_META => $term_id ) );
+		$source_id = $this->create_source( array( \ThreadiNowPages\NowPages\Categories::SOURCE_DEFAULT_META => $term_id ) );
 
 		Sources::get_instance()->import();
 
-		$this->assertSame( array( $term_id ), wp_get_object_terms( $this->get_entries( $source_id )[0]->ID, \NowPagesThreadi\NowPages\Categories::TAXONOMY, array( 'fields' => 'ids' ) ) );
+		$this->assertSame( array( $term_id ), wp_get_object_terms( $this->get_entries( $source_id )[0]->ID, \ThreadiNowPages\NowPages\Categories::TAXONOMY, array( 'fields' => 'ids' ) ) );
 	}
 
 	/**
@@ -349,7 +349,7 @@ class RecurringProviderTest extends NowPagesTestCase {
 
 		$this->assertSame( Source_Builder::CHECK_OK, $check['status'] );
 		$this->assertSame( 'Went to the gym', $check['samples'][0]['text'] );
-		$this->assertCount( 0, get_posts( array( 'post_type' => 'np_threadi_entry', 'post_status' => 'any' ) ) );
+		$this->assertCount( 0, get_posts( array( 'post_type' => 'threadi_np_entry', 'post_status' => 'any' ) ) );
 	}
 
 	/**

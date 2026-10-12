@@ -2,12 +2,12 @@
 /**
  * File to handle the main object for each test class.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
-namespace NowPagesThreadi\Tests;
+namespace ThreadiNowPages\Tests;
 
-use NowPagesThreadi\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digest_Builder;
 use WP_Error;
 use WP_UnitTestCase;
 
@@ -20,28 +20,28 @@ abstract class NowPagesTestCase extends WP_UnitTestCase {
 	 *
 	 * @var string
 	 */
-	protected static string $ics_url = 'https://now-pages-threadi-test.example.com/calendar.ics';
+	protected static string $ics_url = 'https://threadi-now-pages-test.example.com/calendar.ics';
 
 	/**
 	 * Pseudo URL delivering a calendar without any event.
 	 *
 	 * @var string
 	 */
-	protected static string $ics_empty_url = 'https://now-pages-threadi-empty-test.example.com/calendar.ics';
+	protected static string $ics_empty_url = 'https://threadi-now-pages-empty-test.example.com/calendar.ics';
 
 	/**
 	 * Pseudo URL simulating a temporary outage (HTTP 503).
 	 *
 	 * @var string
 	 */
-	protected static string $ics_error_url = 'https://now-pages-threadi-error-test.example.com/calendar.ics';
+	protected static string $ics_error_url = 'https://threadi-now-pages-error-test.example.com/calendar.ics';
 
 	/**
 	 * Pseudo URL delivering a valid calendar with an ETag, and 304 as soon as it is sent back.
 	 *
 	 * @var string
 	 */
-	protected static string $ics_etag_url = 'https://now-pages-threadi-etag-test.example.com/calendar.ics';
+	protected static string $ics_etag_url = 'https://threadi-now-pages-etag-test.example.com/calendar.ics';
 
 	/**
 	 * GitHub account delivering a valid list of events.
@@ -111,16 +111,16 @@ abstract class NowPagesTestCase extends WP_UnitTestCase {
 		parent::set_up_before_class();
 
 		// prepare to load just one time.
-		if ( ! did_action( 'now_pages_threadi_test_preparation_loaded' ) ) {
+		if ( ! did_action( 'threadi_now_pages_test_preparation_loaded' ) ) {
 			// initialize the plugin.
-			\NowPagesThreadi\Plugin\Activation::get_instance()->run();
+			\ThreadiNowPages\Plugin\Activation::get_instance()->run();
 
 			// prevent external requests from our providers.
 			add_filter( 'pre_http_request', array( self::class, 'add_url_filter' ), 10, 3 );
-			add_filter( 'now_pages_threadi_pre_address_problem', '__return_empty_string' );
+			add_filter( 'threadi_now_pages_pre_address_problem', '__return_empty_string' );
 
 			// mark as loaded.
-			do_action( 'now_pages_threadi_test_preparation_loaded' );
+			do_action( 'threadi_now_pages_test_preparation_loaded' );
 		}
 	}
 
@@ -167,7 +167,7 @@ abstract class NowPagesTestCase extends WP_UnitTestCase {
 				return self::mock_http_response( 304 );
 			}
 
-			return self::mock_http_response( 200, self::get_fixture( 'calendar.ics' ), array( 'etag' => '"now-pages-threadi-test-ics-etag"' ) );
+			return self::mock_http_response( 200, self::get_fixture( 'calendar.ics' ), array( 'etag' => '"threadi-now-pages-test-ics-etag"' ) );
 		}
 
 		// simulate a temporary outage.
@@ -196,7 +196,7 @@ abstract class NowPagesTestCase extends WP_UnitTestCase {
 				return self::mock_http_response( 304 );
 			}
 
-			return self::mock_http_response( 200, self::get_fixture( 'github_events.json' ), array( 'etag' => '"now-pages-threadi-test-etag"' ) );
+			return self::mock_http_response( 200, self::get_fixture( 'github_events.json' ), array( 'etag' => '"threadi-now-pages-test-etag"' ) );
 		}
 
 		// answer the Steam API from the mocked account.
@@ -234,7 +234,7 @@ abstract class NowPagesTestCase extends WP_UnitTestCase {
 
 		self::$unmocked_requests[] = $url;
 
-		return new WP_Error( 'now_pages_threadi_unmocked_request', 'Unmocked HTTP request in a test: ' . $url );
+		return new WP_Error( 'threadi_now_pages_unmocked_request', 'Unmocked HTTP request in a test: ' . $url );
 	}
 
 	/**

@@ -2,19 +2,19 @@
 /**
  * This file contains the handler for WP CLI tasks.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Sources\Sources;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Sources\Sources;
 use WP_Query;
 
 /**
@@ -31,8 +31,8 @@ class Cli {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp now-pages-threadi reset_plugin
-	 *     wp now-pages-threadi reset_plugin --yes --url=example.com/subsite
+	 *     wp threadi-now-pages reset_plugin
+	 *     wp threadi-now-pages reset_plugin --yes --url=example.com/subsite
 	 *
 	 * @param array<int,string>    $args       The positional arguments.
 	 * @param array<string,string> $assoc_args The named arguments.

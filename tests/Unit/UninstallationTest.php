@@ -7,21 +7,21 @@
  * carrying our prefix has to be gone afterwards. A new setting added
  * later without a matching cleanup therefore turns this red.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Digests\Summarizer_Stats;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\NowPages\Now_Page;
-use NowPagesThreadi\Plugin\Setup;
-use NowPagesThreadi\Plugin\Uninstallation;
-use NowPagesThreadi\Providers\Webhook_Controller;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Digests\Summarizer_Stats;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\NowPages\Now_Page;
+use ThreadiNowPages\Plugin\Setup;
+use ThreadiNowPages\Plugin\Uninstallation;
+use ThreadiNowPages\Providers\Webhook_Controller;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 use WP_Post;
 use WP_Query;
 
@@ -58,13 +58,13 @@ class UninstallationTest extends NowPagesTestCase {
 	 */
 	private function create_leftovers(): void {
 		// the settings written outside the settings library.
-		update_option( 'now_pages_threadi_slug', 'now' );
-		update_option( 'now_pages_threadi_update_slugs', 1 );
-		update_option( 'now_pages_threadi_log_error_count', 3 );
-		update_option( 'now_pages_threadi_process_values', array( 'foo' => 'bar' ) );
-		update_option( 'now_pages_threadi_schedules', array( 'foo' ) );
-		update_option( 'now_pages_threadi_email_report_last_run', '2026-09-01 10:00:00' );
-		update_option( 'now_pages_threadi_provider_webhook_enabled', 1 );
+		update_option( 'threadi_now_pages_slug', 'now' );
+		update_option( 'threadi_now_pages_update_slugs', 1 );
+		update_option( 'threadi_now_pages_log_error_count', 3 );
+		update_option( 'threadi_now_pages_process_values', array( 'foo' => 'bar' ) );
+		update_option( 'threadi_now_pages_schedules', array( 'foo' ) );
+		update_option( 'threadi_now_pages_email_report_last_run', '2026-09-01 10:00:00' );
+		update_option( 'threadi_now_pages_provider_webhook_enabled', 1 );
 		update_option( Webhook_Controller::OPTION_TOKEN, 'a-token' );
 		update_option( Summarizer_Stats::OPTION, array( '2026-09-01' => array() ) );
 		update_option( Entries::OPTION_DELETED, array( '1|ext-1' ) );
@@ -90,25 +90,25 @@ class UninstallationTest extends NowPagesTestCase {
 		}
 
 		// the marker of the email about an empty now page.
-		update_user_meta( $this->user_id, \NowPagesThreadi\Plugin\Emails\EmptyNowPages::USER_META_SENT, 1 );
+		update_user_meta( $this->user_id, \ThreadiNowPages\Plugin\Emails\EmptyNowPages::USER_META_SENT, 1 );
 
 		// a source with the state a provider left behind.
 		$source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'Test source',
 			)
 		);
 
 		update_post_meta( $source_id, 'provider', 'rss' );
-		update_post_meta( $source_id, 'now_pages_threadi_provider_state', array( 'etag_x' => '"abc"' ) );
-		update_post_meta( $source_id, 'now_pages_threadi_provider_last_run', time() );
+		update_post_meta( $source_id, 'threadi_now_pages_provider_state', array( 'etag_x' => '"abc"' ) );
+		update_post_meta( $source_id, 'threadi_now_pages_provider_last_run', time() );
 
 		// an entry belonging to it.
 		self::factory()->post->create(
 			array(
-				'post_type'    => 'np_threadi_entry',
+				'post_type'    => 'threadi_np_entry',
 				'post_status'  => 'publish',
 				'post_title'   => '',
 				'post_content' => 'An entry',
@@ -117,14 +117,14 @@ class UninstallationTest extends NowPagesTestCase {
 		);
 
 		// a category.
-		wp_insert_term( 'Test category', 'now_pages_threadi_category' );
+		wp_insert_term( 'Test category', 'threadi_now_pages_category' );
 
 		// the caches a digest and a provider leave behind.
-		set_transient( 'now_pages_threadi_summary_abc', 'a cached summary', HOUR_IN_SECONDS );
-		set_transient( 'now_pages_threadi_webhook_fails_abc', 5, HOUR_IN_SECONDS );
+		set_transient( 'threadi_now_pages_summary_abc', 'a cached summary', HOUR_IN_SECONDS );
+		set_transient( 'threadi_now_pages_webhook_fails_abc', 5, HOUR_IN_SECONDS );
 
 		// the lock of an AI summary, left behind by a broken request.
-		add_option( 'now_pages_threadi_summary_abc_lock', (string) time(), '', false );
+		add_option( 'threadi_now_pages_summary_abc_lock', (string) time(), '', false );
 	}
 
 	/**
@@ -139,7 +139,7 @@ class UninstallationTest extends NowPagesTestCase {
 		$names = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
-				$wpdb->esc_like( 'now_pages_threadi' ) . '%'
+				$wpdb->esc_like( 'threadi_now_pages' ) . '%'
 			)
 		);
 
@@ -158,7 +158,7 @@ class UninstallationTest extends NowPagesTestCase {
 		$keys = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT DISTINCT meta_key FROM {$wpdb->usermeta} WHERE meta_key LIKE %s OR meta_key LIKE %s",
-				$wpdb->esc_like( 'now_pages_threadi' ) . '%',
+				$wpdb->esc_like( 'threadi_now_pages' ) . '%',
 				$wpdb->esc_like( 'esfw_values_' ) . '%'
 			)
 		);
@@ -178,8 +178,8 @@ class UninstallationTest extends NowPagesTestCase {
 		$names = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
-				$wpdb->esc_like( '_transient_now_pages_threadi' ) . '%',
-				$wpdb->esc_like( '_transient_timeout_now_pages_threadi' ) . '%'
+				$wpdb->esc_like( '_transient_threadi_now_pages' ) . '%',
+				$wpdb->esc_like( '_transient_timeout_threadi_now_pages' ) . '%'
 			)
 		);
 
@@ -194,7 +194,7 @@ class UninstallationTest extends NowPagesTestCase {
 	private function get_remaining_posts(): array {
 		$query = new WP_Query(
 			array(
-				'post_type'      => array( 'np_threadi_entry', 'np_threadi_source' ),
+				'post_type'      => array( 'threadi_np_entry', 'threadi_np_source' ),
 				'post_status'    => array( 'any', 'trash', 'auto-draft' ),
 				'posts_per_page' => -1,
 				'fields'         => 'ids',
@@ -286,7 +286,7 @@ class UninstallationTest extends NowPagesTestCase {
 
 		$terms = get_terms(
 			array(
-				'taxonomy'   => 'now_pages_threadi_category',
+				'taxonomy'   => 'threadi_now_pages_category',
 				'hide_empty' => false,
 			)
 		);
@@ -360,7 +360,7 @@ class UninstallationTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_other_setups_stay_completed(): void {
-		update_option( 'esfw_completed', array( 'now-pages-threadi', 'some-other-plugin' ) );
+		update_option( 'esfw_completed', array( 'threadi-now-pages', 'some-other-plugin' ) );
 
 		Uninstallation::get_instance()->run( true );
 
@@ -368,7 +368,7 @@ class UninstallationTest extends NowPagesTestCase {
 
 		$this->assertIsArray( $completed );
 		$this->assertContains( 'some-other-plugin', $completed );
-		$this->assertNotContains( 'now-pages-threadi', $completed );
+		$this->assertNotContains( 'threadi-now-pages', $completed );
 	}
 
 	/**

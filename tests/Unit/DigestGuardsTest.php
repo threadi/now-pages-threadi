@@ -6,16 +6,16 @@
  * of searching when they are missing — which is exactly why they need a
  * test that states the intention.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 
 /**
  * Object to test the resolve guard and the build cache.
@@ -31,7 +31,7 @@ class DigestGuardsTest extends NowPagesTestCase {
 	private function create_entry( string $text ): int {
 		return self::factory()->post->create(
 			array(
-				'post_type'     => 'np_threadi_entry',
+				'post_type'     => 'threadi_np_entry',
 				'post_status'   => 'publish',
 				'post_title'    => '',
 				'post_content'  => $text,
@@ -63,7 +63,7 @@ class DigestGuardsTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_resolving_twice_keeps_the_origins(): void {
-		update_option( 'now_pages_threadi_show_time', 1 );
+		update_option( 'threadi_now_pages_show_time', 1 );
 
 		$once  = Display_Settings::resolve( array() );
 		$twice = Display_Settings::resolve( $once );
@@ -78,7 +78,7 @@ class DigestGuardsTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_resolving_twice_changes_nothing(): void {
-		update_option( 'now_pages_threadi_show_time', 1 );
+		update_option( 'threadi_now_pages_show_time', 1 );
 
 		$once  = Display_Settings::resolve( array() );
 		$twice = Display_Settings::resolve( $once );
@@ -94,7 +94,7 @@ class DigestGuardsTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_the_guard_does_not_swallow_a_real_override(): void {
-		update_option( 'now_pages_threadi_show_time', 1 );
+		update_option( 'threadi_now_pages_show_time', 1 );
 
 		$resolved = Display_Settings::resolve( array( 'show_time' => false ) );
 

@@ -2,12 +2,12 @@
 /**
  * File to handle the capabilities on roles and users used from this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -62,13 +62,13 @@ class Capabilities {
 	 */
 	public function install(): void {
 		// add our custom role.
-		$manager_role = get_role( 'manage_now_pages_threadi' );
+		$manager_role = get_role( 'manage_threadi_now_pages' );
 		if ( is_null( $manager_role ) ) {
-			add_role( 'manage_now_pages_threadi', __( 'Manage Now Pages', 'now-pages-threadi' ) );
+			add_role( 'manage_threadi_now_pages', __( 'Manage Now Pages', 'threadi-now-pages' ) );
 		}
 
 		// set the capabilities.
-		$this->set_capabilities_for_role( 'manage_now_pages_threadi' );
+		$this->set_capabilities_for_role( 'manage_threadi_now_pages' );
 		$this->set_capabilities_for_role( 'administrator' );
 	}
 
@@ -165,7 +165,7 @@ class Capabilities {
 		/**
 		 * Remove our own role.
 		 */
-		remove_role( 'manage_now_pages_threadi' );
+		remove_role( 'manage_threadi_now_pages' );
 
 		/**
 		 * Remove our capabilities from other roles.
@@ -190,7 +190,7 @@ class Capabilities {
 				'meta_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- one-time cleanup during uninstallation.
 					array(
 						'key'     => $GLOBALS['wpdb']->get_blog_prefix() . 'capabilities',
-						'value'   => 'np_threadi_',
+						'value'   => 'threadi_np_',
 						'compare' => 'LIKE',
 					),
 				),

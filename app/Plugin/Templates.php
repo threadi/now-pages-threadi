@@ -2,12 +2,12 @@
 /**
  * File to handle template-tasks of this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -56,7 +56,7 @@ class Templates {
 	/**
 	 * Return the path to a requested template if it exists.
 	 *
-	 * Also load the requested file if it is located in the /wp-content/themes/xy/now-pages-threadi/ directory.
+	 * Also load the requested file if it is located in the /wp-content/themes/xy/threadi-now-pages/ directory.
 	 *
 	 * @param string $template The template to use.
 	 * @return string
@@ -85,7 +85,7 @@ class Templates {
 		 *
 		 * @param string $directory The directory to use.
 		 */
-		$plugin_template = plugin_dir_path( apply_filters( 'now_pages_threadi_set_template_directory', $directory ) ) . 'templates/' . $template;
+		$plugin_template = plugin_dir_path( apply_filters( 'threadi_now_pages_set_template_directory', $directory ) ) . 'templates/' . $template;
 		if ( file_exists( $plugin_template ) ) {
 			return $plugin_template;
 		}
@@ -124,7 +124,7 @@ class Templates {
 		 *
 		 * @param string $directory The directory to use.
 		 */
-		$plugin_template = plugin_dir_path( apply_filters( 'now_pages_threadi_set_template_directory', $directory ) ) . 'templates/' . $template;
+		$plugin_template = plugin_dir_path( apply_filters( 'threadi_now_pages_set_template_directory', $directory ) ) . 'templates/' . $template;
 		if ( file_exists( $plugin_template ) ) {
 			return true;
 		}

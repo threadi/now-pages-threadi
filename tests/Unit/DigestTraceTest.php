@@ -5,17 +5,17 @@
  * The diagnostics panel reads nothing but this trace, so a wrong value here
  * silently disables parts of the panel without any visible error.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Digests\Diagnostics;
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Digests\Diagnostics;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 
 /**
  * Object to test Digest_Builder::get_trace() and Diagnostics.
@@ -48,7 +48,7 @@ class DigestTraceTest extends NowPagesTestCase {
 
 		$post_id = self::factory()->post->create(
 			array(
-				'post_type'    => 'np_threadi_entry',
+				'post_type'    => 'threadi_np_entry',
 				'post_status'  => 'publish',
 				'post_title'   => '',
 				'post_content' => $text,
@@ -129,7 +129,7 @@ class DigestTraceTest extends NowPagesTestCase {
 		$trace = $this->build()->get_trace();
 
 		$this->assertArrayHasKey( 'query_args', $trace );
-		$this->assertSame( 'np_threadi_entry', $trace['query_args']['post_type'] );
+		$this->assertSame( 'threadi_np_entry', $trace['query_args']['post_type'] );
 		$this->assertArrayHasKey( 'date_query', $trace['query_args'] );
 	}
 
@@ -139,7 +139,7 @@ class DigestTraceTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_trace_contains_the_resolved_settings(): void {
-		update_option( 'now_pages_threadi_show_time', '1' );
+		update_option( 'threadi_now_pages_show_time', '1' );
 
 		$builder = new Digest_Builder();
 

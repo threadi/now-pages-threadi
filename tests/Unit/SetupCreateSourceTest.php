@@ -6,16 +6,16 @@
  * answers, recipe, duplicate check, post creation. This covers it end to
  * end without touching the React side.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Plugin\Setup;
-use NowPagesThreadi\Presets\Presets;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Plugin\Setup;
+use ThreadiNowPages\Presets\Presets;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 use WP_Query;
 
 /**
@@ -75,7 +75,7 @@ class SetupCreateSourceTest extends NowPagesTestCase {
 	private function get_sources(): array {
 		$query = new WP_Query(
 			array(
-				'post_type'      => 'np_threadi_source',
+				'post_type'      => 'threadi_np_source',
 				'post_status'    => array( 'any', 'trash' ),
 				'posts_per_page' => -1,
 				'fields'         => 'ids',
@@ -129,7 +129,7 @@ class SetupCreateSourceTest extends NowPagesTestCase {
 		$this->assertSame( 'Went to the gym', get_the_title( $sources[0] ) );
 		$this->assertSame( 'recurring', get_post_meta( $sources[0], 'provider', true ) );
 		$this->assertSame( 'Went to the gym', get_post_meta( $sources[0], 'recurring_text', true ) );
-		$this->assertSame( 'routine', get_post_meta( $sources[0], \NowPagesThreadi\Presets\Presets::SOURCE_META, true ) );
+		$this->assertSame( 'routine', get_post_meta( $sources[0], \ThreadiNowPages\Presets\Presets::SOURCE_META, true ) );
 	}
 
 	/**
@@ -342,12 +342,12 @@ class SetupCreateSourceTest extends NowPagesTestCase {
 			++$announced;
 		};
 
-		add_action( 'now_pages_threadi_setup_source_created', $handler );
+		add_action( 'threadi_now_pages_setup_source_created', $handler );
 
 		$this->answer( 'own_website' );
 		$this->run_setup();
 
-		remove_action( 'now_pages_threadi_setup_source_created', $handler );
+		remove_action( 'threadi_now_pages_setup_source_created', $handler );
 
 		$this->assertSame( 1, $announced );
 	}

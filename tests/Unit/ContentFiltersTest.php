@@ -2,16 +2,16 @@
 /**
  * File to test the generic content filter for imported entries.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\NowPages\Content_Filters;
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\NowPages\Content_Filters;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 
 /**
  * Object to test Content_Filters.
@@ -198,7 +198,7 @@ class ContentFiltersTest extends NowPagesTestCase {
 
 		$source_id = self::factory()->post->create(
 			array(
-				'post_type'  => 'np_threadi_source',
+				'post_type'  => 'threadi_np_source',
 				'post_title' => 'Test source',
 			)
 		);

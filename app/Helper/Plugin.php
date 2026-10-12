@@ -2,17 +2,17 @@
 /**
  * This file contains helper for this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Helper;
+namespace ThreadiNowPages\Helper;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Plugin\Log;
+use ThreadiNowPages\Plugin\Log;
 use WP_Filesystem_Base;
 use WP_Filesystem_Direct;
 use WP_Rewrite;
@@ -65,7 +65,7 @@ class Plugin {
 		 * @param string $plugin_version The plugin-version.
 		 * @param string $filepath The absolute path to the requested file.
 		 */
-		$file_version = apply_filters( 'now_pages_threadi_file_version', $plugin_version, $filepath );
+		$file_version = apply_filters( 'threadi_now_pages_file_version', $plugin_version, $filepath );
 
 		// use the plugin version if the filter returned something else than a string.
 		if ( ! is_string( $file_version ) ) { // @phpstan-ignore function.alreadyNarrowedType
@@ -168,7 +168,7 @@ class Plugin {
 		if ( $wp_filesystem->errors->has_errors() ) {
 			// log this event.
 			/* translators: a name will replace %1$s. */
-			Log::get_instance()->add( sprintf( __( '<strong>Error during loading the required WordPress-own filesystem object!</strong><br>We will now use the local filesystem object and hope it will work.<br><br>Tipps to solve this:<ul><li>Check the following error and speak to your WordPress administrator about it.</li><li>Check your <em>wp-config.php</em> if you have the constant "FS_METHOD" set there. If yes, remove it and check if your WordPress can save media files.</li><li>Ask the support of your hoster for help.</li></ul>Used filesystem mode: <em>%1$s</em><br>The following errors occurred:', 'now-pages-threadi' ), get_filesystem_method() ) . ' <code>' . wp_json_encode( $wp_filesystem->errors ) . '</code>', 'error', 'system' );
+			Log::get_instance()->add( sprintf( __( '<strong>Error during loading the required WordPress-own filesystem object!</strong><br>We will now use the local filesystem object and hope it will work.<br><br>Tipps to solve this:<ul><li>Check the following error and speak to your WordPress administrator about it.</li><li>Check your <em>wp-config.php</em> if you have the constant "FS_METHOD" set there. If yes, remove it and check if your WordPress can save media files.</li><li>Ask the support of your hoster for help.</li></ul>Used filesystem mode: <em>%1$s</em><br>The following errors occurred:', 'threadi-now-pages' ), get_filesystem_method() ) . ' <code>' . wp_json_encode( $wp_filesystem->errors ) . '</code>', 'error', 'system' );
 
 			// embed the local directory object.
 			require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
@@ -187,7 +187,7 @@ class Plugin {
 	 * @return string
 	 */
 	public static function get_a11n_window_hint(): string {
-		return '<span class="screen-reader-text"> ' . __( 'opens a new window', 'now-pages-threadi' ) . '</span>';
+		return '<span class="screen-reader-text"> ' . __( 'opens a new window', 'threadi-now-pages' ) . '</span>';
 	}
 
 	/**
@@ -196,7 +196,7 @@ class Plugin {
 	 * @return string
 	 */
 	public static function get_plugin_support_url(): string {
-		return 'https://wordpress.org/support/plugin/now-pages-threadi/';
+		return 'https://wordpress.org/support/plugin/threadi-now-pages/';
 	}
 
 	/**
@@ -291,7 +291,7 @@ class Plugin {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param bool $result True if the settings are built.
 		 */
-		return (bool) apply_filters( 'now_pages_threadi_is_settings_request', $result );
+		return (bool) apply_filters( 'threadi_now_pages_is_settings_request', $result );
 	}
 
 	/**
@@ -302,8 +302,8 @@ class Plugin {
 	public static function get_import_url(): string {
 		return add_query_arg(
 			array(
-				'action' => 'now_pages_threadi_import',
-				'nonce'  => wp_create_nonce( 'now-pages-threadi-import' ),
+				'action' => 'threadi_now_pages_import',
+				'nonce'  => wp_create_nonce( 'threadi-now-pages-import' ),
 			),
 			get_admin_url() . 'admin.php'
 		);
@@ -315,7 +315,7 @@ class Plugin {
 	 * @return string
 	 */
 	public static function get_review_url(): string {
-		return 'https://wordpress.org/support/plugin/now-pages-threadi/reviews/';
+		return 'https://wordpress.org/support/plugin/threadi-now-pages/reviews/';
 	}
 
 	/**
@@ -333,7 +333,7 @@ class Plugin {
 	 * @return string
 	 */
 	public static function get_github_documentation_link(): string {
-		return 'https://github.com/threadi/now-pages-threadi/tree/master/docs';
+		return 'https://github.com/threadi/threadi-now-pages/tree/master/docs';
 	}
 
 	/**
