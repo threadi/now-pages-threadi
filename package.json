@@ -25,7 +25,7 @@
         "@babel/core": "^8.0.7",
         "@babel/runtime": "^7.28.4",
         "@wordpress/i18n": "^6.30.0",
-        "concurrently": "^9.2.3",
+        "concurrently": "^9.2.5",
         "driver.js": "^1.8.0"
     }
 }
