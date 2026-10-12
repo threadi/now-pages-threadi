@@ -1,31 +1,31 @@
 <?php
 /**
- * This file contains the [now_pages_threadi_digest] shortcode.
+ * This file contains the [threadi_now_pages_digest] shortcode.
  *
  * Deliberately thin: all actual logic lives in Digest_Builder, so a future
  * Gutenberg block or page-builder widget can call the exact same method
  * without duplicating any of this.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Digests\Summarizer_Interface;
-use NowPagesThreadi\Digests\Summarizers;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\NowPages\Frontend;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Digests\Summarizer_Interface;
+use ThreadiNowPages\Digests\Summarizers;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\NowPages\Frontend;
 
 /**
- * Registers and handles the [now_pages_threadi_digest] shortcode.
+ * Registers and handles the [threadi_now_pages_digest] shortcode.
  */
 class Shortcode extends PageBuilder_Base {
 	use Singleton_Trait;
@@ -43,17 +43,17 @@ class Shortcode extends PageBuilder_Base {
 	 * @return void
 	 */
 	public function init(): void {
-		add_shortcode( 'now_pages_threadi_digest', array( self::class, 'render' ) );
+		add_shortcode( 'threadi_now_pages_digest', array( self::class, 'render' ) );
 	}
 
 	/**
 	 * Render the shortcode.
 	 *
 	 * Examples:
-	 * [now_pages_threadi_digest period="day" format="narrative"]
-	 * [now_pages_threadi_digest format="verbatim" show_time="true" category="3"]
-	 * [now_pages_threadi_digest user="tz" delay_hours="24" show_source="true"]
-	 * [now_pages_threadi_digest user="42" group_by_category="false"]
+	 * [threadi_now_pages_digest period="day" format="narrative"]
+	 * [threadi_now_pages_digest format="verbatim" show_time="true" category="3"]
+	 * [threadi_now_pages_digest user="tz" delay_hours="24" show_source="true"]
+	 * [threadi_now_pages_digest user="42" group_by_category="false"]
 	 *
 	 * Display options (show_time, show_source, group_by_category, delay_hours)
 	 * follow the hierarchy: shortcode attribute > user meta > global setting > default.
@@ -95,7 +95,7 @@ class Shortcode extends PageBuilder_Base {
 				'end'               => '',
 			),
 			$attributes,
-			'now_pages_threadi_digest'
+			'threadi_now_pages_digest'
 		);
 
 		$args = array(
@@ -188,7 +188,7 @@ class Shortcode extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Shortcode', 'now-pages-threadi' );
+		return __( 'Shortcode', 'threadi-now-pages' );
 	}
 
 	/**

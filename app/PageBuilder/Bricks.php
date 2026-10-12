@@ -2,19 +2,19 @@
 /**
  * This file contains the support for Bricks.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use Bricks\Elements;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
 
 /**
  * Registers and handles the support for Bricks.
@@ -67,7 +67,7 @@ class Bricks extends PageBuilder_Base {
 	 * @return array<string,string>
 	 */
 	public function add_category_to_builder( array $i18n ): array {
-		$i18n['now-pages-threadi'] = esc_html__( 'Now Pages', 'now-pages-threadi' );
+		$i18n['threadi-now-pages'] = esc_html__( 'Now Pages', 'threadi-now-pages' );
 		return $i18n;
 	}
 
@@ -94,12 +94,12 @@ class Bricks extends PageBuilder_Base {
 			'_bricks_page_content_2' => array(
 				array(
 					'id'          => $this->get_element_id(),
-					'name'        => 'now-pages-threadi-digest',
+					'name'        => 'threadi-now-pages-digest',
 					'parent'      => 0,
 					'children'    => array(),
 					'settings'    => array(
-						'period'           => get_option( 'now_pages_threadi_frontend_period', 'live' ),
-						'format'           => get_option( 'now_pages_threadi_frontend_format', 'verbatim' ),
+						'period'           => get_option( 'threadi_now_pages_frontend_period', 'live' ),
+						'format'           => get_option( 'threadi_now_pages_frontend_format', 'verbatim' ),
 						'override_display' => 'no',
 					),
 					'themeStyles' => array(),
@@ -141,7 +141,7 @@ class Bricks extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Bricks', 'now-pages-threadi' );
+		return __( 'Bricks', 'threadi-now-pages' );
 	}
 
 	/**

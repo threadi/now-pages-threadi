@@ -9,12 +9,12 @@
  * for monthly events), plus EXDATE and moved single instances
  * (RECURRENCE-ID). Anything beyond that is ignored.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Helper;
+namespace ThreadiNowPages\Helper;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -23,7 +23,7 @@ use DateInterval;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
-use NowPagesThreadi\Plugin\Log;
+use ThreadiNowPages\Plugin\Log;
 
 /**
  * Object to parse iCalendar data.
@@ -86,7 +86,7 @@ class ICS_Parser {
 			if ( count( $events ) >= self::MAX_EVENTS ) {
 				// log this event.
 				/* translators: %1$d will be replaced by a number of events. */
-				Log::get_instance()->add( sprintf( __( 'The calendar contains more than %1$d events, the remaining events have been ignored.', 'now-pages-threadi' ), self::MAX_EVENTS ), 'error', 'provider' );
+				Log::get_instance()->add( sprintf( __( 'The calendar contains more than %1$d events, the remaining events have been ignored.', 'threadi-now-pages' ), self::MAX_EVENTS ), 'error', 'provider' );
 				break;
 			}
 

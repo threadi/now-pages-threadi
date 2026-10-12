@@ -8,12 +8,12 @@
  * itself never has to know whether the actual text came from a fixed
  * template or an AI model.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests;
+namespace ThreadiNowPages\Digests;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -42,7 +42,7 @@ interface Summarizer_Interface {
 	/**
 	 * Turn the given entries into a narrative summary.
 	 *
-	 * @param array<int,WP_Post> $entries  Chronologically sorted np_threadi_entry posts.
+	 * @param array<int,WP_Post> $entries  Chronologically sorted threadi_np_entry posts.
 	 * @param string             $language Language code the summary should be written in.
 	 *
 	 * @return string|WP_Error The summary text, or a WP_Error on failure.

@@ -7,19 +7,19 @@
  * plain key, which the account owner creates once at
  * https://www.last.fm/api/account/create
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Providers;
+namespace ThreadiNowPages\Providers;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use NowPagesThreadi\NowPages\Entry;
+use ThreadiNowPages\NowPages\Entry;
 use WP_Error;
 
 /**
@@ -55,7 +55,7 @@ class LastFm_Provider extends HTTP_Provider_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Last.fm', 'now-pages-threadi' );
+		return __( 'Last.fm', 'threadi-now-pages' );
 	}
 
 	/**
@@ -64,7 +64,7 @@ class LastFm_Provider extends HTTP_Provider_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'Reads the tracks you scrobbled to Last.fm. Needs a free API key, but no app approval.', 'now-pages-threadi' );
+		return __( 'Reads the tracks you scrobbled to Last.fm. Needs a free API key, but no app approval.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -75,32 +75,32 @@ class LastFm_Provider extends HTTP_Provider_Base {
 	public function get_config_fields(): array {
 		return array(
 			'lastfm_username'  => array(
-				'label'       => __( 'Username', 'now-pages-threadi' ),
+				'label'       => __( 'Username', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => true,
-				'description' => __( 'The Last.fm account whose scrobbles should be read. Its listening history has to be public.', 'now-pages-threadi' ),
+				'description' => __( 'The Last.fm account whose scrobbles should be read. Its listening history has to be public.', 'threadi-now-pages' ),
 				'placeholder' => 'rj',
 			),
 			'lastfm_api_key'   => array(
-				'label'       => __( 'API key', 'now-pages-threadi' ),
+				'label'       => __( 'API key', 'threadi-now-pages' ),
 				'type'        => 'password',
 				'required'    => true,
-				'description' => __( 'Create one at <a href="https://www.last.fm/api/account/create" target="_blank">last.fm/api/account/create</a>. Only the API key is needed, not the shared secret.', 'now-pages-threadi' ),
+				'description' => __( 'Create one at <a href="https://www.last.fm/api/account/create" target="_blank">last.fm/api/account/create</a>. Only the API key is needed, not the shared secret.', 'threadi-now-pages' ),
 			),
 			'lastfm_summarize' => array(
-				'label'       => __( 'Summarize instead of listing', 'now-pages-threadi' ),
+				'label'       => __( 'Summarize instead of listing', 'threadi-now-pages' ),
 				'type'        => 'checkbox',
 				'default'     => 1,
-				'description' => __( 'Recommended. Creates one entry per run instead of one per track - a normal listening day would otherwise fill the whole now page.', 'now-pages-threadi' ),
+				'description' => __( 'Recommended. Creates one entry per run instead of one per track - a normal listening day would otherwise fill the whole now page.', 'threadi-now-pages' ),
 			),
 			'lastfm_max_items' => array(
-				'label'       => __( 'Max. tracks per run', 'now-pages-threadi' ),
+				'label'       => __( 'Max. tracks per run', 'threadi-now-pages' ),
 				'type'        => 'number',
 				'default'     => 10,
 				'min'         => 1,
 				'max'         => 200,
 				'step'        => 1,
-				'description' => __( 'When summarizing, this is how many tracks are read to build the summary.', 'now-pages-threadi' ),
+				'description' => __( 'When summarizing, this is how many tracks are read to build the summary.', 'threadi-now-pages' ),
 			),
 		);
 	}
@@ -155,10 +155,10 @@ class LastFm_Provider extends HTTP_Provider_Base {
 		if ( isset( $data['error'] ) ) {
 			$this->report_error(
 				new WP_Error(
-					'now_pages_threadi_lastfm_error',
+					'threadi_now_pages_lastfm_error',
 					sprintf(
 					/* translators: %1$s will be replaced by an error message from Last.fm. */
-						__( 'Last.fm answered with an error: %1$s', 'now-pages-threadi' ),
+						__( 'Last.fm answered with an error: %1$s', 'threadi-now-pages' ),
 						(string) ( $data['message'] ?? '' )
 					)
 				)
@@ -277,7 +277,7 @@ class LastFm_Provider extends HTTP_Provider_Base {
 		if ( '' === $artist ) {
 			$entry->text = sprintf(
 			/* translators: %1$s will be replaced by the title of a track. */
-				__( 'Listened to "%1$s"', 'now-pages-threadi' ),
+				__( 'Listened to "%1$s"', 'threadi-now-pages' ),
 				$title
 			);
 
@@ -286,7 +286,7 @@ class LastFm_Provider extends HTTP_Provider_Base {
 
 		$entry->text = sprintf(
 		/* translators: %1$s will be replaced by the title of a track, %2$s by an artist. */
-			__( 'Listened to "%1$s" by %2$s', 'now-pages-threadi' ),
+			__( 'Listened to "%1$s" by %2$s', 'threadi-now-pages' ),
 			$title,
 			$artist
 		);
@@ -331,7 +331,7 @@ class LastFm_Provider extends HTTP_Provider_Base {
 		if ( empty( $artists ) ) {
 			$entry->text = sprintf(
 			/* translators: %1$d will be replaced by a number of tracks. */
-				_n( 'Listened to %1$d track', 'Listened to %1$d tracks', $count, 'now-pages-threadi' ),
+				_n( 'Listened to %1$d track', 'Listened to %1$d tracks', $count, 'threadi-now-pages' ),
 				$count
 			);
 
@@ -342,7 +342,7 @@ class LastFm_Provider extends HTTP_Provider_Base {
 
 		$entry->text = sprintf(
 		/* translators: %1$d will be replaced by a number of tracks, %2$s by an artist. */
-			_n( 'Listened to %1$d track, most recently %2$s', 'Listened to %1$d tracks, mostly %2$s', $count, 'now-pages-threadi' ),
+			_n( 'Listened to %1$d track, most recently %2$s', 'Listened to %1$d tracks, mostly %2$s', $count, 'threadi-now-pages' ),
 			$count,
 			(string) array_key_first( $artists )
 		);

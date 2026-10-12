@@ -2,18 +2,18 @@
 /**
  * File for handling the knowledge center with help texts for different situations the user could have with this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Instance_Registry;
-use NowPagesThreadi\Helper\Plugin;
+use ThreadiNowPages\Helper\Instance_Registry;
+use ThreadiNowPages\Helper\Plugin;
 use WP_Screen;
 
 /**
@@ -60,8 +60,8 @@ class KnowledgeCenter {
 		add_action( 'current_screen', array( $this, 'add_help' ) );
 
 		// add tabs in help.
-		add_filter( 'now_pages_threadi_help_tabs', array( $this, 'add_entries' ), 20 );
-		add_filter( 'now_pages_threadi_help_tabs', array( $this, 'add_documentation_help' ) );
+		add_filter( 'threadi_now_pages_help_tabs', array( $this, 'add_entries' ), 20 );
+		add_filter( 'threadi_now_pages_help_tabs', array( $this, 'add_documentation_help' ) );
 	}
 
 	/**
@@ -71,9 +71,9 @@ class KnowledgeCenter {
 	 */
 	public function get_entries(): array {
 		$entries = array(
-			'\NowPagesThreadi\Plugin\KnowledgeCenter\FindTheNowPage',
-			'\NowPagesThreadi\Plugin\KnowledgeCenter\PrettyPermalinks',
-			'\NowPagesThreadi\Plugin\KnowledgeCenter\TermsExplained',
+			'\ThreadiNowPages\Plugin\KnowledgeCenter\FindTheNowPage',
+			'\ThreadiNowPages\Plugin\KnowledgeCenter\PrettyPermalinks',
+			'\ThreadiNowPages\Plugin\KnowledgeCenter\TermsExplained',
 		);
 
 		/**
@@ -82,7 +82,7 @@ class KnowledgeCenter {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param array<int,class-string<KnowledgeCenter_Base>> $entries List of knowledge center entries.
 		 */
-		return apply_filters( 'now_pages_threadi_knowledge_center_entries', $entries );
+		return apply_filters( 'threadi_now_pages_knowledge_center_entries', $entries );
 	}
 
 	/**
@@ -120,7 +120,7 @@ class KnowledgeCenter {
 		 * @param bool $allowed True if the help should be visible.
 		 * @param WP_Screen $screen The actual visible screen.
 		 */
-		if ( ! apply_filters( 'now_pages_threadi_show_help', $allowed, $screen ) ) {
+		if ( ! apply_filters( 'threadi_now_pages_show_help', $allowed, $screen ) ) {
 			return;
 		}
 
@@ -155,7 +155,7 @@ class KnowledgeCenter {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param array<string,mixed> $list List of help tabs.
 		 */
-		return apply_filters( 'now_pages_threadi_help_tabs', $list );
+		return apply_filters( 'threadi_now_pages_help_tabs', $list );
 	}
 
 	/**
@@ -167,7 +167,7 @@ class KnowledgeCenter {
 	 */
 	private function add_sidebar( WP_Screen $screen ): void {
 		// get content for sidebar.
-		$sidebar_content = '<p><strong>' . __( 'Question not answered?', 'now-pages-threadi' ) . '</strong></p><p><a href="' . esc_url( Plugin::get_plugin_support_url() ) . '" target="_blank">' . esc_html__( 'Ask in our forum', 'now-pages-threadi' ) . '</a></p>';
+		$sidebar_content = '<p><strong>' . __( 'Question not answered?', 'threadi-now-pages' ) . '</strong></p><p><a href="' . esc_url( Plugin::get_plugin_support_url() ) . '" target="_blank">' . esc_html__( 'Ask in our forum', 'threadi-now-pages' ) . '</a></p>';
 
 		/**
 		 * Filter the sidebar content.
@@ -175,7 +175,7 @@ class KnowledgeCenter {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param string $sidebar_content The content.
 		 */
-		$sidebar_content = apply_filters( 'now_pages_threadi_help_sidebar_content', $sidebar_content );
+		$sidebar_content = apply_filters( 'threadi_now_pages_help_sidebar_content', $sidebar_content );
 
 		// add the sidebar with the given content.
 		$screen->set_help_sidebar( $sidebar_content );
@@ -191,12 +191,12 @@ class KnowledgeCenter {
 	public function add_documentation_help( array $help_list ): array {
 		// collect the content for the help.
 		/* translators: %1$s will be replaced by a URL. */
-		$content = '<h2>' . __( 'Documentation', 'now-pages-threadi' ) . '</h2><p>' . sprintf( __( 'We provide some documentation for the WordPress plugin <i>Now Pages</i> at <a href="%1$s" target="_blank">GitHub (opens a new window)</a>.', 'now-pages-threadi' ), esc_url( Plugin::get_github_documentation_link() ) ) . '</p>';
+		$content = '<h2>' . __( 'Documentation', 'threadi-now-pages' ) . '</h2><p>' . sprintf( __( 'We provide some documentation for the WordPress plugin <i>Now Pages</i> at <a href="%1$s" target="_blank">GitHub (opens a new window)</a>.', 'threadi-now-pages' ), esc_url( Plugin::get_github_documentation_link() ) ) . '</p>';
 
 		// add the help entry.
 		$help_list[] = array(
-			'id'      => 'now-pages-threadi-documentation',
-			'title'   => __( 'Documentations', 'now-pages-threadi' ),
+			'id'      => 'threadi-now-pages-documentation',
+			'title'   => __( 'Documentations', 'threadi-now-pages' ),
 			'content' => $content,
 		);
 
@@ -214,11 +214,11 @@ class KnowledgeCenter {
 	public function add_entries( array $help_list ): array {
 		foreach ( Instance_Registry::get_instance()->get_new_instances_of( $this->get_entries(), KnowledgeCenter_Base::class ) as $entry ) {
 			// create the content.
-			$content = '<h2>' . esc_html( $entry->get_title() ) . '</h2><h3>' . esc_html__( 'The problem:', 'now-pages-threadi' ) . '</h3><p>' . wp_kses_post( implode( '<br>', $entry->get_keywords() ) ) . '</p><h3>' . esc_html__( 'The solution:', 'now-pages-threadi' ) . '</h3> ' . wp_kses_post( $entry->get_text() );
+			$content = '<h2>' . esc_html( $entry->get_title() ) . '</h2><h3>' . esc_html__( 'The problem:', 'threadi-now-pages' ) . '</h3><p>' . wp_kses_post( implode( '<br>', $entry->get_keywords() ) ) . '</p><h3>' . esc_html__( 'The solution:', 'threadi-now-pages' ) . '</h3> ' . wp_kses_post( $entry->get_text() );
 
 			// add help for the now pages in general.
 			$help_list[] = array(
-				'id'      => 'now-pages-threadi-' . $entry->get_name(),
+				'id'      => 'threadi-now-pages-' . $entry->get_name(),
 				'title'   => $entry->get_title(),
 				'content' => $content,
 			);

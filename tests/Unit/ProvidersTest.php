@@ -2,17 +2,17 @@
 /**
  * File to test provider registration and enablement.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Providers\Provider_Interface;
-use NowPagesThreadi\Providers\Providers;
-use NowPagesThreadi\Tests\NowPagesTestCase;
-use NowPagesThreadi\Tests\Unit\Stubs\Stub_Provider;
+use ThreadiNowPages\Providers\Provider_Interface;
+use ThreadiNowPages\Providers\Providers;
+use ThreadiNowPages\Tests\NowPagesTestCase;
+use ThreadiNowPages\Tests\Unit\Stubs\Stub_Provider;
 
 /**
  * Object to test Providers.
@@ -26,7 +26,7 @@ class ProvidersTest extends NowPagesTestCase {
 	public function set_up(): void {
 		parent::set_up();
 
-		delete_option( 'now_pages_threadi_provider_stub_enabled' );
+		delete_option( 'threadi_now_pages_provider_stub_enabled' );
 		Providers::get_instance()->register_provider( new Stub_Provider() );
 	}
 
@@ -50,7 +50,7 @@ class ProvidersTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_disabled_provider_remains_registered(): void {
-		update_option( 'now_pages_threadi_provider_stub_enabled', 0 );
+		update_option( 'threadi_now_pages_provider_stub_enabled', 0 );
 
 		$this->assertArrayHasKey( 'stub', Providers::get_instance()->get_providers() );
 		$this->assertInstanceOf( Provider_Interface::class, Providers::get_instance()->get_provider( 'stub' ) );
@@ -62,7 +62,7 @@ class ProvidersTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_enabled_provider_view_excludes_disabled_providers(): void {
-		update_option( 'now_pages_threadi_provider_stub_enabled', 0 );
+		update_option( 'threadi_now_pages_provider_stub_enabled', 0 );
 
 		$providers = Providers::get_instance()->get_enabled_providers();
 
@@ -75,7 +75,7 @@ class ProvidersTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_enabled_provider_view_contains_enabled_providers(): void {
-		update_option( 'now_pages_threadi_provider_stub_enabled', 1 );
+		update_option( 'threadi_now_pages_provider_stub_enabled', 1 );
 
 		$providers = Providers::get_instance()->get_enabled_providers();
 

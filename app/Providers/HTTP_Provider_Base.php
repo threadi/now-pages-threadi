@@ -5,18 +5,18 @@
  * Keeps timeouts, the user agent, conditional requests and error logging
  * in one place instead of repeating them in every provider.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Providers;
+namespace ThreadiNowPages\Providers;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Url;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Url;
 use WP_Error;
 
 /**
@@ -27,7 +27,7 @@ abstract class HTTP_Provider_Base extends Provider_Base {
 	 * Maximum size of a response body in bytes.
 	 *
 	 * Protects the import against huge or endless responses. Can be changed
-	 * per request via the filter "now_pages_threadi_provider_request_args"
+	 * per request via the filter "threadi_now_pages_provider_request_args"
 	 * (key "limit_response_size").
 	 */
 	private const MAX_RESPONSE_SIZE = 5 * MB_IN_BYTES;
@@ -36,7 +36,7 @@ abstract class HTTP_Provider_Base extends Provider_Base {
 	 * Perform a GET request and return the decoded JSON body.
 	 *
 	 * Returns null on any error - the error is reported through
-	 * now_pages_threadi_provider_error, so the caller only has to bail out.
+	 * threadi_now_pages_provider_error, so the caller only has to bail out.
 	 *
 	 * @param string               $url     The URL to request.
 	 * @param array<string,string> $headers Additional request headers.
@@ -65,10 +65,10 @@ abstract class HTTP_Provider_Base extends Provider_Base {
 		if ( ! is_array( $data ) ) {
 			$this->report_error(
 				new WP_Error(
-					'now_pages_threadi_invalid_json',
+					'threadi_now_pages_invalid_json',
 					sprintf(
 						/* translators: %1$s will be replaced by an error message. */
-						__( 'The response could not be decoded as JSON: %1$s', 'now-pages-threadi' ),
+						__( 'The response could not be decoded as JSON: %1$s', 'threadi-now-pages' ),
 						json_last_error_msg()
 					)
 				)
@@ -119,7 +119,7 @@ abstract class HTTP_Provider_Base extends Provider_Base {
 		 * @param string              $url  The URL being requested.
 		 * @param string              $slug The slug of the requesting provider.
 		 */
-		$args = apply_filters( 'now_pages_threadi_provider_request_args', $args, $url, $this->get_slug() );
+		$args = apply_filters( 'threadi_now_pages_provider_request_args', $args, $url, $this->get_slug() );
 
 		// use the safe variant: it rejects hosts in local or private networks (SSRF)
 		// and validates every redirect target the same way.
@@ -148,10 +148,10 @@ abstract class HTTP_Provider_Base extends Provider_Base {
 		if ( $code < 200 || $code >= 300 ) {
 			$this->report_error(
 				new WP_Error(
-					'now_pages_threadi_http_error',
+					'threadi_now_pages_http_error',
 					sprintf(
 						/* translators: %1$d will be replaced by a status code, %2$s by a URL. */
-						__( 'The request to %2$s answered with status %1$d.', 'now-pages-threadi' ),
+						__( 'The request to %2$s answered with status %1$d.', 'threadi-now-pages' ),
 						$code,
 						Url::redact( $url )
 					),
@@ -168,10 +168,10 @@ abstract class HTTP_Provider_Base extends Provider_Base {
 		if ( $limit > 0 && strlen( wp_remote_retrieve_body( $response ) ) >= $limit ) {
 			$this->report_error(
 				new WP_Error(
-					'now_pages_threadi_response_too_large',
+					'threadi_now_pages_response_too_large',
 					sprintf(
 						/* translators: %1$s will be replaced by a URL, %2$s by a file size. */
-						__( 'The answer of %1$s is larger than %2$s and has been ignored.', 'now-pages-threadi' ),
+						__( 'The answer of %1$s is larger than %2$s and has been ignored.', 'threadi-now-pages' ),
 						Url::redact( $url ),
 						size_format( $limit )
 					)
@@ -215,6 +215,6 @@ abstract class HTTP_Provider_Base extends Provider_Base {
 	 */
 	protected function report_error( WP_Error $error ): void {
 		/** This action is documented in app/Providers/RSS_Provider.php */
-		do_action( 'now_pages_threadi_provider_error', $this->get_slug(), $error );
+		do_action( 'threadi_now_pages_provider_error', $this->get_slug(), $error );
 	}
 }

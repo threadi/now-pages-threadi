@@ -2,12 +2,12 @@
 /**
  * File to handle every schedule in this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -61,7 +61,7 @@ class Schedules {
 
 		// use our own hooks.
 		if ( is_admin() || wp_doing_cron() ) {
-			add_filter( 'now_pages_threadi_schedule_our_events', array( $this, 'check_events' ) );
+			add_filter( 'threadi_now_pages_schedule_our_events', array( $this, 'check_events' ) );
 		}
 		add_action( 'init', array( $this, 'add_the_settings' ), 20 );
 		add_action( 'init', array( $this, 'init_schedules' ), 100 );
@@ -104,7 +104,7 @@ class Schedules {
 	 */
 	public function add_the_settings(): void {
 		// bail if the settings are not needed in this request.
-		if ( ! \NowPagesThreadi\Helper\Plugin::is_settings_request() ) {
+		if ( ! \ThreadiNowPages\Helper\Plugin::is_settings_request() ) {
 			return;
 		}
 
@@ -120,7 +120,7 @@ class Schedules {
 		}
 
 		// get the tab.
-		$tab = $settings_page->get_tab( 'now_pages_threadi_general' );
+		$tab = $settings_page->get_tab( 'threadi_now_pages_general' );
 
 		// bail if tab could not be found.
 		if ( ! $tab instanceof Tab ) {
@@ -128,7 +128,7 @@ class Schedules {
 		}
 
 		// get the section.
-		$advanced_section = $tab->get_section( 'now_pages_threadi_general' );
+		$advanced_section = $tab->get_section( 'threadi_now_pages_general' );
 
 		// bail if the tab does not exist.
 		if ( ! $advanced_section ) {
@@ -136,12 +136,12 @@ class Schedules {
 		}
 
 		// add setting.
-		$setting = $settings_obj->add_setting( 'now_pages_threadi_enable_cron_check_in_frontend' );
+		$setting = $settings_obj->add_setting( 'threadi_now_pages_enable_cron_check_in_frontend' );
 		$setting->set_section( $advanced_section );
 		$setting->set_default( 0 );
 		$field = new Checkbox( $settings_obj );
-		$field->set_title( __( 'Check for schedules in frontend', 'now-pages-threadi' ) );
-		$field->set_description( __( 'If enabled the plugin will check our own schedules on each request in the frontend. This could be slow the performance of your website.', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Check for schedules in frontend', 'threadi-now-pages' ) );
+		$field->set_description( __( 'If enabled the plugin will check our own schedules on each request in the frontend. This could be slow the performance of your website.', 'threadi-now-pages' ) );
 		$setting->set_field( $field );
 	}
 
@@ -161,7 +161,7 @@ class Schedules {
 		 *
 		 * @param array<string,array<string,mixed>> $our_events List of our own events in WP-cron.
 		 */
-		return apply_filters( 'now_pages_threadi_schedule_our_events', $our_events );
+		return apply_filters( 'threadi_now_pages_schedule_our_events', $our_events );
 	}
 
 	/**
@@ -187,7 +187,7 @@ class Schedules {
 		 *
 		 * @noinspection PhpConditionAlreadyCheckedInspection
 		 */
-		if ( apply_filters( 'now_pages_threadi_disable_cron_check', $false ) ) {
+		if ( apply_filters( 'threadi_now_pages_disable_cron_check', $false ) ) {
 			return $our_events;
 		}
 
@@ -241,7 +241,7 @@ class Schedules {
 
 				// log this event.
 				/* translators: %1$s will be replaced by the event name. */
-				Log::get_instance()->add( sprintf( __( 'Missing cron event <i>%1$s</i> automatically re-installed.', 'now-pages-threadi' ), esc_html( $obj->get_name() ) ), 'success', $obj->get_log_category() );
+				Log::get_instance()->add( sprintf( __( 'Missing cron event <i>%1$s</i> automatically re-installed.', 'threadi-now-pages' ), esc_html( $obj->get_name() ) ), 'success', $obj->get_log_category() );
 
 				// re-run the check for WP-cron-events.
 				$our_events = $this->get_wp_events();
@@ -252,7 +252,7 @@ class Schedules {
 
 					// log this event.
 					/* translators: %1$s will be replaced by the event name. */
-					Log::get_instance()->add( sprintf( __( 'Duplicate cron event <i>%1$s</i> automatically removed.', 'now-pages-threadi' ), esc_html( $obj->get_name() ) ), 'success', $obj->get_log_category() );
+					Log::get_instance()->add( sprintf( __( 'Duplicate cron event <i>%1$s</i> automatically removed.', 'threadi-now-pages' ), esc_html( $obj->get_name() ) ), 'success', $obj->get_log_category() );
 				}
 
 				// the event exists and is enabled: make sure its interval still
@@ -269,7 +269,7 @@ class Schedules {
 
 				// log this event.
 				/* translators: %1$s will be replaced by the event name. */
-				Log::get_instance()->add( sprintf( __( 'Not enabled cron event <i>%1$s</i> automatically removed.', 'now-pages-threadi' ), esc_html( $obj->get_name() ) ), 'success', $obj->get_log_category() );
+				Log::get_instance()->add( sprintf( __( 'Not enabled cron event <i>%1$s</i> automatically removed.', 'threadi-now-pages' ), esc_html( $obj->get_name() ) ), 'success', $obj->get_log_category() );
 
 				// re-run the check for WP-cron-events.
 				$our_events = $this->get_wp_events();
@@ -341,21 +341,21 @@ class Schedules {
 	public function get_schedule_object_names(): array {
 		// list of schedules in this plugin.
 		$list_of_schedules = array(
-			'\NowPagesThreadi\Plugin\Schedules\EmptyNowPages',
-			'\NowPagesThreadi\Plugin\Schedules\Fediverse',
-			'\NowPagesThreadi\Plugin\Schedules\Import',
+			'\ThreadiNowPages\Plugin\Schedules\EmptyNowPages',
+			'\ThreadiNowPages\Plugin\Schedules\Fediverse',
+			'\ThreadiNowPages\Plugin\Schedules\Import',
 		);
 
 		/**
 		 * Add custom schedule-objects to use.
 		 *
-		 * They must be objects based on NowPagesThreadi\Plugin\Schedules_Base.
+		 * They must be objects based on ThreadiNowPages\Plugin\Schedules_Base.
 		 *
 		 * @since 1.0.0 Available since 1.0.0.
 		 *
 		 * @param array<string> $list_of_schedules List of additional schedules.
 		 */
-		return apply_filters( 'now_pages_threadi_schedules', $list_of_schedules );
+		return apply_filters( 'threadi_now_pages_schedules', $list_of_schedules );
 	}
 
 	/**
@@ -407,7 +407,7 @@ class Schedules {
 			// check each entry.
 			foreach ( $events as $event_name => $event_settings ) {
 				// bail if this is not our own event (numeric hook names of other plugins are array keys of type int).
-				if ( ! is_string( $event_name ) || ! str_contains( $event_name, 'now_pages_threadi_' ) ) {
+				if ( ! is_string( $event_name ) || ! str_contains( $event_name, 'threadi_now_pages_' ) ) {
 					continue;
 				}
 
@@ -430,7 +430,7 @@ class Schedules {
 	 */
 	public function check_events_on_shutdown(): void {
 		// bail if the check is disabled.
-		if ( 1 !== absint( get_option( 'now_pages_threadi_enable_cron_check_in_frontend' ) ) ) {
+		if ( 1 !== absint( get_option( 'threadi_now_pages_enable_cron_check_in_frontend' ) ) ) {
 			return;
 		}
 
@@ -469,12 +469,12 @@ class Schedules {
 		$schedule_obj->set_args( $event->args ); // @phpstan-ignore property.notFound
 
 		// get the actual list.
-		$list = get_option( 'now_pages_threadi_schedules' );
+		$list = get_option( 'threadi_now_pages_schedules' );
 		if ( ! is_array( $list ) ) {
 			$list = array();
 		}
 		$list[ $schedule_obj->get_name() ] = $schedule_obj->get_args();
-		update_option( 'now_pages_threadi_schedules', $list );
+		update_option( 'threadi_now_pages_schedules', $list );
 
 		// return the event object.
 		return $event;

@@ -6,8 +6,8 @@
   // module from a plain, static ".js" URL, so the data cannot travel with
   // the file itself — but it can sit in a global next to it. That keeps
   // the lists translated and in sync with whatever is registered through
-  // the 'now_pages_threadi_periods' and the format filters.
-  const data = window.nowPagesThreadiThemify || {};
+  // the 'threadi_now_pages_periods' and the format filters.
+  const data = window.threadiNowPagesThemify || {};
 
   /**
    * Return a list handed over by PHP, or an empty map.

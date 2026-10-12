@@ -5,19 +5,19 @@
  * The setup, the abilities and the advisor all end up here. What is
  * covered here does not have to be covered three times.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Plugin\Log;
-use NowPagesThreadi\Providers\Provider_Interface;
-use NowPagesThreadi\Providers\Providers;
-use NowPagesThreadi\Sources\Source_Builder;
-use NowPagesThreadi\Sources\Sources;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Plugin\Log;
+use ThreadiNowPages\Providers\Provider_Interface;
+use ThreadiNowPages\Providers\Providers;
+use ThreadiNowPages\Sources\Source_Builder;
+use ThreadiNowPages\Sources\Sources;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 use WP_Error;
 use WP_Query;
 
@@ -44,7 +44,7 @@ class SourceBuilderTest extends NowPagesTestCase {
 	private function count_entries(): int {
 		$query = new WP_Query(
 			array(
-				'post_type'      => 'np_threadi_entry',
+				'post_type'      => 'threadi_np_entry',
 				'post_status'    => 'any',
 				'posts_per_page' => -1,
 				'fields'         => 'ids',
@@ -91,11 +91,11 @@ class SourceBuilderTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_the_catalog_leaves_out_disabled_providers(): void {
-		update_option( 'now_pages_threadi_provider_rss_enabled', 0 );
+		update_option( 'threadi_now_pages_provider_rss_enabled', 0 );
 
 		$catalog = Source_Builder::get_instance()->get_catalog();
 
-		delete_option( 'now_pages_threadi_provider_rss_enabled' );
+		delete_option( 'threadi_now_pages_provider_rss_enabled' );
 
 		$this->assertNotContains( 'rss', wp_list_pluck( $catalog['providers'], 'slug' ) );
 		$this->assertNotContains( 'mastodon', wp_list_pluck( $catalog['presets'], 'slug' ) );
@@ -144,7 +144,7 @@ class SourceBuilderTest extends NowPagesTestCase {
 		$resolved = Source_Builder::get_instance()->resolve( 'does-not-exist', '', array() );
 
 		$this->assertInstanceOf( WP_Error::class, $resolved );
-		$this->assertSame( 'now_pages_threadi_unknown_preset', $resolved->get_error_code() );
+		$this->assertSame( 'threadi_now_pages_unknown_preset', $resolved->get_error_code() );
 		$this->assertStringContainsString( 'mastodon', $resolved->get_error_message() );
 	}
 
@@ -157,7 +157,7 @@ class SourceBuilderTest extends NowPagesTestCase {
 		$resolved = Source_Builder::get_instance()->resolve( '', 'does-not-exist', array() );
 
 		$this->assertInstanceOf( WP_Error::class, $resolved );
-		$this->assertSame( 'now_pages_threadi_unknown_provider', $resolved->get_error_code() );
+		$this->assertSame( 'threadi_now_pages_unknown_provider', $resolved->get_error_code() );
 	}
 
 	/**
@@ -166,14 +166,14 @@ class SourceBuilderTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_disabled_provider_is_refused(): void {
-		update_option( 'now_pages_threadi_provider_rss_enabled', 0 );
+		update_option( 'threadi_now_pages_provider_rss_enabled', 0 );
 
 		$resolved = Source_Builder::get_instance()->resolve( '', 'rss', array( 'feed_url' => 'https://example.com/feed/' ) );
 
-		delete_option( 'now_pages_threadi_provider_rss_enabled' );
+		delete_option( 'threadi_now_pages_provider_rss_enabled' );
 
 		$this->assertInstanceOf( WP_Error::class, $resolved );
-		$this->assertSame( 'now_pages_threadi_provider_disabled', $resolved->get_error_code() );
+		$this->assertSame( 'threadi_now_pages_provider_disabled', $resolved->get_error_code() );
 	}
 
 	/**
@@ -325,12 +325,12 @@ class SourceBuilderTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_error_handlers_are_restored_after_a_check(): void {
-		$expected = has_action( 'now_pages_threadi_provider_error', array( Providers::get_instance(), 'log_error' ) );
+		$expected = has_action( 'threadi_now_pages_provider_error', array( Providers::get_instance(), 'log_error' ) );
 
 		Source_Builder::get_instance()->check( $this->get_provider( 'github' ), array( 'github_username' => self::$github_error_user ) );
 
 		$this->assertNotFalse( $expected );
-		$this->assertSame( $expected, has_action( 'now_pages_threadi_provider_error', array( Providers::get_instance(), 'log_error' ) ) );
+		$this->assertSame( $expected, has_action( 'threadi_now_pages_provider_error', array( Providers::get_instance(), 'log_error' ) ) );
 	}
 
 	/**
@@ -401,7 +401,7 @@ class SourceBuilderTest extends NowPagesTestCase {
 		$created = Source_Builder::get_instance()->create_checked( $resolved );
 
 		$this->assertInstanceOf( WP_Error::class, $created );
-		$this->assertSame( 'now_pages_threadi_check_failed', $created->get_error_code() );
+		$this->assertSame( 'threadi_now_pages_check_failed', $created->get_error_code() );
 		$this->assertSame( 0, Sources::get_instance()->get_duplicate( $resolved['provider'], $resolved['config'] ) );
 	}
 
@@ -450,7 +450,7 @@ class SourceBuilderTest extends NowPagesTestCase {
 		$created = Source_Builder::get_instance()->create_checked( $resolved );
 
 		$this->assertInstanceOf( WP_Error::class, $created );
-		$this->assertSame( 'now_pages_threadi_missing_values', $created->get_error_code() );
+		$this->assertSame( 'threadi_now_pages_missing_values', $created->get_error_code() );
 	}
 
 	/**
@@ -473,7 +473,7 @@ class SourceBuilderTest extends NowPagesTestCase {
 		$created = $builder->create_checked( $again );
 
 		$this->assertInstanceOf( WP_Error::class, $created );
-		$this->assertSame( 'now_pages_threadi_duplicate_source', $created->get_error_code() );
+		$this->assertSame( 'threadi_now_pages_duplicate_source', $created->get_error_code() );
 	}
 
 	/**

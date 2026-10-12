@@ -2,18 +2,18 @@
 /**
  * This file contains the live period.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests\Periods;
+namespace ThreadiNowPages\Digests\Periods;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Digests\Period_Base;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Digests\Period_Base;
 
 /**
  * Object for the live period.
@@ -32,7 +32,7 @@ class Live extends Period_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Live', 'now-pages-threadi' );
+		return __( 'Live', 'threadi-now-pages' );
 	}
 
 	/**
@@ -41,7 +41,7 @@ class Live extends Period_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'The last 24 hours, counted backwards from now.', 'now-pages-threadi' );
+		return __( 'The last 24 hours, counted backwards from now.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -78,7 +78,7 @@ class Live extends Period_Base {
 
 		return sprintf(
 			/* translators: %1$d will be replaced by a number of hours. */
-			_n( 'From the last %1$d hour', 'From the last %1$d hours', $look_back, 'now-pages-threadi' ),
+			_n( 'From the last %1$d hour', 'From the last %1$d hours', $look_back, 'threadi-now-pages' ),
 			$look_back
 		);
 	}

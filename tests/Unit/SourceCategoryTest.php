@@ -2,19 +2,19 @@
 /**
  * File to test that the entries of a source follow the category of this source.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Dependencies\easyTransientsForWordPress\Transients;
-use NowPagesThreadi\NowPages\Categories;
-use NowPagesThreadi\Providers\Providers;
-use NowPagesThreadi\Sources\Sources;
-use NowPagesThreadi\Tests\NowPagesTestCase;
-use NowPagesThreadi\Tests\Unit\Stubs\Stub_Provider;
+use ThreadiNowPages\Dependencies\easyTransientsForWordPress\Transients;
+use ThreadiNowPages\NowPages\Categories;
+use ThreadiNowPages\Providers\Providers;
+use ThreadiNowPages\Sources\Sources;
+use ThreadiNowPages\Tests\NowPagesTestCase;
+use ThreadiNowPages\Tests\Unit\Stubs\Stub_Provider;
 
 /**
  * Object to test Categories::assign_to_source_entries() and its use when a source is saved.
@@ -23,7 +23,7 @@ class SourceCategoryTest extends NowPagesTestCase {
 	/**
 	 * The name of the hint shown after entries were moved.
 	 */
-	private const HINT = 'now_pages_threadi_source_category';
+	private const HINT = 'threadi_now_pages_source_category';
 
 	/**
 	 * The source.
@@ -49,7 +49,7 @@ class SourceCategoryTest extends NowPagesTestCase {
 
 		Stub_Provider::reset();
 
-		update_option( 'now_pages_threadi_provider_stub_enabled', 1 );
+		update_option( 'threadi_now_pages_provider_stub_enabled', 1 );
 
 		Providers::get_instance()->register_provider( new Stub_Provider() );
 
@@ -90,7 +90,7 @@ class SourceCategoryTest extends NowPagesTestCase {
 	private function create_source(): int {
 		return self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'Test source',
 			)
@@ -109,7 +109,7 @@ class SourceCategoryTest extends NowPagesTestCase {
 	private function create_entry( int $source_id, int $term_id = 0, string $status = 'publish' ): int {
 		$entry_id = self::factory()->post->create(
 			array(
-				'post_type'    => 'np_threadi_entry',
+				'post_type'    => 'threadi_np_entry',
 				'post_status'  => $status,
 				'post_parent'  => $source_id,
 				'post_content' => 'An entry.',
@@ -144,8 +144,8 @@ class SourceCategoryTest extends NowPagesTestCase {
 	private function save( array $fields ): void {
 		$_POST = array_merge(
 			array(
-				'now_pages_threadi_source_form' => '1',
-				'now-pages-threadi-provider'    => 'stub',
+				'threadi_now_pages_source_form' => '1',
+				'threadi-now-pages-provider'    => 'stub',
 				'stub_url'                      => 'https://example.com/feed',
 			),
 			$fields
@@ -290,7 +290,7 @@ class SourceCategoryTest extends NowPagesTestCase {
 		$first  = $this->create_entry( $this->source_id, $this->terms['Forum'] );
 		$second = $this->create_entry( $this->source_id, $this->terms['Forum'] );
 
-		$this->save( array( 'now-pages-threadi-default-category' => (string) $this->terms['Translations'] ) );
+		$this->save( array( 'threadi-now-pages-default-category' => (string) $this->terms['Translations'] ) );
 
 		$this->assertSame( $this->terms['Translations'], absint( get_post_meta( $this->source_id, Categories::SOURCE_DEFAULT_META, true ) ) );
 		$this->assertSame( array( $this->terms['Translations'] ), $this->get_categories( $first ) );
@@ -312,7 +312,7 @@ class SourceCategoryTest extends NowPagesTestCase {
 
 		$moved_by_hand = $this->create_entry( $this->source_id, $this->terms['Code'] );
 
-		$this->save( array( 'now-pages-threadi-default-category' => (string) $this->terms['Forum'] ) );
+		$this->save( array( 'threadi-now-pages-default-category' => (string) $this->terms['Forum'] ) );
 
 		$this->assertSame( array( $this->terms['Code'] ), $this->get_categories( $moved_by_hand ) );
 		$this->assertFalse( Transients::get_instance()->get_transient_by_name( self::HINT )->is_set() );
@@ -346,7 +346,7 @@ class SourceCategoryTest extends NowPagesTestCase {
 
 		$entry_id = $this->create_entry( $this->source_id, $this->terms['Forum'] );
 
-		$this->save( array( 'now-pages-threadi-default-category' => '0' ) );
+		$this->save( array( 'threadi-now-pages-default-category' => '0' ) );
 
 		$this->assertSame( array(), $this->get_categories( $entry_id ) );
 		$this->assertStringContainsString( 'The category "Forum" has been removed from 1 entry of this source.', html_entity_decode( Transients::get_instance()->get_transient_by_name( self::HINT )->get_message() ) );
@@ -362,7 +362,7 @@ class SourceCategoryTest extends NowPagesTestCase {
 		Sources::get_instance()->show_provider_additional_settings( get_post( $this->source_id ) );
 		$html = (string) ob_get_clean();
 
-		$this->assertStringContainsString( 'edit-tags.php?taxonomy=' . Categories::TAXONOMY . '&amp;post_type=np_threadi_entry"', $html );
+		$this->assertStringContainsString( 'edit-tags.php?taxonomy=' . Categories::TAXONOMY . '&amp;post_type=threadi_np_entry"', $html );
 		$this->assertStringContainsString( 'Manage the categories', $html );
 	}
 

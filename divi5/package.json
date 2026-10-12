@@ -1,5 +1,5 @@
 {
-  "name": "now-pages-threadi-divi5",
+  "name": "threadi-now-pages-divi5",
   "version": "1.0.0",
   "description": "Add a widget to show entries on your now page via Divi 5.",
   "main": "src/index.js",

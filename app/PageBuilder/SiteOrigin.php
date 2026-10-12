@@ -2,19 +2,19 @@
 /**
  * This file contains the support for SiteOrigin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\Plugin\Post_Types;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\Plugin\Post_Types;
 
 /**
  * Registers and handles the support for SiteOrigin.
@@ -86,11 +86,11 @@ class SiteOrigin extends PageBuilder_Base {
 		$panels_data = array(
 			'widgets'    => array(
 				array(
-					'period'           => get_option( 'now_pages_threadi_frontend_period', 'live' ),
-					'format'           => get_option( 'now_pages_threadi_frontend_format', 'verbatim' ),
+					'period'           => get_option( 'threadi_now_pages_frontend_period', 'live' ),
+					'format'           => get_option( 'threadi_now_pages_frontend_format', 'verbatim' ),
 					'override_display' => 'no',
 					'panels_info'      => array(
-						'class'     => 'NowPagesThreadi\\PageBuilder\\SiteOrigin\\Digest\\Digest',
+						'class'     => 'ThreadiNowPages\\PageBuilder\\SiteOrigin\\Digest\\Digest',
 						'grid'      => 0,
 						'cell'      => 0,
 						'id'        => 0,
@@ -122,7 +122,7 @@ class SiteOrigin extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'SiteOrigin', 'now-pages-threadi' );
+		return __( 'SiteOrigin', 'threadi-now-pages' );
 	}
 
 	/**

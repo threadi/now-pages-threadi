@@ -2,18 +2,18 @@
 /**
  * This file contains format-helper for this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Helper;
+namespace ThreadiNowPages\Helper;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use Collator;
-use NowPagesThreadi\NowPages\Entries;
+use ThreadiNowPages\NowPages\Entries;
 use WP_Error;
 use WP_Post;
 
@@ -91,9 +91,9 @@ class Format {
 		if ( '' === $text ) {
 			return '';
 		}
-		$text = apply_filters( 'now_pages_threadi_entry_text_pre_linkify', $text );
+		$text = apply_filters( 'threadi_now_pages_entry_text_pre_linkify', $text );
 		$html = \make_clickable( \esc_html( $text ) );
-		return apply_filters( 'now_pages_threadi_entry_text_linkified', $html, $text );
+		return apply_filters( 'threadi_now_pages_entry_text_linkified', $html, $text );
 	}
 
 	/**

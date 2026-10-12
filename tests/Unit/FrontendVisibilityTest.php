@@ -6,15 +6,15 @@
  * "/now is a 404" and the cause is an unfinished setup. The tests state
  * that this is intentional.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\NowPages\Frontend;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\NowPages\Frontend;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 
 /**
  * Object to test Frontend::is_public().
@@ -28,8 +28,8 @@ class FrontendVisibilityTest extends NowPagesTestCase {
 	public function set_up(): void {
 		parent::set_up();
 
-		update_option( 'now_pages_threadi_frontend_global_url', 1 );
-		update_option( 'now_pages_threadi_frontend_user_url', 1 );
+		update_option( 'threadi_now_pages_frontend_global_url', 1 );
+		update_option( 'threadi_now_pages_frontend_user_url', 1 );
 
 		$this->set_setup_completed( true );
 	}
@@ -40,8 +40,8 @@ class FrontendVisibilityTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function tear_down(): void {
-		remove_all_filters( 'now_pages_threadi_setup_is_completed' );
-		remove_all_filters( 'now_pages_threadi_is_public' );
+		remove_all_filters( 'threadi_now_pages_setup_is_completed' );
+		remove_all_filters( 'threadi_now_pages_is_public' );
 
 		parent::tear_down();
 	}
@@ -57,10 +57,10 @@ class FrontendVisibilityTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	private function set_setup_completed( bool $completed ): void {
-		remove_all_filters( 'now_pages_threadi_setup_is_completed' );
+		remove_all_filters( 'threadi_now_pages_setup_is_completed' );
 
 		add_filter(
-			'now_pages_threadi_setup_is_completed',
+			'threadi_now_pages_setup_is_completed',
 			static function () use ( $completed ): bool {
 				return $completed;
 			}
@@ -95,7 +95,7 @@ class FrontendVisibilityTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_a_disabled_route_makes_the_page_private(): void {
-		update_option( 'now_pages_threadi_frontend_global_url', 0 );
+		update_option( 'threadi_now_pages_frontend_global_url', 0 );
 
 		$this->assertFalse( Frontend::get_instance()->is_public() );
 	}
@@ -106,7 +106,7 @@ class FrontendVisibilityTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_the_author_route_has_its_own_setting(): void {
-		update_option( 'now_pages_threadi_frontend_user_url', 0 );
+		update_option( 'threadi_now_pages_frontend_user_url', 0 );
 
 		$this->assertTrue( Frontend::get_instance()->is_public() );
 		$this->assertFalse( Frontend::get_instance()->is_public( true ) );
@@ -118,7 +118,7 @@ class FrontendVisibilityTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_a_missing_option_keeps_the_author_route_closed(): void {
-		delete_option( 'now_pages_threadi_frontend_user_url' );
+		delete_option( 'threadi_now_pages_frontend_user_url' );
 
 		$this->assertFalse( Frontend::get_instance()->is_public( true ) );
 	}
@@ -129,7 +129,7 @@ class FrontendVisibilityTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_the_routes_are_independent(): void {
-		update_option( 'now_pages_threadi_frontend_global_url', 0 );
+		update_option( 'threadi_now_pages_frontend_global_url', 0 );
 
 		$this->assertFalse( Frontend::get_instance()->is_public() );
 		$this->assertTrue( Frontend::get_instance()->is_public( true ) );
@@ -143,7 +143,7 @@ class FrontendVisibilityTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_the_decision_is_filterable(): void {
-		add_filter( 'now_pages_threadi_is_public', '__return_false' );
+		add_filter( 'threadi_now_pages_is_public', '__return_false' );
 
 		$this->assertFalse( Frontend::get_instance()->is_public() );
 	}
@@ -155,7 +155,7 @@ class FrontendVisibilityTest extends NowPagesTestCase {
 	 */
 	public function test_the_filter_knows_the_route(): void {
 		add_filter(
-			'now_pages_threadi_is_public',
+			'threadi_now_pages_is_public',
 			static function ( bool $is_public, bool $for_author ): bool {
 				// close the author route, keep the global one.
 				if ( $for_author ) {
@@ -227,7 +227,7 @@ class FrontendVisibilityTest extends NowPagesTestCase {
 
 		self::factory()->post->create(
 			array(
-				'post_type'     => 'np_threadi_entry',
+				'post_type'     => 'threadi_np_entry',
 				'post_status'   => 'publish',
 				'post_title'    => '',
 				'post_content'  => 'An entry',
@@ -257,7 +257,7 @@ class FrontendVisibilityTest extends NowPagesTestCase {
 
 		Frontend::get_instance()->prepare();
 
-		$this->assertStringContainsString( 'now-pages-threadi-not-public', Frontend::get_instance()->get_content() );
+		$this->assertStringContainsString( 'threadi-now-pages-not-public', Frontend::get_instance()->get_content() );
 	}
 
 	/**
@@ -272,7 +272,7 @@ class FrontendVisibilityTest extends NowPagesTestCase {
 	public function test_the_address_exists_before_the_settings_are_saved(): void {
 		global $wp_rewrite;
 
-		delete_option( 'now_pages_threadi_frontend_global_url' );
+		delete_option( 'threadi_now_pages_frontend_global_url' );
 
 		$wp_rewrite->extra_rules_top = array();
 
@@ -290,7 +290,7 @@ class FrontendVisibilityTest extends NowPagesTestCase {
 	public function test_a_switched_off_now_page_has_no_address(): void {
 		global $wp_rewrite;
 
-		update_option( 'now_pages_threadi_frontend_global_url', 0 );
+		update_option( 'threadi_now_pages_frontend_global_url', 0 );
 
 		$wp_rewrite->extra_rules_top = array();
 

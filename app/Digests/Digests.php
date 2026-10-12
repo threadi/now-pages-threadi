@@ -2,21 +2,21 @@
 /**
  * This file contains the main initialization for digest formats.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests;
+namespace ThreadiNowPages\Digests;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Formats\Narrative_Format;
-use NowPagesThreadi\Digests\Formats\Verbatim_Format;
-use NowPagesThreadi\Helper\Singleton_Interface;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\Plugin\Log;
+use ThreadiNowPages\Digests\Formats\Narrative_Format;
+use ThreadiNowPages\Digests\Formats\Verbatim_Format;
+use ThreadiNowPages\Helper\Singleton_Interface;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\Plugin\Log;
 use WP_Error;
 
 /**
@@ -44,7 +44,7 @@ class Digests implements Singleton_Interface {
 	 */
 	public function init(): void {
 		// use hooks.
-		add_action( 'now_pages_threadi_digest_error', array( $this, 'log_error' ), 10, 3 );
+		add_action( 'threadi_now_pages_digest_error', array( $this, 'log_error' ), 10, 3 );
 
 		// register our own, built-in formats.
 		$this->register_format( new Verbatim_Format() );
@@ -56,13 +56,13 @@ class Digests implements Singleton_Interface {
 		 *
 		 * Use this to add further formats from your own code, without
 		 * touching this plugin:
-		 * add_action( 'now_pages_threadi_register_digest_formats', function ( $formats ) {
+		 * add_action( 'threadi_now_pages_register_digest_formats', function ( $formats ) {
 		 *     $formats->register_format( new My_Format() );
 		 * } );
 		 *
 		 * @param Digests $interface The digests object.
 		 */
-		do_action( 'now_pages_threadi_register_digest_formats', $interface );
+		do_action( 'threadi_now_pages_register_digest_formats', $interface );
 	}
 
 	/**
@@ -107,7 +107,7 @@ class Digests implements Singleton_Interface {
 	 */
 	public function log_error( WP_Error $error, string $summarizer_slug, string $label ): void {
 		// log the same error only once per hour: it is reported on every page view showing the digest.
-		$throttle_key = 'now_pages_threadi_digest_error_' . md5( $summarizer_slug . '|' . $error->get_error_code() . '|' . $label );
+		$throttle_key = 'threadi_now_pages_digest_error_' . md5( $summarizer_slug . '|' . $error->get_error_code() . '|' . $label );
 		if ( false !== get_transient( $throttle_key ) ) {
 			return;
 		}
@@ -116,9 +116,9 @@ class Digests implements Singleton_Interface {
 		Log::get_instance()->add(
 			sprintf(
 			/* translators: %1$s will be replaced by a summarizer slug, %2$s by a category label. */
-				__( 'The summarizer %1$s failed for the block %2$s:', 'now-pages-threadi' ),
+				__( 'The summarizer %1$s failed for the block %2$s:', 'threadi-now-pages' ),
 				'<code>' . esc_html( $summarizer_slug ) . '</code>',
-				'<code>' . esc_html( '' !== $label ? $label : __( 'ungrouped', 'now-pages-threadi' ) ) . '</code>'
+				'<code>' . esc_html( '' !== $label ? $label : __( 'ungrouped', 'threadi-now-pages' ) ) . '</code>'
 			) . ' <code>' . esc_html( $error->get_error_message() ) . '</code>',
 			'error',
 			'system'
@@ -168,7 +168,7 @@ class Digests implements Singleton_Interface {
 		 *
 		 * @param array<string,array<string,bool>> $allowed The allowed tags and attributes.
 		 */
-		return apply_filters( 'now_pages_threadi_digest_allowed_html', $allowed );
+		return apply_filters( 'threadi_now_pages_digest_allowed_html', $allowed );
 	}
 
 	/**
@@ -177,7 +177,7 @@ class Digests implements Singleton_Interface {
 	 * @return string
 	 */
 	public function get_default_period(): string {
-		return (string) get_option( 'now_pages_threadi_frontend_period', 'live' );
+		return (string) get_option( 'threadi_now_pages_frontend_period', 'live' );
 	}
 
 	/**
@@ -186,6 +186,6 @@ class Digests implements Singleton_Interface {
 	 * @return string
 	 */
 	public function get_default_format(): string {
-		return (string) get_option( 'now_pages_threadi_frontend_format', 'verbatim' );
+		return (string) get_option( 'threadi_now_pages_frontend_format', 'verbatim' );
 	}
 }

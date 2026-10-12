@@ -3,12 +3,12 @@
  * Resolves display settings for digests with hierarchical priority:
  * shortcode / explicit args > user meta > global options > hard-coded defaults.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests;
+namespace ThreadiNowPages\Digests;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -51,14 +51,14 @@ class Display_Settings {
 	 */
 	public static function option_names(): array {
 		return array(
-			'disabled'          => 'now_pages_threadi_disable_now_page',
-			'show_time'         => 'now_pages_threadi_show_time',
-			'show_source'       => 'now_pages_threadi_show_source',
-			'link_source'       => 'now_pages_threadi_link_source',
-			'show_period'       => 'now_pages_threadi_show_period',
-			'group_by_category' => 'now_pages_threadi_group_by_category',
-			'order'             => 'now_pages_threadi_order',
-			'delay_hours'       => 'now_pages_threadi_delay_hours',
+			'disabled'          => 'threadi_now_pages_disable_now_page',
+			'show_time'         => 'threadi_now_pages_show_time',
+			'show_source'       => 'threadi_now_pages_show_source',
+			'link_source'       => 'threadi_now_pages_link_source',
+			'show_period'       => 'threadi_now_pages_show_period',
+			'group_by_category' => 'threadi_now_pages_group_by_category',
+			'order'             => 'threadi_now_pages_order',
+			'delay_hours'       => 'threadi_now_pages_delay_hours',
 		);
 	}
 
@@ -220,10 +220,10 @@ class Display_Settings {
 	 */
 	public static function origin_labels(): array {
 		return array(
-			'default'   => __( 'Plugin default', 'now-pages-threadi' ),
-			'option'    => __( 'Site-wide setting', 'now-pages-threadi' ),
-			'user_meta' => __( 'User profile', 'now-pages-threadi' ),
-			'explicit'  => __( 'Shortcode or block attribute', 'now-pages-threadi' ),
+			'default'   => __( 'Plugin default', 'threadi-now-pages' ),
+			'option'    => __( 'Site-wide setting', 'threadi-now-pages' ),
+			'user_meta' => __( 'User profile', 'threadi-now-pages' ),
+			'explicit'  => __( 'Shortcode or block attribute', 'threadi-now-pages' ),
 		);
 	}
 

@@ -2,17 +2,17 @@
 /**
  * File to test how entry text is normalized and turned into sentences.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Digests\Summarizers\Template_Summarizer;
-use NowPagesThreadi\Helper\Format;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Digests\Summarizers\Template_Summarizer;
+use ThreadiNowPages\Helper\Format;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 use WP_Post;
 
 /**
@@ -31,7 +31,7 @@ class EntryTextTest extends NowPagesTestCase {
 	private function create_entry( string $content, int $source_id = 0, string $external_id = '' ): WP_Post {
 		$post_id = self::factory()->post->create(
 			array(
-				'post_type'    => 'np_threadi_entry',
+				'post_type'    => 'threadi_np_entry',
 				'post_status'  => 'publish',
 				'post_title'   => '',
 				'post_content' => $content,
@@ -90,16 +90,16 @@ class EntryTextTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_shortcodes_are_removed(): void {
-		add_shortcode( 'now_pages_threadi_test', static fn (): string => 'BOOM' );
+		add_shortcode( 'threadi_now_pages_test', static fn (): string => 'BOOM' );
 
-		$entry = $this->create_entry( 'Ein Eintrag [now_pages_threadi_test] mit Shortcode.' );
+		$entry = $this->create_entry( 'Ein Eintrag [threadi_now_pages_test] mit Shortcode.' );
 
 		$text = Format::get_entry_text( $entry );
 
-		remove_shortcode( 'now_pages_threadi_test' );
+		remove_shortcode( 'threadi_now_pages_test' );
 
 		$this->assertStringNotContainsString( 'BOOM', $text );
-		$this->assertStringNotContainsString( '[now_pages_threadi_test]', $text );
+		$this->assertStringNotContainsString( '[threadi_now_pages_test]', $text );
 	}
 
 	/**
@@ -119,7 +119,7 @@ class EntryTextTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_entry_with_a_source_is_not_manual(): void {
-		$source_id = self::factory()->post->create( array( 'post_type' => 'np_threadi_source' ) );
+		$source_id = self::factory()->post->create( array( 'post_type' => 'threadi_np_source' ) );
 
 		$entry = $this->create_entry( 'Importiert.', $source_id, 'ext-1' );
 
@@ -189,20 +189,20 @@ class EntryTextTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_rest_does_not_run_shortcodes_of_imported_entries(): void {
-		add_shortcode( 'now_pages_threadi_test', static fn (): string => 'BOOM' );
+		add_shortcode( 'threadi_now_pages_test', static fn (): string => 'BOOM' );
 
 		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
 
-		$entry = $this->create_entry( 'Importiert [now_pages_threadi_test] mit Shortcode.', 0, 'hook-2' );
+		$entry = $this->create_entry( 'Importiert [threadi_now_pages_test] mit Shortcode.', 0, 'hook-2' );
 
-		$request = new \WP_REST_Request( 'GET', '/wp/v2/np_threadi_entry/' . $entry->ID );
+		$request = new \WP_REST_Request( 'GET', '/wp/v2/threadi_np_entry/' . $entry->ID );
 		$request->set_param( 'context', 'edit' );
 		$data = rest_do_request( $request )->get_data();
 
-		remove_shortcode( 'now_pages_threadi_test' );
+		remove_shortcode( 'threadi_now_pages_test' );
 
 		$this->assertIsArray( $data );
 		$this->assertStringNotContainsString( 'BOOM', (string) $data['content']['rendered'] );
-		$this->assertSame( 'Importiert [now_pages_threadi_test] mit Shortcode.', $data['content']['raw'] );
+		$this->assertSame( 'Importiert [threadi_now_pages_test] mit Shortcode.', $data['content']['raw'] );
 	}
 }

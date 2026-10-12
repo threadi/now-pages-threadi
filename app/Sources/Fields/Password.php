@@ -6,17 +6,17 @@
  * rendered back into the form - an empty input means "keep the stored
  * value", so a saved secret cannot be read out of the markup.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Sources\Fields;
+namespace ThreadiNowPages\Sources\Fields;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Sources\Field_Base;
+use ThreadiNowPages\Sources\Field_Base;
 
 /**
  * Object to handle a secret field for provider configuration.
@@ -60,7 +60,7 @@ class Password extends Field_Base {
 
 		// set the placeholder depending on value.
 		$placeholder = $has_value
-			? __( 'A value is stored. Leave empty to keep it.', 'now-pages-threadi' )
+			? __( 'A value is stored. Leave empty to keep it.', 'threadi-now-pages' )
 			: $placeholder_settings;
 
 		// create the input field.
@@ -68,7 +68,7 @@ class Password extends Field_Base {
 
 		// offer to remove a stored value of an optional field.
 		if ( $has_value && ! $this->is_required() ) {
-			$html .= '<br><label><input type="checkbox" name="' . esc_attr( $this->get_name() . '_clear' ) . '" value="1"> ' . esc_html__( 'Remove the stored value', 'now-pages-threadi' ) . '</label>';
+			$html .= '<br><label><input type="checkbox" name="' . esc_attr( $this->get_name() . '_clear' ) . '" value="1"> ' . esc_html__( 'Remove the stored value', 'threadi-now-pages' ) . '</label>';
 		}
 
 		// return the HTML-code.

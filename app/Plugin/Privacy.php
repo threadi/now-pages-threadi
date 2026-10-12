@@ -2,23 +2,23 @@
 /**
  * File to handle the privacy tools of WordPress for this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Fediverse\Fediverse;
-use NowPagesThreadi\Fediverse\Updates;
-use NowPagesThreadi\Helper\Format;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\Sources\Sources;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Fediverse\Fediverse;
+use ThreadiNowPages\Fediverse\Updates;
+use ThreadiNowPages\Helper\Format;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\Sources\Sources;
 use WP_Post;
 use WP_Query;
 use WP_User;
@@ -63,8 +63,8 @@ class Privacy {
 	 * @return array<string,array<string,mixed>>
 	 */
 	public function add_exporter( array $exporters ): array {
-		$exporters['now-pages-threadi'] = array(
-			'exporter_friendly_name' => __( 'Now Pages', 'now-pages-threadi' ),
+		$exporters['threadi-now-pages'] = array(
+			'exporter_friendly_name' => __( 'Now Pages', 'threadi-now-pages' ),
 			'callback'               => array( $this, 'export' ),
 		);
 
@@ -80,8 +80,8 @@ class Privacy {
 	 * @return array<string,array<string,mixed>>
 	 */
 	public function add_eraser( array $erasers ): array {
-		$erasers['now-pages-threadi'] = array(
-			'eraser_friendly_name' => __( 'Now Pages', 'now-pages-threadi' ),
+		$erasers['threadi-now-pages'] = array(
+			'eraser_friendly_name' => __( 'Now Pages', 'threadi-now-pages' ),
 			'callback'             => array( $this, 'erase' ),
 		);
 
@@ -116,10 +116,10 @@ class Privacy {
 			$settings = $this->get_user_settings_data( $user );
 			if ( ! empty( $settings ) ) {
 				$data[] = array(
-					'group_id'          => 'now-pages-threadi-settings',
-					'group_label'       => __( 'Now Page settings', 'now-pages-threadi' ),
-					'group_description' => __( 'The settings for the own now page in the user profile.', 'now-pages-threadi' ),
-					'item_id'           => 'now-pages-threadi-settings-' . $user->ID,
+					'group_id'          => 'threadi-now-pages-settings',
+					'group_label'       => __( 'Now Page settings', 'threadi-now-pages' ),
+					'group_description' => __( 'The settings for the own now page in the user profile.', 'threadi-now-pages' ),
+					'item_id'           => 'threadi-now-pages-settings-' . $user->ID,
 					'data'              => $settings,
 				);
 			}
@@ -134,33 +134,33 @@ class Privacy {
 			$source_id = absint( $entry->post_parent );
 
 			$data[] = array(
-				'group_id'          => 'now-pages-threadi-entries',
-				'group_label'       => __( 'Now Page entries', 'now-pages-threadi' ),
-				'group_description' => __( 'The entries of the user shown on the now pages.', 'now-pages-threadi' ),
-				'item_id'           => 'now-pages-threadi-entry-' . $entry->ID,
+				'group_id'          => 'threadi-now-pages-entries',
+				'group_label'       => __( 'Now Page entries', 'threadi-now-pages' ),
+				'group_description' => __( 'The entries of the user shown on the now pages.', 'threadi-now-pages' ),
+				'item_id'           => 'threadi-now-pages-entry-' . $entry->ID,
 				'data'              => array(
 					array(
-						'name'  => __( 'Date', 'now-pages-threadi' ),
+						'name'  => __( 'Date', 'threadi-now-pages' ),
 						'value' => (string) get_the_date( 'c', $entry ),
 					),
 					array(
-						'name'  => __( 'Text', 'now-pages-threadi' ),
+						'name'  => __( 'Text', 'threadi-now-pages' ),
 						'value' => Format::get_entry_text( $entry ),
 					),
 					array(
-						'name'  => __( 'Status', 'now-pages-threadi' ),
+						'name'  => __( 'Status', 'threadi-now-pages' ),
 						'value' => $entry->post_status,
 					),
 					array(
-						'name'  => __( 'Source', 'now-pages-threadi' ),
-						'value' => $source_id > 0 ? get_the_title( $source_id ) : __( 'added manually', 'now-pages-threadi' ),
+						'name'  => __( 'Source', 'threadi-now-pages' ),
+						'value' => $source_id > 0 ? get_the_title( $source_id ) : __( 'added manually', 'threadi-now-pages' ),
 					),
 					array(
-						'name'  => __( 'URL', 'now-pages-threadi' ),
+						'name'  => __( 'URL', 'threadi-now-pages' ),
 						'value' => (string) get_post_meta( $entry->ID, 'source_url', true ),
 					),
 					array(
-						'name'  => __( 'Language', 'now-pages-threadi' ),
+						'name'  => __( 'Language', 'threadi-now-pages' ),
 						'value' => (string) get_post_meta( $entry->ID, 'language', true ),
 					),
 				),
@@ -228,7 +228,7 @@ class Privacy {
 				)
 			);
 			if ( ! empty( $sources ) ) {
-				$result['messages'][] = __( 'The user still owns now page sources. Their now page has been disabled.', 'now-pages-threadi' );
+				$result['messages'][] = __( 'The user still owns now page sources. Their now page has been disabled.', 'threadi-now-pages' );
 			}
 		}
 
@@ -258,7 +258,7 @@ class Privacy {
 			$failed                   = true;
 			$result['items_retained'] = true;
 			/* translators: %1$d will be replaced by the ID of an entry. */
-			$result['messages'][] = sprintf( __( 'The now page entry with ID %1$d could not be deleted.', 'now-pages-threadi' ), $entry->ID );
+			$result['messages'][] = sprintf( __( 'The now page entry with ID %1$d could not be deleted.', 'threadi-now-pages' ), $entry->ID );
 		}
 
 		add_action( 'before_delete_post', array( Entries::get_instance(), 'remember_deletion' ), 10, 2 );
@@ -376,25 +376,25 @@ class Privacy {
 
 		foreach ( $sources as $source ) {
 			$data[] = array(
-				'group_id'          => 'now-pages-threadi-sources',
-				'group_label'       => __( 'Now Page sources', 'now-pages-threadi' ),
-				'group_description' => __( 'The sources the entries of the user are imported from.', 'now-pages-threadi' ),
-				'item_id'           => 'now-pages-threadi-source-' . $source->ID,
+				'group_id'          => 'threadi-now-pages-sources',
+				'group_label'       => __( 'Now Page sources', 'threadi-now-pages' ),
+				'group_description' => __( 'The sources the entries of the user are imported from.', 'threadi-now-pages' ),
+				'item_id'           => 'threadi-now-pages-source-' . $source->ID,
 				'data'              => array(
 					array(
-						'name'  => __( 'Title', 'now-pages-threadi' ),
+						'name'  => __( 'Title', 'threadi-now-pages' ),
 						'value' => get_the_title( $source ),
 					),
 					array(
-						'name'  => __( 'Provider', 'now-pages-threadi' ),
+						'name'  => __( 'Provider', 'threadi-now-pages' ),
 						'value' => (string) get_post_meta( $source->ID, 'provider', true ),
 					),
 					array(
-						'name'  => __( 'Status', 'now-pages-threadi' ),
+						'name'  => __( 'Status', 'threadi-now-pages' ),
 						'value' => $source->post_status,
 					),
 					array(
-						'name'  => __( 'Created', 'now-pages-threadi' ),
+						'name'  => __( 'Created', 'threadi-now-pages' ),
 						'value' => (string) get_the_date( 'c', $source ),
 					),
 				),
@@ -425,21 +425,21 @@ class Privacy {
 
 		foreach ( $updates as $update ) {
 			$data[] = array(
-				'group_id'          => 'now-pages-threadi-updates',
-				'group_label'       => __( 'Now Page updates in the Fediverse', 'now-pages-threadi' ),
-				'group_description' => __( 'What was shared in the Fediverse in the name of the user.', 'now-pages-threadi' ),
-				'item_id'           => 'now-pages-threadi-update-' . $update->ID,
+				'group_id'          => 'threadi-now-pages-updates',
+				'group_label'       => __( 'Now Page updates in the Fediverse', 'threadi-now-pages' ),
+				'group_description' => __( 'What was shared in the Fediverse in the name of the user.', 'threadi-now-pages' ),
+				'item_id'           => 'threadi-now-pages-update-' . $update->ID,
 				'data'              => array(
 					array(
-						'name'  => __( 'Date', 'now-pages-threadi' ),
+						'name'  => __( 'Date', 'threadi-now-pages' ),
 						'value' => (string) get_the_date( 'c', $update ),
 					),
 					array(
-						'name'  => __( 'Text', 'now-pages-threadi' ),
+						'name'  => __( 'Text', 'threadi-now-pages' ),
 						'value' => wp_strip_all_tags( $update->post_content ),
 					),
 					array(
-						'name'  => __( 'Status', 'now-pages-threadi' ),
+						'name'  => __( 'Status', 'threadi-now-pages' ),
 						'value' => $update->post_status,
 					),
 				),
@@ -461,10 +461,10 @@ class Privacy {
 		}
 
 		// prepare the content.
-		$content = '<p class="privacy-policy-tutorial">' . esc_html__( 'Now Pages imports activities from the services you configure as sources and shows them on a public page. Which data leaves this website depends on the sources and features you use.', 'now-pages-threadi' ) . '</p>'
-					. '<p>' . esc_html__( 'We show recent activities of the authors of this website on a public page. For this we request data from the following services: [list your sources, e.g., GitHub, Last.fm, Steam]. With each request the address of this website is transmitted. If summaries are generated by an AI service, the texts of the entries are sent to [name of the AI provider]. If sharing in the Fediverse is enabled, entries are sent to other servers and cannot be reliably deleted there.', 'now-pages-threadi' ) . '</p>';
+		$content = '<p class="privacy-policy-tutorial">' . esc_html__( 'Now Pages imports activities from the services you configure as sources and shows them on a public page. Which data leaves this website depends on the sources and features you use.', 'threadi-now-pages' ) . '</p>'
+					. '<p>' . esc_html__( 'We show recent activities of the authors of this website on a public page. For this we request data from the following services: [list your sources, e.g., GitHub, Last.fm, Steam]. With each request the address of this website is transmitted. If summaries are generated by an AI service, the texts of the entries are sent to [name of the AI provider]. If sharing in the Fediverse is enabled, entries are sent to other servers and cannot be reliably deleted there.', 'threadi-now-pages' ) . '</p>';
 
 		// add the content.
-		wp_add_privacy_policy_content( __( 'Now Pages', 'now-pages-threadi' ), wp_kses_post( $content ) );
+		wp_add_privacy_policy_content( __( 'Now Pages', 'threadi-now-pages' ), wp_kses_post( $content ) );
 	}
 }

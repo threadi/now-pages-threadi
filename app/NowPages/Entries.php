@@ -2,23 +2,23 @@
 /**
  * This file contains the object to handle entries for now pages.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\NowPages;
+namespace ThreadiNowPages\NowPages;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use NowPagesThreadi\Helper\Format;
-use NowPagesThreadi\Helper\Languages;
-use NowPagesThreadi\Plugin\Log;
-use NowPagesThreadi\Plugin\Post_Type_Base;
-use NowPagesThreadi\Sources\Sources;
+use ThreadiNowPages\Helper\Format;
+use ThreadiNowPages\Helper\Languages;
+use ThreadiNowPages\Plugin\Log;
+use ThreadiNowPages\Plugin\Post_Type_Base;
+use ThreadiNowPages\Sources\Sources;
 use WP_Post;
 use WP_Query;
 
@@ -29,12 +29,12 @@ class Entries extends Post_Type_Base {
 	/**
 	 * Option to save deleted external IDs.
 	 */
-	public const OPTION_DELETED = 'now_pages_threadi_deleted_entries';
+	public const OPTION_DELETED = 'threadi_now_pages_deleted_entries';
 
 	/**
 	 * Option to save the time (GMT timestamp) before which the cleanup has deleted all entries.
 	 */
-	public const OPTION_CLEANED_BEFORE = 'now_pages_threadi_cleaned_before';
+	public const OPTION_CLEANED_BEFORE = 'threadi_now_pages_cleaned_before';
 
 	/**
 	 * Maximum number of remembered deletions, older ones are dropped first.
@@ -51,7 +51,7 @@ class Entries extends Post_Type_Base {
 	 *
 	 * @var string
 	 */
-	protected string $slug = 'np_threadi_entry';
+	protected string $slug = 'threadi_np_entry';
 
 	/**
 	 * The outcome of the last call of add_entry() in this request.
@@ -81,7 +81,7 @@ class Entries extends Post_Type_Base {
 	 */
 	public function init(): void {
 		// use our own hooks.
-		add_action( 'now_pages_threadi_entry_received', array( $this, 'add_entry' ), 10, 2 );
+		add_action( 'threadi_now_pages_entry_received', array( $this, 'add_entry' ), 10, 2 );
 
 		// use hooks.
 		add_action( 'restrict_manage_posts', array( $this, 'add_author_filter' ) );
@@ -91,7 +91,7 @@ class Entries extends Post_Type_Base {
 		add_action( 'delete_option_' . self::OPTION_DELETED, array( $this, 'forget_pending_deletions' ) );
 		add_action( 'save_post_' . $this->get_slug(), array( $this, 'ensure_language' ), 10, 2 );
 
-		// add a "Source" column to the entries list-table, linked to the parent np_threadi_source post.
+		// add a "Source" column to the entries list-table, linked to the parent threadi_np_source post.
 		add_filter( 'manage_' . $this->get_slug() . '_posts_columns', array( $this, 'add_source_column' ) );
 		add_action( 'manage_' . $this->get_slug() . '_posts_custom_column', array( $this, 'render_source_column' ), 10, 2 );
 		add_filter( 'manage_edit-' . $this->get_slug() . '_sortable_columns', array( $this, 'add_sortable_source_column' ) );
@@ -110,19 +110,19 @@ class Entries extends Post_Type_Base {
 	 */
 	protected function get_labels(): array {
 		return array(
-			'name'                  => __( 'Now Page Entries', 'now-pages-threadi' ),
-			'singular_name'         => __( 'Now Page Entry', 'now-pages-threadi' ),
-			'menu_name'             => __( 'Now Page Entries', 'now-pages-threadi' ),
-			'parent_item_colon'     => __( 'Parent Now Page Entry', 'now-pages-threadi' ),
-			'all_items'             => __( 'All Now Page Entries', 'now-pages-threadi' ),
-			'view_item'             => __( 'View Now Page Entry in frontend', 'now-pages-threadi' ),
-			'view_items'            => __( 'View Now Page Entries', 'now-pages-threadi' ),
-			'edit_item'             => __( 'View Now Page Entry', 'now-pages-threadi' ),
-			'search_items'          => __( 'Search Now Page Entry', 'now-pages-threadi' ),
-			'not_found'             => __( 'No entries found', 'now-pages-threadi' ),
-			'item_link'             => _x( 'Now Page Entry Link', 'navigation link block title', 'now-pages-threadi' ),
-			'item_link_description' => _x( 'A link to a Now Page entry.', 'navigation link block description', 'now-pages-threadi' ),
-			'add_new_item'          => __( 'Add New Now Page Entry', 'now-pages-threadi' ),
+			'name'                  => __( 'Now Page Entries', 'threadi-now-pages' ),
+			'singular_name'         => __( 'Now Page Entry', 'threadi-now-pages' ),
+			'menu_name'             => __( 'Now Page Entries', 'threadi-now-pages' ),
+			'parent_item_colon'     => __( 'Parent Now Page Entry', 'threadi-now-pages' ),
+			'all_items'             => __( 'All Now Page Entries', 'threadi-now-pages' ),
+			'view_item'             => __( 'View Now Page Entry in frontend', 'threadi-now-pages' ),
+			'view_items'            => __( 'View Now Page Entries', 'threadi-now-pages' ),
+			'edit_item'             => __( 'View Now Page Entry', 'threadi-now-pages' ),
+			'search_items'          => __( 'Search Now Page Entry', 'threadi-now-pages' ),
+			'not_found'             => __( 'No entries found', 'threadi-now-pages' ),
+			'item_link'             => _x( 'Now Page Entry Link', 'navigation link block title', 'threadi-now-pages' ),
+			'item_link_description' => _x( 'A link to a Now Page entry.', 'navigation link block description', 'threadi-now-pages' ),
+			'add_new_item'          => __( 'Add New Now Page Entry', 'threadi-now-pages' ),
 		);
 	}
 
@@ -132,7 +132,7 @@ class Entries extends Post_Type_Base {
 	 * This is the main function to add new entries for new Now Pages.
 	 *
 	 * It must be requested via hook:
-	 * `do_action( 'now_pages_threadi_entry_received', $entry, $source_id );`
+	 * `do_action( 'threadi_now_pages_entry_received', $entry, $source_id );`
 	 *
 	 * @param Entry $entry The entry object.
 	 * @param int   $sources_id The ID of the used source.
@@ -142,13 +142,13 @@ class Entries extends Post_Type_Base {
 	public function add_entry( Entry $entry, int $sources_id ): void {
 		// skip if this exact entry (same source, same external_id) already exists.
 		if ( '' !== $entry->external_id && $this->entry_exists( $entry->external_id, $sources_id ) ) {
-			$this->set_last_add_result( 0, 'duplicate', __( 'An entry with this external ID already exists for this source.', 'now-pages-threadi' ) );
+			$this->set_last_add_result( 0, 'duplicate', __( 'An entry with this external ID already exists for this source.', 'threadi-now-pages' ) );
 			return;
 		}
 
 		// skip if this entry was deleted by hand before.
 		if ( '' !== $entry->external_id && in_array( $sources_id . '|' . $entry->external_id, $this->get_deleted_entries(), true ) ) {
-			$this->set_last_add_result( 0, 'deleted_before', __( 'An entry with this external ID was deleted before and will not be added again.', 'now-pages-threadi' ) );
+			$this->set_last_add_result( 0, 'deleted_before', __( 'An entry with this external ID was deleted before and will not be added again.', 'threadi-now-pages' ) );
 			return;
 		}
 
@@ -156,7 +156,7 @@ class Entries extends Post_Type_Base {
 		// like a feed delivers its newest items regardless of their age, so they would return.
 		$cleaned_before = absint( get_option( self::OPTION_CLEANED_BEFORE, 0 ) );
 		if ( '' !== $entry->external_id && $cleaned_before > 0 && $entry->date->getTimestamp() < $cleaned_before ) {
-			$this->set_last_add_result( 0, 'cleaned_up', __( 'The entry is older than the entries deleted by the cleanup and will not be added again.', 'now-pages-threadi' ) );
+			$this->set_last_add_result( 0, 'cleaned_up', __( 'The entry is older than the entries deleted by the cleanup and will not be added again.', 'threadi-now-pages' ) );
 			return;
 		}
 
@@ -168,7 +168,7 @@ class Entries extends Post_Type_Base {
 			Log::get_instance()->add(
 				sprintf(
 				/* translators: %1$s will be replaced by a rule description. */
-					__( 'Entry skipped, it did not pass the content filter: %1$s', 'now-pages-threadi' ),
+					__( 'Entry skipped, it did not pass the content filter: %1$s', 'threadi-now-pages' ),
 					esc_html( $filter_result )
 				) . ' <code>' . esc_html( wp_trim_words( $entry->text, 12 ) ) . '</code>',
 				'info',
@@ -214,7 +214,7 @@ class Entries extends Post_Type_Base {
 		// bail on any error.
 		if ( is_wp_error( $post_id ) ) {
 			// log this event.
-			Log::get_instance()->add( __( 'Error during import of new entry:', 'now-pages-threadi' ) . ' <code>' . esc_html( Format::get_json( $post_id ) ) . '</code>', 'error', 'system' );
+			Log::get_instance()->add( __( 'Error during import of new entry:', 'threadi-now-pages' ) . ' <code>' . esc_html( Format::get_json( $post_id ) ) . '</code>', 'error', 'system' );
 
 			$this->set_last_add_result( 0, 'insert_failed', $post_id->get_error_message() );
 
@@ -233,7 +233,7 @@ class Entries extends Post_Type_Base {
 				$this->remember_deletions = true;
 			}
 
-			$this->set_last_add_result( 0, 'duplicate', __( 'An entry with this external ID already exists for this source.', 'now-pages-threadi' ) );
+			$this->set_last_add_result( 0, 'duplicate', __( 'An entry with this external ID already exists for this source.', 'threadi-now-pages' ) );
 			return;
 		}
 
@@ -252,7 +252,7 @@ class Entries extends Post_Type_Base {
 		 * @param Entry $entry      The entry object it was created from.
 		 * @param int   $sources_id The ID of the source it came from (0 = none).
 		 */
-		do_action( 'now_pages_threadi_entry_added', (int) $post_id, $entry, $sources_id );
+		do_action( 'threadi_now_pages_entry_added', (int) $post_id, $entry, $sources_id );
 	}
 
 	/**
@@ -276,7 +276,7 @@ class Entries extends Post_Type_Base {
 	/**
 	 * Return the outcome of the last add_entry() call and forget it.
 	 *
-	 * The hook `now_pages_threadi_entry_received` returns nothing, so callers
+	 * The hook `threadi_now_pages_entry_received` returns nothing, so callers
 	 * that need to know what happened (e.g. the abilities) read it here.
 	 *
 	 * @return array{added:bool,post_id:int,reason:string,message:string}|null Null if add_entry() did not run.
@@ -364,10 +364,10 @@ class Entries extends Post_Type_Base {
 
 			if ( 'title' === $key ) {
 				// what is shown there is the text of the entry.
-				$new_columns[ $key ] = __( 'Entry', 'now-pages-threadi' );
+				$new_columns[ $key ] = __( 'Entry', 'threadi-now-pages' );
 
-				$new_columns['np_threadi_source']          = __( 'Source', 'now-pages-threadi' );
-				$new_columns['now_pages_threadi_language'] = __( 'Language', 'now-pages-threadi' );
+				$new_columns['threadi_np_source']          = __( 'Source', 'threadi-now-pages' );
+				$new_columns['threadi_now_pages_language'] = __( 'Language', 'threadi-now-pages' );
 			}
 		}
 
@@ -375,7 +375,7 @@ class Entries extends Post_Type_Base {
 	}
 
 	/**
-	 * Render the "Source" column: a link to the parent np_threadi_source post.
+	 * Render the "Source" column: a link to the parent threadi_np_source post.
 	 *
 	 * @param string $column  The column being rendered.
 	 * @param mixed  $post_id The current entry's post ID.
@@ -384,7 +384,7 @@ class Entries extends Post_Type_Base {
 	 */
 	public function render_source_column( string $column, mixed $post_id ): void {
 		// show the source.
-		if ( 'np_threadi_source' === $column ) {
+		if ( 'threadi_np_source' === $column ) {
 			// get the parent ID.
 			$parent_id = wp_get_post_parent_id( absint( $post_id ) );
 
@@ -413,7 +413,7 @@ class Entries extends Post_Type_Base {
 		}
 
 		// show the language.
-		if ( 'now_pages_threadi_language' === $column ) {
+		if ( 'threadi_now_pages_language' === $column ) {
 			// get the configured provider.
 			$language = (string) get_post_meta( absint( $post_id ), 'language', true );
 
@@ -441,7 +441,7 @@ class Entries extends Post_Type_Base {
 	 * @return array<string,string>
 	 */
 	public function add_sortable_source_column( array $columns ): array {
-		$columns['np_threadi_source'] = 'parent';
+		$columns['threadi_np_source'] = 'parent';
 		$columns['author']            = 'author';
 
 		// entries have no stored title to sort by.
@@ -585,7 +585,7 @@ class Entries extends Post_Type_Base {
 		wp_dropdown_users(
 			array(
 				'name'            => 'author',
-				'show_option_all' => __( 'All authors', 'now-pages-threadi' ),
+				'show_option_all' => __( 'All authors', 'threadi-now-pages' ),
 				'selected'        => $selected,
 				'include'         => $author_ids,
 			)
@@ -598,7 +598,7 @@ class Entries extends Post_Type_Base {
 	 * @return array<int,int>
 	 */
 	private function get_entry_author_ids(): array {
-		$cache_key  = 'now_pages_threadi_entry_authors_' . md5( wp_cache_get_last_changed( 'posts' ) );
+		$cache_key  = 'threadi_now_pages_entry_authors_' . md5( wp_cache_get_last_changed( 'posts' ) );
 		$author_ids = wp_cache_get( $cache_key );
 
 		if ( false === $author_ids ) {
@@ -650,8 +650,8 @@ class Entries extends Post_Type_Base {
 		}
 
 		// log this event, only in debug mode: bulk deletions would flood the log.
-		if ( 1 === absint( get_option( 'now_pages_threadi_debug' ) ) ) {
-			Log::get_instance()->add( __( 'Added an entry to the list to remember its deletion:', 'now-pages-threadi' ) . ' <code>' . esc_html( $external_id ) . '</code>', 'info', 'system' );
+		if ( 1 === absint( get_option( 'threadi_now_pages_debug' ) ) ) {
+			Log::get_instance()->add( __( 'Added an entry to the list to remember its deletion:', 'threadi-now-pages' ) . ' <code>' . esc_html( $external_id ) . '</code>', 'info', 'system' );
 		}
 
 		// save the deletions of this request once at its end: a bulk deletion
@@ -862,7 +862,7 @@ class Entries extends Post_Type_Base {
 		 * @param bool    $is_manual Whether the entry was created by hand.
 		 * @param WP_Post $entry     The entry.
 		 */
-		return (bool) apply_filters( 'now_pages_threadi_entry_is_manual', $is_manual, $entry );
+		return (bool) apply_filters( 'threadi_now_pages_entry_is_manual', $is_manual, $entry );
 	}
 
 	/**
@@ -886,13 +886,13 @@ class Entries extends Post_Type_Base {
 		// define the messages for our cpt.
 		$messages[ $this->get_slug() ] = array(
 			0  => '',
-			1  => __( 'The entry has been updated.', 'now-pages-threadi' ),
-			4  => __( 'The entry has been updated.', 'now-pages-threadi' ),
-			6  => __( 'The entry has been saved.', 'now-pages-threadi' ),
-			7  => __( 'The entry has been saved.', 'now-pages-threadi' ),
+			1  => __( 'The entry has been updated.', 'threadi-now-pages' ),
+			4  => __( 'The entry has been updated.', 'threadi-now-pages' ),
+			6  => __( 'The entry has been saved.', 'threadi-now-pages' ),
+			7  => __( 'The entry has been saved.', 'threadi-now-pages' ),
 			/* translators: %1$s will be replaced by a date. */
-			9  => sprintf( __( 'The entry should be published on %1$s.', 'now-pages-threadi' ), $date ),
-			10 => __( 'The entry has been updated.', 'now-pages-threadi' ),
+			9  => sprintf( __( 'The entry should be published on %1$s.', 'threadi-now-pages' ), $date ),
+			10 => __( 'The entry has been updated.', 'threadi-now-pages' ),
 		);
 
 		// return the resulting messages.
@@ -908,21 +908,21 @@ class Entries extends Post_Type_Base {
 			'%1$d entry has been deleted.',
 			'%1$d entries have been deleted.',
 			absint( $bulk_counts['deleted'] ),
-			'now-pages-threadi'
+			'threadi-now-pages'
 		);
 		/* translators: %1$s will be replaced by a number. */
 		$bulk_messages[ $this->get_slug() ]['trashed'] = _n(
 			'%1$d entry has been moved to trash.',
 			'%1$d entries have been moved to trash.',
 			absint( $bulk_counts['trashed'] ),
-			'now-pages-threadi'
+			'threadi-now-pages'
 		);
 		/* translators: %1$s will be replaced by a number. */
 		$bulk_messages[ $this->get_slug() ]['untrashed'] = _n(
 			'%1$d entry has been revived from trash.',
 			'%1$d entries have been revived from trash.',
 			absint( $bulk_counts['untrashed'] ),
-			'now-pages-threadi'
+			'threadi-now-pages'
 		);
 		return $bulk_messages;
 	}
@@ -961,7 +961,7 @@ class Entries extends Post_Type_Base {
 		printf(
 			'<option value="0"%s>%s</option>',
 			selected( $selected, 0, false ),
-			esc_html__( 'All sources', 'now-pages-threadi' )
+			esc_html__( 'All sources', 'threadi-now-pages' )
 		);
 
 		foreach ( $posts as $post ) {
@@ -986,7 +986,7 @@ class Entries extends Post_Type_Base {
 
 		// the key changes whenever a post is saved or deleted, so nothing has to be deleted by hand:
 		// the old entry is simply not found anymore and expires on its own.
-		$cache_key  = 'now_pages_threadi_entry_sources_' . ( $restricted ? get_current_user_id() : 'all' ) . '_' . md5( wp_cache_get_last_changed( 'posts' ) );
+		$cache_key  = 'threadi_now_pages_entry_sources_' . ( $restricted ? get_current_user_id() : 'all' ) . '_' . md5( wp_cache_get_last_changed( 'posts' ) );
 		$source_ids = wp_cache_get( $cache_key );
 
 		if ( false === $source_ids ) {

@@ -2,12 +2,12 @@
 /**
  * This file contains the month period.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests\Periods;
+namespace ThreadiNowPages\Digests\Periods;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -29,7 +29,7 @@ class Month extends Months_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Month', 'now-pages-threadi' );
+		return __( 'Month', 'threadi-now-pages' );
 	}
 
 	/**
@@ -38,7 +38,7 @@ class Month extends Months_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'The whole month a date falls into.', 'now-pages-threadi' );
+		return __( 'The whole month a date falls into.', 'threadi-now-pages' );
 	}
 
 	/**

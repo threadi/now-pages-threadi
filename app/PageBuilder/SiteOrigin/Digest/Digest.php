@@ -5,18 +5,18 @@
  * Author: Thomas Zwirner
  * Author URI: https://plugin.thomaszwirner.de
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder\SiteOrigin\Digest;
+namespace ThreadiNowPages\PageBuilder\SiteOrigin\Digest;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Display_Settings;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Display_Settings;
 use SiteOrigin_Widget;
 
 /**
@@ -49,13 +49,13 @@ class Digest extends SiteOrigin_Widget {
 		// Call the parent constructor with the required arguments.
 		parent::__construct(
 			// The unique id for your widget.
-			'now-pages-threadi-digest',
+			'threadi-now-pages-digest',
 			// The name of the widget for display purposes.
-			__( 'Digest', 'now-pages-threadi' ),
+			__( 'Digest', 'threadi-now-pages' ),
 			// The $widget_options array, which is passed through to WP_Widget.
 			// It has a couple of extras like the optional help URL, which should link to your sites help or support page.
 			array(
-				'description' => __( 'Provides a SiteOrigin Widget to show your now page entries.', 'now-pages-threadi' ),
+				'description' => __( 'Provides a SiteOrigin Widget to show your now page entries.', 'threadi-now-pages' ),
 			),
 			// The $control_options array, which is passed through to WP_Widget.
 			array(),
@@ -63,68 +63,68 @@ class Digest extends SiteOrigin_Widget {
 			array(
 				'period'            => array(
 					'type'    => 'select',
-					'label'   => __( 'Period', 'now-pages-threadi' ),
+					'label'   => __( 'Period', 'threadi-now-pages' ),
 					'default' => Digests::get_instance()->get_default_period(),
 					'options' => $periods,
 				),
 				'format'            => array(
 					'type'    => 'select',
-					'label'   => __( 'Format', 'now-pages-threadi' ),
+					'label'   => __( 'Format', 'threadi-now-pages' ),
 					'default' => Digests::get_instance()->get_default_format(),
 					'options' => $formats,
 				),
 				'override_display'  => array(
 					'type'    => 'radio',
-					'label'   => __( 'Use own display settings', 'now-pages-threadi' ),
+					'label'   => __( 'Use own display settings', 'threadi-now-pages' ),
 					'default' => 'no',
 					'options' => array(
-						'yes' => esc_html__( 'Yes', 'now-pages-threadi' ),
-						'no'  => esc_html__( 'No', 'now-pages-threadi' ),
+						'yes' => esc_html__( 'Yes', 'threadi-now-pages' ),
+						'no'  => esc_html__( 'No', 'threadi-now-pages' ),
 					),
 				),
 				'show_time'         => array(
 					'type'    => 'radio',
-					'label'   => __( 'Show times', 'now-pages-threadi' ),
+					'label'   => __( 'Show times', 'threadi-now-pages' ),
 					'default' => 'no',
 					'options' => array(
-						'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-						'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+						'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+						'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 					),
 				),
 				'show_source'       => array(
 					'type'    => 'radio',
-					'label'   => __( 'Show data source', 'now-pages-threadi' ),
+					'label'   => __( 'Show data source', 'threadi-now-pages' ),
 					'default' => 'no',
 					'options' => array(
-						'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-						'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+						'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+						'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 					),
 				),
 				'link_source'       => array(
 					'type'    => 'radio',
-					'label'   => __( 'Link the data source', 'now-pages-threadi' ),
+					'label'   => __( 'Link the data source', 'threadi-now-pages' ),
 					'default' => 'no',
 					'options' => array(
-						'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-						'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+						'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+						'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 					),
 				),
 				'show_period'       => array(
 					'type'    => 'radio',
-					'label'   => __( 'Show period of entries', 'now-pages-threadi' ),
+					'label'   => __( 'Show period of entries', 'threadi-now-pages' ),
 					'default' => 'yes',
 					'options' => array(
-						'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-						'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+						'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+						'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 					),
 				),
 				'group_by_category' => array(
 					'type'    => 'radio',
-					'label'   => __( 'Group by category', 'now-pages-threadi' ),
+					'label'   => __( 'Group by category', 'threadi-now-pages' ),
 					'default' => 'yes',
 					'options' => array(
-						'yes' => esc_html__( 'Show', 'now-pages-threadi' ),
-						'no'  => esc_html__( 'Hide', 'now-pages-threadi' ),
+						'yes' => esc_html__( 'Show', 'threadi-now-pages' ),
+						'no'  => esc_html__( 'Hide', 'threadi-now-pages' ),
 					),
 				),
 			),
@@ -144,4 +144,4 @@ class Digest extends SiteOrigin_Widget {
 		return 'digest';
 	}
 }
-siteorigin_widget_register( 'now-pages-threadi-digest', __FILE__, 'NowPagesThreadi\PageBuilder\SiteOrigin\Digest\Digest' );
+siteorigin_widget_register( 'threadi-now-pages-digest', __FILE__, 'ThreadiNowPages\PageBuilder\SiteOrigin\Digest\Digest' );

@@ -2,18 +2,18 @@
 /**
  * This file contains the support for Live Composer.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
 
 /**
  * Registers and handles the support for Live Composer.
@@ -62,14 +62,14 @@ class LiveComposer extends PageBuilder_Base {
 		// module registration.
 		require_once Plugin::get_plugin_path() . '/legacy-classes/LiveComposer/module.php';
 
-		dslc_register_module( 'NowPagesThreadi_DSLC_Digest' );
+		dslc_register_module( 'ThreadiNowPages_DSLC_Digest' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Live Composer', 'now-pages-threadi' );
+		return __( 'Live Composer', 'threadi-now-pages' );
 	}
 
 	/**
@@ -216,13 +216,13 @@ class LiveComposer extends PageBuilder_Base {
 						'content'                  => array(
 							array(
 								'element_type'           => 'module',
-								'module_id'              => 'NowPagesThreadi_DSLC_Digest',
+								'module_id'              => 'ThreadiNowPages_DSLC_Digest',
 								'module_instance_id'     => $this->get_instance_id(),
 								'dslc_m_size'            => '12',
 								'last'                   => 'yes',
 								'css_show_on'            => 'desktop tablet phone',
-								'period'                 => get_option( 'now_pages_threadi_frontend_period', 'live' ),
-								'format'                 => get_option( 'now_pages_threadi_frontend_format', 'verbatim' ),
+								'period'                 => get_option( 'threadi_now_pages_frontend_period', 'live' ),
+								'format'                 => get_option( 'threadi_now_pages_frontend_format', 'verbatim' ),
 								// left empty on purpose: without the override
 								// the module follows the settings of the website.
 								'override_display'       => '',
@@ -267,7 +267,7 @@ class LiveComposer extends PageBuilder_Base {
 	public function add_styles(): void {
 		// enqueue our own styles.
 		wp_enqueue_style(
-			'now-pages-threadi-live-composer',
+			'threadi-now-pages-live-composer',
 			Plugin::get_plugin_url() . 'css/style.css',
 			array(),
 			Plugin::get_file_version( Plugin::get_plugin_path() . '/css/style.css' ),

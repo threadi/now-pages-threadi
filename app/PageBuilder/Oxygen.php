@@ -7,18 +7,18 @@
  * the element format and the post meta key are identical, so this class
  * only has to answer "which plugin is running" differently.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
 
 /**
  * Registers and handles the support for Oxygen.
@@ -41,7 +41,7 @@ class Oxygen extends Breakdance {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Oxygen', 'now-pages-threadi' );
+		return __( 'Oxygen', 'threadi-now-pages' );
 	}
 
 	/**

@@ -2,19 +2,19 @@
 /**
  * This file contains the support for Zion Builder.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\PageBuilder\ZionBuilder\Digest;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\PageBuilder\ZionBuilder\Digest;
 
 /**
  * Registers and handles the support for Avada.
@@ -48,8 +48,8 @@ class ZionBuilder extends PageBuilder_Base {
 	 */
 	public function add_category( array $categories ): array {
 		$categories[] = array(
-			'id'       => 'now-pages-threadi',
-			'name'     => __( 'Now Pages', 'now-pages-threadi' ),
+			'id'       => 'threadi-now-pages',
+			'name'     => __( 'Now Pages', 'threadi-now-pages' ),
 			'priority' => 10,
 		);
 
@@ -96,10 +96,10 @@ class ZionBuilder extends PageBuilder_Base {
 				'content'      => array(
 					array(
 						'uid'          => $this->get_element_uid(),
-						'element_type' => 'now_pages_threadi_digest',
+						'element_type' => 'threadi_now_pages_digest',
 						'options'      => array(
-							'period' => get_option( 'now_pages_threadi_frontend_period', 'live' ),
-							'format' => get_option( 'now_pages_threadi_frontend_format', 'verbatim' ),
+							'period' => get_option( 'threadi_now_pages_frontend_period', 'live' ),
+							'format' => get_option( 'threadi_now_pages_frontend_format', 'verbatim' ),
 						),
 						'content'      => array(),
 					),
@@ -126,7 +126,7 @@ class ZionBuilder extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Zion Builder', 'now-pages-threadi' );
+		return __( 'Zion Builder', 'threadi-now-pages' );
 	}
 
 	/**

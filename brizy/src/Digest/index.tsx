@@ -22,7 +22,7 @@ let cachedEditorData: EditorData | null = null;
 const getEditorData = (): EditorData => {
 	if (typeof window === "undefined") return cachedEditorData ?? {};
 
-	const current = (window as unknown as { nowPagesThreadiBrizy?: EditorData }).nowPagesThreadiBrizy;
+	const current = (window as unknown as { threadiNowPagesBrizy?: EditorData }).threadiNowPagesBrizy;
 
 	// Nur übernehmen, wenn tatsächlich Daten da sind – ein leeres/undefined
 	// Objekt in einem späteren Aufruf überschreibt den Cache nicht.
@@ -62,8 +62,8 @@ interface WidgetProps {
  * @constructor
  */
 const WidgetView = ({ format, period, override_display, show_time, show_source, link_source, show_period, group_by_category }: WidgetProps): JSX.Element => (
-	<div className="now-pages-threadi-digest">
-		{`{{ now_pages_threadi_digest format="${format ?? ""}" period="${period ?? ""}" override_display="${String(override_display) ?? ""}" show_time="${String(show_time) ?? ""}" show_source="${String(show_source) ?? ""}" link_source="${String(link_source) ?? ""}" show_period="${String(show_period) ?? ""}" group_by_category="${String(group_by_category) ?? ""}" }}`}
+	<div className="threadi-now-pages-digest">
+		{`{{ threadi_now_pages_digest format="${format ?? ""}" period="${period ?? ""}" override_display="${String(override_display) ?? ""}" show_time="${String(show_time) ?? ""}" show_source="${String(show_source) ?? ""}" link_source="${String(link_source) ?? ""}" show_period="${String(show_period) ?? ""}" group_by_category="${String(group_by_category) ?? ""}" }}`}
 	</div>
 );
 
@@ -85,7 +85,7 @@ const WidgetEditor = ({ format, period, override_display, show_time, show_source
 		const data = getEditorData();
 		const target = data.restUrl
 			? new URL(data.restUrl + "digest", window.location.origin)
-			: new URL("/wp-json/now-pages-threadi/v1/digest", window.location.origin);
+			: new URL("/wp-json/threadi-now-pages/v1/digest", window.location.origin);
 		const url = new URL(target.pathname + target.search, window.location.origin);
 		if (format) {
 			url.searchParams.set("format", format);
@@ -126,8 +126,8 @@ const WidgetEditor = ({ format, period, override_display, show_time, show_source
 
     // define the output depending on response.
     return html
-            ? <div className="now-pages-threadi-digest" dangerouslySetInnerHTML={{ __html: html }} />
-            : <div className="now-pages-threadi-digest">{__('Now Pages: Digest (Preview)', 'now-pages-threadi' )}</div>;
+            ? <div className="threadi-now-pages-digest" dangerouslySetInnerHTML={{ __html: html }} />
+            : <div className="threadi-now-pages-digest">{__('Now Pages: Digest (Preview)', 'threadi-now-pages' )}</div>;
 };
 
 /**
@@ -139,27 +139,27 @@ Brizy.registerComponent({
 		editor: WidgetEditor,
 		view: WidgetView
 	},
-	title: __( 'Digest', 'now-pages-threadi' ),
-	category: "now-pages-threadi",
+	title: __( 'Digest', 'threadi-now-pages' ),
+	category: "threadi-now-pages",
 	options: () => {
 		const data = getEditorData();
 
 		return [
 			{
-				selector: ".now-pages-threadi-digest",
+				selector: ".threadi-now-pages-digest",
 				toolbar: [
 					{
 						id: "toolbarSettings",
 						type: "popover",
-						config: { icon: "nc-cog", title: __("Settings", "now-pages-threadi") },
+						config: { icon: "nc-cog", title: __("Settings", "threadi-now-pages") },
 						position: 20,
 						options: [
 							{
 								id: "openNowPagesTab",
 								type: "sidebarTabsButton",
 								config: {
-									tabId: "nowPagesThreadiTab",
-									text: __("Settings", "now-pages-threadi"),
+									tabId: "threadiNowPagesTab",
+									text: __("Settings", "threadi-now-pages"),
 									icon: "nc-cog",
 								},
 							},
@@ -172,28 +172,28 @@ Brizy.registerComponent({
 						type: "sidebarTabs",
 						tabs: [
 							{
-								id: "nowPagesThreadiTab",
-								title: __("Settings", "now-pages-threadi"),
-								label: __("Settings", "now-pages-threadi"),
+								id: "threadiNowPagesTab",
+								title: __("Settings", "threadi-now-pages"),
+								label: __("Settings", "threadi-now-pages"),
 								options: [
 									{
 										id: "period",
 										type: "select",
-										label: __("Period", "now-pages-threadi"),
+										label: __("Period", "threadi-now-pages"),
 										choices: data.periods,
 										default: data.default_period ?? "",
 									},
 									{
 										id: "format",
 										type: "select",
-										label: __("Format", "now-pages-threadi"),
+										label: __("Format", "threadi-now-pages"),
 										choices: data.formats,
 										default: data.default_format ?? "",
 									},
                                     {
                                         id: "override_display",
                                         type: "switch",
-                                        label: __("Use own display settings", "now-pages-threadi"),
+                                        label: __("Use own display settings", "threadi-now-pages"),
                                         default: {
                                             value: "off",
                                         },
@@ -201,7 +201,7 @@ Brizy.registerComponent({
                                     {
                                         id: "show_time",
                                         type: "switch",
-                                        label: __("Show times", "now-pages-threadi"),
+                                        label: __("Show times", "threadi-now-pages"),
                                         default: {
                                             value: "off",
                                         },
@@ -209,7 +209,7 @@ Brizy.registerComponent({
                                     {
                                         id: "show_source",
                                         type: "switch",
-                                        label: __("Show data source", "now-pages-threadi"),
+                                        label: __("Show data source", "threadi-now-pages"),
                                         default: {
                                             value: "off",
                                         },
@@ -217,7 +217,7 @@ Brizy.registerComponent({
                                     {
                                         id: "link_source",
                                         type: "switch",
-                                        label: __("Link the data source", "now-pages-threadi"),
+                                        label: __("Link the data source", "threadi-now-pages"),
                                         default: {
                                             value: "off",
                                         },
@@ -225,7 +225,7 @@ Brizy.registerComponent({
                                     {
                                         id: "show_period",
                                         type: "switch",
-                                        label: __("Show period of entries", "now-pages-threadi"),
+                                        label: __("Show period of entries", "threadi-now-pages"),
                                         default: {
                                             value: "on",
                                         },
@@ -233,7 +233,7 @@ Brizy.registerComponent({
                                     {
                                         id: "group_by_category",
                                         type: "switch",
-                                        label: __("Group by category", "now-pages-threadi"),
+                                        label: __("Group by category", "threadi-now-pages"),
                                         default: {
                                             value: "on",
                                         },

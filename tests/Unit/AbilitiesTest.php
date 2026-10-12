@@ -6,21 +6,21 @@
  * directly, without the abilities API, so the tests run whether or not
  * that plugin is installed in this environment.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Periods;
-use NowPagesThreadi\NowPages\Abilities;
-use NowPagesThreadi\NowPages\Categories;
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Providers\Providers;
-use NowPagesThreadi\Tests\NowPagesTestCase;
-use NowPagesThreadi\Tests\Unit\Stubs\Stub_Provider;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Periods;
+use ThreadiNowPages\NowPages\Abilities;
+use ThreadiNowPages\NowPages\Categories;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Providers\Providers;
+use ThreadiNowPages\Tests\NowPagesTestCase;
+use ThreadiNowPages\Tests\Unit\Stubs\Stub_Provider;
 use WP_Error;
 
 /**
@@ -48,7 +48,7 @@ class AbilitiesTest extends NowPagesTestCase {
 	private function create_entry( string $text ): int {
 		return self::factory()->post->create(
 			array(
-				'post_type'     => 'np_threadi_entry',
+				'post_type'     => 'threadi_np_entry',
 				'post_status'   => 'publish',
 				'post_title'    => '',
 				'post_content'  => $text,
@@ -165,7 +165,7 @@ class AbilitiesTest extends NowPagesTestCase {
 
 		$source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'My test source',
 			)
@@ -191,7 +191,7 @@ class AbilitiesTest extends NowPagesTestCase {
 
 		$source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'My test source',
 			)
@@ -214,14 +214,14 @@ class AbilitiesTest extends NowPagesTestCase {
 
 		$source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'My test source',
 			)
 		);
 
 		update_post_meta( $source_id, 'provider', 'stub' );
-		update_post_meta( $source_id, 'now_pages_threadi_provider_last_run', time() );
+		update_post_meta( $source_id, 'threadi_now_pages_provider_last_run', time() );
 
 		$sources = Abilities::get_instance()->get_sources();
 
@@ -245,14 +245,14 @@ class AbilitiesTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_a_locked_import_reports_an_error(): void {
-		add_option( \NowPagesThreadi\Sources\Sources::IMPORT_LOCK_OPTION, time() . '|another-run', '', false );
+		add_option( \ThreadiNowPages\Sources\Sources::IMPORT_LOCK_OPTION, time() . '|another-run', '', false );
 
 		$result = Abilities::get_instance()->run_import();
 
-		delete_option( \NowPagesThreadi\Sources\Sources::IMPORT_LOCK_OPTION );
+		delete_option( \ThreadiNowPages\Sources\Sources::IMPORT_LOCK_OPTION );
 
 		$this->assertInstanceOf( WP_Error::class, $result );
-		$this->assertSame( 'now_pages_threadi_import_running', $result->get_error_code() );
+		$this->assertSame( 'threadi_now_pages_import_running', $result->get_error_code() );
 	}
 
 	/**
@@ -275,7 +275,7 @@ class AbilitiesTest extends NowPagesTestCase {
 
 		$source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'My test source',
 			)
@@ -310,7 +310,7 @@ class AbilitiesTest extends NowPagesTestCase {
 
 		$source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'My test source',
 			)
@@ -475,7 +475,7 @@ class AbilitiesTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_a_fresh_entry_reports_the_delay(): void {
-		update_option( 'now_pages_threadi_delay_hours', 6 );
+		update_option( 'threadi_now_pages_delay_hours', 6 );
 
 		$added = Abilities::get_instance()->add_entry( array( 'text' => 'Just now' ) );
 
@@ -562,7 +562,7 @@ class AbilitiesTest extends NowPagesTestCase {
 	public function test_update_entry_confirms_a_waiting_entry(): void {
 		$entry_id = wp_insert_post(
 			array(
-				'post_type'     => 'np_threadi_entry',
+				'post_type'     => 'threadi_np_entry',
 				'post_status'   => 'pending',
 				'post_content'  => 'Went to the gym',
 				'post_date'     => '2025-10-06 00:00:00',
@@ -585,7 +585,7 @@ class AbilitiesTest extends NowPagesTestCase {
 		$this->assertIsArray( $result );
 		$this->assertSame( 'publish', get_post_status( $entry_id ) );
 		$this->assertSame( '2025-10-06 00:00:00', get_post( $entry_id )->post_date );
-		$this->assertSame( 1, did_action( 'now_pages_threadi_entry_confirmed' ) );
+		$this->assertSame( 1, did_action( 'threadi_now_pages_entry_confirmed' ) );
 	}
 
 	/**
@@ -637,7 +637,7 @@ class AbilitiesTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_diagnose_explains_the_delay(): void {
-		update_option( 'now_pages_threadi_delay_hours', 6 );
+		update_option( 'threadi_now_pages_delay_hours', 6 );
 
 		$added = Abilities::get_instance()->add_entry( array( 'text' => 'Just now' ) );
 		$this->assertIsArray( $added );
@@ -656,7 +656,7 @@ class AbilitiesTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_diagnose_confirms_a_shown_entry(): void {
-		update_option( 'now_pages_threadi_delay_hours', 0 );
+		update_option( 'threadi_now_pages_delay_hours', 0 );
 
 		$entry_id = $this->create_entry( 'Two hours ago' );
 
@@ -719,8 +719,8 @@ class AbilitiesTest extends NowPagesTestCase {
 
 		$info = Abilities::get_instance()->add_site_health_info( array() );
 
-		$this->assertArrayHasKey( 'now-pages-threadi-abilities', $info );
-		$this->assertSame( __( 'yes', 'now-pages-threadi' ), $info['now-pages-threadi-abilities']['fields']['read_only']['value'] );
+		$this->assertArrayHasKey( 'threadi-now-pages-abilities', $info );
+		$this->assertSame( __( 'yes', 'threadi-now-pages' ), $info['threadi-now-pages-abilities']['fields']['read_only']['value'] );
 	}
 
 	/**
@@ -731,7 +731,7 @@ class AbilitiesTest extends NowPagesTestCase {
 	public function test_update_entry_does_not_make_a_waiting_entry_a_draft(): void {
 		$entry_id = wp_insert_post(
 			array(
-				'post_type'    => 'np_threadi_entry',
+				'post_type'    => 'threadi_np_entry',
 				'post_status'  => 'pending',
 				'post_content' => 'Went to the gym',
 			)

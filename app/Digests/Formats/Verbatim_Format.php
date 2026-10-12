@@ -2,21 +2,21 @@
 /**
  * This file contains the verbatim (1:1 list) digest format.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests\Formats;
+namespace ThreadiNowPages\Digests\Formats;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Digest_Format_Interface;
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Helper\Format;
-use NowPagesThreadi\NowPages\Categories;
-use NowPagesThreadi\Plugin\Templates;
+use ThreadiNowPages\Digests\Digest_Format_Interface;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Helper\Format;
+use ThreadiNowPages\NowPages\Categories;
+use ThreadiNowPages\Plugin\Templates;
 use WP_Post;
 
 /**
@@ -39,13 +39,13 @@ class Verbatim_Format implements Digest_Format_Interface {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( '1:1 list', 'now-pages-threadi' );
+		return __( '1:1 list', 'threadi-now-pages' );
 	}
 
 	/**
 	 * Render the given entries as a (optionally grouped) list.
 	 *
-	 * @param array<int,WP_Post>  $entries  Chronologically sorted np_threadi_entry posts.
+	 * @param array<int,WP_Post>  $entries  Chronologically sorted threadi_np_entry posts.
 	 * @param array<string,mixed> $settings Output settings, see Digest_Builder::build().
 	 *
 	 * @return string
@@ -260,7 +260,7 @@ class Verbatim_Format implements Digest_Format_Interface {
 		}
 
 		// format the text.
-		$line .= '<span class="now-pages-threadi-digest-text">' . Format::linkify_text( Format::get_entry_text( $entry ) ) . '</span>';
+		$line .= '<span class="threadi-now-pages-digest-text">' . Format::linkify_text( Format::get_entry_text( $entry ) ) . '</span>';
 
 		// append the source, if enabled and available.
 		$line .= $this->render_source( $entry, $settings );
@@ -310,7 +310,7 @@ class Verbatim_Format implements Digest_Format_Interface {
 		 * @param WP_Post             $entry    The entry.
 		 * @param array<string,mixed> $settings The resolved display settings.
 		 */
-		$url = (string) apply_filters( 'now_pages_threadi_digest_source_url', $url, $entry, $settings );
+		$url = (string) apply_filters( 'threadi_now_pages_digest_source_url', $url, $entry, $settings );
 
 		// link the name, if we got a URL.
 		$name = '' !== $url
@@ -322,6 +322,6 @@ class Verbatim_Format implements Digest_Format_Interface {
 			: esc_html( $title );
 
 		// return the source as citation.
-		return ' <cite class="now-pages-threadi-digest-source">' . $name . '</cite>';
+		return ' <cite class="threadi-now-pages-digest-source">' . $name . '</cite>';
 	}
 }

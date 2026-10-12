@@ -2,12 +2,12 @@
 /**
  * This file contains the Wehook Provider.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare( strict_types=1 );
 
-namespace NowPagesThreadi\Providers;
+namespace ThreadiNowPages\Providers;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -18,9 +18,9 @@ use easySettingsForWordPress\Fields\Checkbox;
 use easySettingsForWordPress\Fields\Password;
 use easySettingsForWordPress\Section;
 use easySettingsForWordPress\Setting;
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Plugin\Crypt;
-use NowPagesThreadi\Plugin\Settings;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Plugin\Crypt;
+use ThreadiNowPages\Plugin\Settings;
 
 /**
  * Object for the Webhook Provider.
@@ -34,7 +34,7 @@ class Webhook_Provider extends Provider_Base {
 	public function init(): void {
 		parent::init();
 		add_action( 'init', array( $this, 'add_provider_settings' ), 40 );
-		add_action( 'now_pages_threadi_source_duplicate', array( $this, 'check_for_duplicates' ), 10, 3 );
+		add_action( 'threadi_now_pages_source_duplicate', array( $this, 'check_for_duplicates' ), 10, 3 );
 	}
 
 	/**
@@ -44,7 +44,7 @@ class Webhook_Provider extends Provider_Base {
 	 */
 	public function add_provider_settings(): void {
 		// bail if the settings are not needed in this request.
-		if ( ! \NowPagesThreadi\Helper\Plugin::is_settings_request() ) {
+		if ( ! \ThreadiNowPages\Helper\Plugin::is_settings_request() ) {
 			return;
 		}
 
@@ -52,18 +52,18 @@ class Webhook_Provider extends Provider_Base {
 		$settings_obj = Settings::get_instance()->get_settings_obj();
 
 		// add section.
-		$section = $this->settings_tab->get_section( 'now_pages_threadi_provider_' . $this->get_slug() . '_section' );
+		$section = $this->settings_tab->get_section( 'threadi_now_pages_provider_' . $this->get_slug() . '_section' );
 		if ( ! $section instanceof Section ) {
 			return;
 		}
 		$section->set_callback( array( $this, 'show_instructions' ) );
 
 		// get and extend the main setting.
-		$webhook_setting = $settings_obj->get_setting( 'now_pages_threadi_provider_' . $this->get_slug() . '_enabled' );
+		$webhook_setting = $settings_obj->get_setting( 'threadi_now_pages_provider_' . $this->get_slug() . '_enabled' );
 		if ( $webhook_setting instanceof Setting ) {
 			$field = $webhook_setting->get_field();
 			if ( $field instanceof Field_Base ) {
-				$field->set_description( __( 'Lets external tools push entries into your now page. Disabled by default - only enable it if you actually use it.', 'now-pages-threadi' ) );
+				$field->set_description( __( 'Lets external tools push entries into your now page. Disabled by default - only enable it if you actually use it.', 'threadi-now-pages' ) );
 			}
 		}
 
@@ -76,11 +76,11 @@ class Webhook_Provider extends Provider_Base {
 		$setting->set_read_callback( Crypt::get_instance()->get_read_callback( $setting->get_name() ) );
 		$setting->set_save_callback( Crypt::get_instance()->get_save_callback( $setting->get_name() ) );
 		$field = new Password( $settings_obj );
-		$field->set_title( __( 'Token', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Token', 'threadi-now-pages' ) );
 		$field->set_description(
 			sprintf(
 			/* translators: %1$d will be replaced by the minimal number of characters. */
-				__( 'The secret your automation tool has to send in the X-Now-Pages-Token header. Anyone who knows it can add entries. Use at least %1$d characters - shorter tokens are not accepted. Best use the "Generate" button below.', 'now-pages-threadi' ),
+				__( 'The secret your automation tool has to send in the X-Now-Pages-Token header. Anyone who knows it can add entries. Use at least %1$d characters - shorter tokens are not accepted. Best use the "Generate" button below.', 'threadi-now-pages' ),
 				Webhook_Controller::MIN_TOKEN_LENGTH
 			)
 		);
@@ -92,19 +92,19 @@ class Webhook_Provider extends Provider_Base {
 		// create URL to generate a token.
 		$create_token_url = add_query_arg(
 			array(
-				'action' => 'now_pages_threadi_generate_webhook_token',
-				'nonce'  => wp_create_nonce( 'now-pages-threadi-generate-webhook-token' ),
+				'action' => 'threadi_now_pages_generate_webhook_token',
+				'nonce'  => wp_create_nonce( 'threadi-now-pages-generate-webhook-token' ),
 			),
 			get_admin_url() . 'admin.php'
 		);
 
 		// add setting.
-		$setting = $settings_obj->add_setting( 'now_pages_threadi_webhook_generate' );
+		$setting = $settings_obj->add_setting( 'threadi_now_pages_webhook_generate' );
 		$setting->set_section( $section );
 		$setting->prevent_export( true );
 		$field = new Button( $settings_obj );
-		$field->set_title( __( 'New token', 'now-pages-threadi' ) );
-		$field->set_button_title( __( 'Generate', 'now-pages-threadi' ) );
+		$field->set_title( __( 'New token', 'threadi-now-pages' ) );
+		$field->set_button_title( __( 'Generate', 'threadi-now-pages' ) );
 		$field->set_button_url( $create_token_url );
 		if ( $webhook_setting instanceof Setting ) {
 			$field->add_depend( $webhook_setting, 1 );
@@ -127,7 +127,7 @@ class Webhook_Provider extends Provider_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Webhook (push)', 'now-pages-threadi' );
+		return __( 'Webhook (push)', 'threadi-now-pages' );
 	}
 
 	/**
@@ -138,21 +138,21 @@ class Webhook_Provider extends Provider_Base {
 	public function get_config_fields(): array {
 		return array(
 			'webhook_slug'  => array(
-				'label'       => __( 'Slug', 'now-pages-threadi' ),
+				'label'       => __( 'Slug', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => true,
-				'description' => __( 'Send this value as "source" in the request body to assign entries to this source. Only lowercase letters, numbers, dashes and underscores are kept, and every webhook source needs its own slug.', 'now-pages-threadi' ),
+				'description' => __( 'Send this value as "source" in the request body to assign entries to this source. Only lowercase letters, numbers, dashes and underscores are kept, and every webhook source needs its own slug.', 'threadi-now-pages' ),
 				'placeholder' => 'discord',
 				// the request is matched with sanitize_key(), so the slug is stored the same way.
 				'sanitize'    => 'key',
 			),
 			'webhook_token' => array(
-				'label'       => __( 'Token for this source', 'now-pages-threadi' ),
+				'label'       => __( 'Token for this source', 'threadi-now-pages' ),
 				'type'        => 'password',
 				'required'    => false,
 				'description' => sprintf(
 					/* translators: %1$d will be replaced by the minimal number of characters. */
-					__( 'Optional. If set, requests for this source must send this token in the X-Now-Pages-Token header, the global token is not accepted for this source anymore. Use at least %1$d characters - shorter tokens are not accepted.', 'now-pages-threadi' ),
+					__( 'Optional. If set, requests for this source must send this token in the X-Now-Pages-Token header, the global token is not accepted for this source anymore. Use at least %1$d characters - shorter tokens are not accepted.', 'threadi-now-pages' ),
 					Webhook_Controller::MIN_TOKEN_LENGTH
 				),
 			),
@@ -186,7 +186,7 @@ class Webhook_Provider extends Provider_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'Receives entries pushed by external tools. Nothing is fetched - see the webhook section in the import settings.', 'now-pages-threadi' );
+		return __( 'Receives entries pushed by external tools. Nothing is fetched - see the webhook section in the import settings.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -195,7 +195,7 @@ class Webhook_Provider extends Provider_Base {
 	 * @return bool
 	 */
 	public function is_available(): bool {
-		return 1 === absint( get_option( 'now_pages_threadi_provider_' . $this->get_slug() . '_enabled' ) );
+		return 1 === absint( get_option( 'threadi_now_pages_provider_' . $this->get_slug() . '_enabled' ) );
 	}
 
 	/**
@@ -204,7 +204,7 @@ class Webhook_Provider extends Provider_Base {
 	 * @return string
 	 */
 	public function get_unavailable_reason(): string {
-		return __( 'The webhook is disabled in the import settings.', 'now-pages-threadi' );
+		return __( 'The webhook is disabled in the import settings.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -216,16 +216,16 @@ class Webhook_Provider extends Provider_Base {
 		$url = rest_url( Webhook_Controller::NAMESPACE . Webhook_Controller::ROUTE );
 
 		?>
-		<p><?php echo esc_html__( 'External tools can push entries into your now page instead of you polling them. Useful for services like a Discord bot, a n8n or Make flow, a shortcut on your phone.', 'now-pages-threadi' ); ?></p>
+		<p><?php echo esc_html__( 'External tools can push entries into your now page instead of you polling them. Useful for services like a Discord bot, a n8n or Make flow, a shortcut on your phone.', 'threadi-now-pages' ); ?></p>
 
 		<p>
-			<strong><?php echo esc_html__( 'Endpoint', 'now-pages-threadi' ); ?></strong><br>
+			<strong><?php echo esc_html__( 'Endpoint', 'threadi-now-pages' ); ?></strong><br>
 			<code><?php echo esc_html( $url ); ?></code>
 		</p>
 
 		<p>
-			<strong><?php echo esc_html__( 'Send a POST request', 'now-pages-threadi' ); ?></strong>
-			<?php echo esc_html__( 'with the header X-Now-Pages-Token and a JSON body:', 'now-pages-threadi' ); ?>
+			<strong><?php echo esc_html__( 'Send a POST request', 'threadi-now-pages' ); ?></strong>
+			<?php echo esc_html__( 'with the header X-Now-Pages-Token and a JSON body:', 'threadi-now-pages' ); ?>
 		</p>
 
 		<pre><code>
@@ -233,24 +233,24 @@ class Webhook_Provider extends Provider_Base {
 		echo esc_html(
 			"curl -X POST '" . $url . "' \\\n"
 			. "  -H 'Content-Type: application/json' \\\n"
-			. "  -H 'X-Now-Pages-Token: " . __( 'YOUR-TOKEN', 'now-pages-threadi' ) . "' \\\n"
-			. '  -d \'{"text":"' . __( 'Currently preparing a talk.', 'now-pages-threadi' ) . '","date":"2026-09-06T10:00:00+02:00"}\''
+			. "  -H 'X-Now-Pages-Token: " . __( 'YOUR-TOKEN', 'threadi-now-pages' ) . "' \\\n"
+			. '  -d \'{"text":"' . __( 'Currently preparing a talk.', 'threadi-now-pages' ) . '","date":"2026-09-06T10:00:00+02:00"}\''
 		);
 		?>
 				</code></pre>
 
-		<p><?php echo esc_html__( 'Entries are assigned to a source, and inherit its author, category and language. Create a source with the provider "Webhook (push)", give it a slug, and send that slug as "source".', 'now-pages-threadi' ); ?></p>
+		<p><?php echo esc_html__( 'Entries are assigned to a source, and inherit its author, category and language. Create a source with the provider "Webhook (push)", give it a slug, and send that slug as "source".', 'threadi-now-pages' ); ?></p>
 		<?php
 
 		// the supported fields.
 		$fields = array(
-			'text'             => __( 'Required. The text of the entry.', 'now-pages-threadi' ),
-			'date'             => __( 'Optional. ISO 8601. Defaults to the time of the request. Dates in the future or before 2000 are rejected.', 'now-pages-threadi' ),
-			'source'           => __( 'Optional. The slug of a webhook source you created under Sources. Determines the author and category of the entry. Defaults to "webhook". If the source has its own token, only this token is accepted.', 'now-pages-threadi' ),
-			'external_id'      => __( 'Optional. Prevents duplicates. Derived from text and date if omitted.', 'now-pages-threadi' ),
-			'url'              => __( 'Optional. Links the entry back to the original post.', 'now-pages-threadi' ),
-			'language'         => __( 'Optional. A locale like de_DE. Only used if the source has no language of its own. Defaults to the language of your site.', 'now-pages-threadi' ),
-			'category_term_id' => __( 'Optional. The term ID of a now pages category.', 'now-pages-threadi' ),
+			'text'             => __( 'Required. The text of the entry.', 'threadi-now-pages' ),
+			'date'             => __( 'Optional. ISO 8601. Defaults to the time of the request. Dates in the future or before 2000 are rejected.', 'threadi-now-pages' ),
+			'source'           => __( 'Optional. The slug of a webhook source you created under Sources. Determines the author and category of the entry. Defaults to "webhook". If the source has its own token, only this token is accepted.', 'threadi-now-pages' ),
+			'external_id'      => __( 'Optional. Prevents duplicates. Derived from text and date if omitted.', 'threadi-now-pages' ),
+			'url'              => __( 'Optional. Links the entry back to the original post.', 'threadi-now-pages' ),
+			'language'         => __( 'Optional. A locale like de_DE. Only used if the source has no language of its own. Defaults to the language of your site.', 'threadi-now-pages' ),
+			'category_term_id' => __( 'Optional. The term ID of a now pages category.', 'threadi-now-pages' ),
 		);
 
 		echo '<table class="widefat striped"><tbody>';

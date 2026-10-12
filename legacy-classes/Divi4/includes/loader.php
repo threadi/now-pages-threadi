@@ -2,7 +2,7 @@
 /**
  * File to load the Divi modules.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 // prevent direct access.
@@ -13,18 +13,18 @@ if ( ! class_exists( 'ET_Builder_Element' ) ) {
 	return;
 }
 
-$now_pages_threadi_module_files = array();
+$threadi_now_pages_module_files = array();
 /**
  * Filter the available Divi widgets.
  *
  * @since 1.0.0 Available since 1.0.0.
  * @param array<int,string> $module_files List of modules.
  */
-$now_pages_threadi_module_files = apply_filters( 'now_pages_threadi_divi4_widgets', $now_pages_threadi_module_files );
+$threadi_now_pages_module_files = apply_filters( 'threadi_now_pages_divi4_widgets', $threadi_now_pages_module_files );
 
 // Load custom Divi Builder modules.
-foreach ( (array) $now_pages_threadi_module_files as $now_pages_threadi_module_file ) {
-	if ( $now_pages_threadi_module_file && preg_match( "/\/modules\/\b([^\/]+)\/\\1\.php$/", $now_pages_threadi_module_file ) ) {
-		require_once $now_pages_threadi_module_file;
+foreach ( (array) $threadi_now_pages_module_files as $threadi_now_pages_module_file ) {
+	if ( $threadi_now_pages_module_file && preg_match( "/\/modules\/\b([^\/]+)\/\\1\.php$/", $threadi_now_pages_module_file ) ) {
+		require_once $threadi_now_pages_module_file;
 	}
 }

@@ -2,16 +2,16 @@
 /**
  * File to test the common provider enablement behavior.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Providers\Provider_Interface;
-use NowPagesThreadi\Tests\NowPagesTestCase;
-use NowPagesThreadi\Tests\Unit\Stubs\Stub_Provider;
+use ThreadiNowPages\Providers\Provider_Interface;
+use ThreadiNowPages\Tests\NowPagesTestCase;
+use ThreadiNowPages\Tests\Unit\Stubs\Stub_Provider;
 
 /**
  * Object to test Provider_Base::is_enabled().
@@ -25,7 +25,7 @@ class ProviderEnabledTest extends NowPagesTestCase {
 	public function set_up(): void {
 		parent::set_up();
 
-		delete_option( 'now_pages_threadi_provider_stub_enabled' );
+		delete_option( 'threadi_now_pages_provider_stub_enabled' );
 	}
 
 	/**
@@ -48,7 +48,7 @@ class ProviderEnabledTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_zero_disables_provider(): void {
-		update_option( 'now_pages_threadi_provider_stub_enabled', 0 );
+		update_option( 'threadi_now_pages_provider_stub_enabled', 0 );
 
 		$this->assertFalse( ( new Stub_Provider() )->is_enabled() );
 	}
@@ -59,7 +59,7 @@ class ProviderEnabledTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_one_enables_provider(): void {
-		update_option( 'now_pages_threadi_provider_stub_enabled', 1 );
+		update_option( 'threadi_now_pages_provider_stub_enabled', 1 );
 
 		$this->assertTrue( ( new Stub_Provider() )->is_enabled() );
 	}

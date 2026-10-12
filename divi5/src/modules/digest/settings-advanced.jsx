@@ -16,7 +16,7 @@ export const SettingsAdvanced = () => (
   <React.Fragment>
     <IdClassesGroup />
     <CssGroup
-      mainSelector=".now-pages-threadi-digest" // This is the main selector for the module.
+      mainSelector=".threadi-now-pages-digest" // This is the main selector for the module.
     />
     <VisibilitySettingsGroup />
     <TransitionGroup />

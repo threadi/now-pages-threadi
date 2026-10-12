@@ -5,7 +5,7 @@ test.describe('Settings', () => {
     // @ts-ignore
     test('Loading settings page without error', async ({ page, cli }) => {
         // @ts-ignore
-        await page.goto(`${cli.serverUrl}/wp-admin/options-general.php?page=now_pages_threadi_settings`);
+        await page.goto(`${cli.serverUrl}/wp-admin/options-general.php?page=threadi_now_pages_settings`);
         await expect(page.getByRole('heading', { level: 1 })).toContainText(
             'Settings for Now Pages'
         );
@@ -14,7 +14,7 @@ test.describe('Settings', () => {
     // @ts-ignore
     test('Save max. age of log entries in advanced tab', async ({ page, cli }) => {
         // @ts-ignore
-        const settingsUrl = `${cli.serverUrl}/wp-admin/options-general.php?page=now_pages_threadi_settings`;
+        const settingsUrl = `${cli.serverUrl}/wp-admin/options-general.php?page=threadi_now_pages_settings`;
         const label = 'max. Age for log entries in days';
 
         await page.goto(settingsUrl);
@@ -35,13 +35,13 @@ test.describe('Settings', () => {
     // @ts-ignore
     test('Every tab opens without an error', async ({ page, cli }) => {
         // errors of earlier tests mark the tab "Logs" with a "!", which becomes part of its name.
-        await setOptions(cli, { now_pages_threadi_log_error_count: 0 });
+        await setOptions(cli, { threadi_now_pages_log_error_count: 0 });
 
         const errors: string[] = [];
         page.on('pageerror', (error: Error) => errors.push(error.message));
 
         // @ts-ignore
-        await page.goto(`${cli.serverUrl}/wp-admin/options-general.php?page=now_pages_threadi_settings`);
+        await page.goto(`${cli.serverUrl}/wp-admin/options-general.php?page=threadi_now_pages_settings`);
 
         for (const name of ['Now page', 'Display', 'Import', 'Provider', 'Permissions', 'AI', 'Fediverse', 'Advanced', 'Emails', 'Logs']) {
             const tab = page.getByRole('tab', { name, exact: true });
@@ -64,7 +64,7 @@ test.describe('Settings', () => {
         await addEntry(cli, 'Happened three hours ago', 3);
 
         // @ts-ignore
-        const settingsUrl = `${cli.serverUrl}/wp-admin/options-general.php?page=now_pages_threadi_settings`;
+        const settingsUrl = `${cli.serverUrl}/wp-admin/options-general.php?page=threadi_now_pages_settings`;
 
         // with the default of six hours the entry is held back.
         // @ts-ignore
@@ -80,14 +80,14 @@ test.describe('Settings', () => {
 
         // @ts-ignore
         await page.goto(`${cli.serverUrl}/now/`);
-        await expect(page.locator('.now-pages-threadi-digest-entry')).toHaveText(['Happened three hours ago']);
-        await expect(page.locator('.now-pages-threadi-digest-delay')).toContainText('last 2 hours');
+        await expect(page.locator('.threadi-now-pages-digest-entry')).toHaveText(['Happened three hours ago']);
+        await expect(page.locator('.threadi-now-pages-digest-delay')).toContainText('last 2 hours');
     });
 
     // @ts-ignore
     test('Sharing in the Fediverse is locked without the ActivityPub plugin', async ({ page, cli }) => {
         // @ts-ignore
-        await page.goto(`${cli.serverUrl}/wp-admin/options-general.php?page=now_pages_threadi_settings`);
+        await page.goto(`${cli.serverUrl}/wp-admin/options-general.php?page=threadi_now_pages_settings`);
         await page.getByRole('tab', { name: 'Fediverse', exact: true }).click();
 
         const panel = page.getByRole('tabpanel');

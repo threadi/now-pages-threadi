@@ -6,14 +6,14 @@
  * backend it must still be recognizable, so the title is derived from
  * the text whenever WordPress asks for one.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 
 /**
  * Object to test the title of an entry.
@@ -30,7 +30,7 @@ class EntriesTitleTest extends NowPagesTestCase {
 	private function create_entry( string $text, string $title = '' ): int {
 		return self::factory()->post->create(
 			array(
-				'post_type'    => 'np_threadi_entry',
+				'post_type'    => 'threadi_np_entry',
 				'post_status'  => 'publish',
 				'post_title'   => $title,
 				'post_content' => $text,
@@ -105,8 +105,8 @@ class EntriesTitleTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_entries_have_no_title_field(): void {
-		$this->assertFalse( post_type_supports( 'np_threadi_entry', 'title' ) );
-		$this->assertTrue( post_type_supports( 'np_threadi_entry', 'editor' ) );
+		$this->assertFalse( post_type_supports( 'threadi_np_entry', 'title' ) );
+		$this->assertTrue( post_type_supports( 'threadi_np_entry', 'editor' ) );
 	}
 
 	/**
@@ -116,7 +116,7 @@ class EntriesTitleTest extends NowPagesTestCase {
 	 */
 	public function test_the_list_names_the_column_entry(): void {
 		$columns = apply_filters(
-			'manage_np_threadi_entry_posts_columns',
+			'manage_threadi_np_entry_posts_columns',
 			array(
 				'cb'    => '',
 				'title' => 'Title',
@@ -127,7 +127,7 @@ class EntriesTitleTest extends NowPagesTestCase {
 		$this->assertSame( 'Entry', $columns['title'] );
 
 		$sortable = apply_filters(
-			'manage_edit-np_threadi_entry_sortable_columns',
+			'manage_edit-threadi_np_entry_sortable_columns',
 			array(
 				'title' => 'title',
 				'date'  => array( 'date', true ),

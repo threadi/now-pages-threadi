@@ -6,16 +6,16 @@
  * happens to that answer: a model can return anything, and nothing of it
  * may reach a source unchecked.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Sources\Advisor;
-use NowPagesThreadi\Sources\Source_Builder;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Sources\Advisor;
+use ThreadiNowPages\Sources\Source_Builder;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 use WP_Error;
 
 /**
@@ -27,7 +27,7 @@ class AdvisorTest extends NowPagesTestCase {
 	 *
 	 * @var string
 	 */
-	private const FEED_URL = 'https://films.now-pages-threadi-test.example.com/jane/rss/';
+	private const FEED_URL = 'https://films.threadi-now-pages-test.example.com/jane/rss/';
 
 	/**
 	 * The answer the model gives in this test.
@@ -56,8 +56,8 @@ class AdvisorTest extends NowPagesTestCase {
 		$this->answer   = '';
 		$this->requests = 0;
 
-		add_filter( 'now_pages_threadi_advisor_is_available', '__return_true' );
-		add_filter( 'now_pages_threadi_advisor_pre_request', array( $this, 'get_answer' ) );
+		add_filter( 'threadi_now_pages_advisor_is_available', '__return_true' );
+		add_filter( 'threadi_now_pages_advisor_pre_request', array( $this, 'get_answer' ) );
 		add_filter( 'pre_http_request', array( $this, 'mock_feed' ), 5, 3 );
 	}
 
@@ -83,15 +83,15 @@ class AdvisorTest extends NowPagesTestCase {
 	 */
 	public function mock_feed( mixed $preempt, mixed $parsed_args, string $url ): mixed {
 		if ( self::FEED_URL === $url ) {
-			$feed = '<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Films</title><link>https://films.now-pages-threadi-test.example.com/jane/</link><description>Films</description>'
-				. '<item><title>Watched a film</title><link>https://films.now-pages-threadi-test.example.com/jane/1</link><guid>film-1</guid><pubDate>' . gmdate( 'r', time() - DAY_IN_SECONDS ) . '</pubDate><description>Watched The Third Man</description></item>'
-				. '<item><title>Watched another film</title><link>https://films.now-pages-threadi-test.example.com/jane/2</link><guid>film-2</guid><pubDate>' . gmdate( 'r', time() - ( 2 * DAY_IN_SECONDS ) ) . '</pubDate><description>Watched Paris, Texas</description></item>'
+			$feed = '<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Films</title><link>https://films.threadi-now-pages-test.example.com/jane/</link><description>Films</description>'
+				. '<item><title>Watched a film</title><link>https://films.threadi-now-pages-test.example.com/jane/1</link><guid>film-1</guid><pubDate>' . gmdate( 'r', time() - DAY_IN_SECONDS ) . '</pubDate><description>Watched The Third Man</description></item>'
+				. '<item><title>Watched another film</title><link>https://films.threadi-now-pages-test.example.com/jane/2</link><guid>film-2</guid><pubDate>' . gmdate( 'r', time() - ( 2 * DAY_IN_SECONDS ) ) . '</pubDate><description>Watched Paris, Texas</description></item>'
 				. '</channel></rss>';
 
 			return self::mock_http_response( 200, $feed, array( 'content-type' => 'application/rss+xml; charset=UTF-8' ) );
 		}
 
-		if ( str_contains( $url, 'films.now-pages-threadi-test.example.com' ) ) {
+		if ( str_contains( $url, 'films.threadi-now-pages-test.example.com' ) ) {
 			return self::mock_http_response( 404, 'Not found' );
 		}
 
@@ -144,7 +144,7 @@ class AdvisorTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_without_ai_service_there_is_no_advice(): void {
-		remove_filter( 'now_pages_threadi_advisor_is_available', '__return_true' );
+		remove_filter( 'threadi_now_pages_advisor_is_available', '__return_true' );
 
 		$this->assertFalse( Advisor::get_instance()->is_available() );
 
@@ -160,7 +160,7 @@ class AdvisorTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_the_advisor_can_be_switched_off(): void {
-		remove_filter( 'now_pages_threadi_advisor_is_available', '__return_true' );
+		remove_filter( 'threadi_now_pages_advisor_is_available', '__return_true' );
 		update_option( Advisor::OPTION_ENABLED, 0 );
 
 		$this->assertFalse( Advisor::get_instance()->is_enabled() );
@@ -212,7 +212,7 @@ class AdvisorTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_invented_address_is_not_offered(): void {
-		$this->answer_with( array( $this->get_feed_proposal( 'https://films.now-pages-threadi-test.example.com/invented/feed.xml' ) ) );
+		$this->answer_with( array( $this->get_feed_proposal( 'https://films.threadi-now-pages-test.example.com/invented/feed.xml' ) ) );
 
 		$advice = Advisor::get_instance()->get_advice( 'The films I watch' );
 
@@ -251,7 +251,7 @@ class AdvisorTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_a_source_which_only_receives_is_not_offered(): void {
-		update_option( 'now_pages_threadi_provider_webhook_enabled', 1 );
+		update_option( 'threadi_now_pages_provider_webhook_enabled', 1 );
 
 		$this->answer_with(
 			array(
@@ -282,7 +282,7 @@ class AdvisorTest extends NowPagesTestCase {
 
 		$advice = Advisor::get_instance()->get_advice( 'My posts on gutefrage.net' );
 
-		delete_option( 'now_pages_threadi_provider_webhook_enabled' );
+		delete_option( 'threadi_now_pages_provider_webhook_enabled' );
 
 		$this->assertIsArray( $advice );
 		$this->assertSame( array(), $advice['proposals'] );
@@ -455,7 +455,7 @@ class AdvisorTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_placeholder_becomes_a_question(): void {
-		$proposal              = $this->get_feed_proposal( 'https://films.now-pages-threadi-test.example.com/{username}/rss/' );
+		$proposal              = $this->get_feed_proposal( 'https://films.threadi-now-pages-test.example.com/{username}/rss/' );
 		$proposal['questions'] = array(
 			array(
 				'name'  => 'username',
@@ -485,7 +485,7 @@ class AdvisorTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_answer_completes_the_proposal(): void {
-		$this->answer_with( array( $this->get_feed_proposal( 'https://films.now-pages-threadi-test.example.com/{username}/rss/' ) ) );
+		$this->answer_with( array( $this->get_feed_proposal( 'https://films.threadi-now-pages-test.example.com/{username}/rss/' ) ) );
 
 		$advice = Advisor::get_instance()->get_advice( 'The films I watch' );
 
@@ -505,7 +505,7 @@ class AdvisorTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_wrong_answer_leaves_a_draft(): void {
-		$this->answer_with( array( $this->get_feed_proposal( 'https://films.now-pages-threadi-test.example.com/{username}/rss/' ) ) );
+		$this->answer_with( array( $this->get_feed_proposal( 'https://films.threadi-now-pages-test.example.com/{username}/rss/' ) ) );
 
 		$advice = Advisor::get_instance()->get_advice( 'The films I watch' );
 
@@ -525,7 +525,7 @@ class AdvisorTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_answer_cannot_change_the_host(): void {
-		$this->answer_with( array( $this->get_feed_proposal( 'https://films.now-pages-threadi-test.example.com/{username}/rss/' ) ) );
+		$this->answer_with( array( $this->get_feed_proposal( 'https://films.threadi-now-pages-test.example.com/{username}/rss/' ) ) );
 
 		$advice = Advisor::get_instance()->get_advice( 'The films I watch' );
 
@@ -534,7 +534,7 @@ class AdvisorTest extends NowPagesTestCase {
 		$resolved = Advisor::get_instance()->resolve_proposal( reset( $advice['proposals'] ), array( 'username' => '../../evil.example.org/x?y=' ) );
 
 		$this->assertIsArray( $resolved );
-		$this->assertSame( 'films.now-pages-threadi-test.example.com', wp_parse_url( $resolved['config']['feed_url'], PHP_URL_HOST ) );
+		$this->assertSame( 'films.threadi-now-pages-test.example.com', wp_parse_url( $resolved['config']['feed_url'], PHP_URL_HOST ) );
 		$this->assertStringNotContainsString( '..', $resolved['config']['feed_url'] );
 	}
 
@@ -544,7 +544,7 @@ class AdvisorTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_missing_answer_creates_nothing(): void {
-		$this->answer_with( array( $this->get_feed_proposal( 'https://films.now-pages-threadi-test.example.com/{username}/rss/' ) ) );
+		$this->answer_with( array( $this->get_feed_proposal( 'https://films.threadi-now-pages-test.example.com/{username}/rss/' ) ) );
 
 		$advice = Advisor::get_instance()->get_advice( 'The films I watch' );
 
@@ -857,11 +857,11 @@ class AdvisorTest extends NowPagesTestCase {
 
 		Advisor::get_instance()->get_advice( 'The films I watch' );
 
-		update_option( 'now_pages_threadi_provider_github_enabled', 0 );
+		update_option( 'threadi_now_pages_provider_github_enabled', 0 );
 
 		$cached = Advisor::get_instance()->get_cached_advice( 'The films I watch' );
 
-		delete_option( 'now_pages_threadi_provider_github_enabled' );
+		delete_option( 'threadi_now_pages_provider_github_enabled' );
 
 		$this->assertIsArray( $cached );
 	}
@@ -878,14 +878,14 @@ class AdvisorTest extends NowPagesTestCase {
 
 		$this->assertIsArray( $advice );
 
-		update_option( 'now_pages_threadi_provider_rss_enabled', 0 );
+		update_option( 'threadi_now_pages_provider_rss_enabled', 0 );
 
 		$created = Advisor::get_instance()->create_source( reset( $advice['proposals'] ) );
 
-		delete_option( 'now_pages_threadi_provider_rss_enabled' );
+		delete_option( 'threadi_now_pages_provider_rss_enabled' );
 
 		$this->assertInstanceOf( WP_Error::class, $created );
-		$this->assertSame( 'now_pages_threadi_provider_disabled', $created->get_error_code() );
+		$this->assertSame( 'threadi_now_pages_provider_disabled', $created->get_error_code() );
 	}
 
 	/**
@@ -929,7 +929,7 @@ class AdvisorTest extends NowPagesTestCase {
 		$advice = Advisor::get_instance()->get_advice( 'The films I watch' );
 
 		$this->assertInstanceOf( WP_Error::class, $advice );
-		$this->assertSame( 'now_pages_threadi_advisor_unreadable', $advice->get_error_code() );
+		$this->assertSame( 'threadi_now_pages_advisor_unreadable', $advice->get_error_code() );
 		$this->assertNull( Advisor::get_instance()->get_cached_advice( 'The films I watch' ) );
 	}
 
@@ -956,7 +956,7 @@ class AdvisorTest extends NowPagesTestCase {
 		$proposals = array();
 
 		foreach ( array( 'a', 'b', 'c', 'd', 'e' ) as $name ) {
-			$proposals[] = $this->get_feed_proposal( 'https://films.now-pages-threadi-test.example.com/' . $name . '/rss/' );
+			$proposals[] = $this->get_feed_proposal( 'https://films.threadi-now-pages-test.example.com/' . $name . '/rss/' );
 		}
 
 		$this->answer_with( $proposals );

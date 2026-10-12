@@ -45,8 +45,8 @@ export async function completeSetup(cli: Cli): Promise<void> {
         if ( ! is_array( $completed ) ) {
             $completed = array();
         }
-        if ( ! in_array( 'now-pages-threadi', $completed, true ) ) {
-            $completed[] = 'now-pages-threadi';
+        if ( ! in_array( 'threadi-now-pages', $completed, true ) ) {
+            $completed[] = 'threadi-now-pages';
             update_option( 'esfw_completed', $completed );
         }`
     );
@@ -56,14 +56,14 @@ export async function completeSetup(cli: Cli): Promise<void> {
  * Switch the global now page on or off, like the setting "Global URL" does.
  */
 export async function setNowPageEnabled(cli: Cli, enabled: boolean): Promise<void> {
-    await php(cli, `update_option( 'now_pages_threadi_frontend_global_url', $args['enabled'] ? 1 : 0 );`, { enabled });
+    await php(cli, `update_option( 'threadi_now_pages_frontend_global_url', $args['enabled'] ? 1 : 0 );`, { enabled });
 
     // the addresses are registered when WordPress starts, so they have to be
     // rebuilt in a request of their own: this one already knows the new value.
     await php(
         cli,
-        `\\NowPagesThreadi\\NowPages\\Frontend::trigger_slug_update();
-        \\NowPagesThreadi\\NowPages\\Frontend::get_instance()->update_slugs();`
+        `\\ThreadiNowPages\\NowPages\\Frontend::trigger_slug_update();
+        \\ThreadiNowPages\\NowPages\\Frontend::get_instance()->update_slugs();`
     );
 }
 
@@ -72,7 +72,7 @@ export async function setNowPageEnabled(cli: Cli, enabled: boolean): Promise<voi
  */
 export async function resetSetup(cli: Cli): Promise<void> {
     await removeContent(cli);
-    await php(cli, `\\NowPagesThreadi\\Plugin\\Setup::get_instance()->uninstall();`);
+    await php(cli, `\\ThreadiNowPages\\Plugin\\Setup::get_instance()->uninstall();`);
 }
 
 /**
@@ -81,25 +81,25 @@ export async function resetSetup(cli: Cli): Promise<void> {
 export async function removeContent(cli: Cli): Promise<void> {
     await php(
         cli,
-        `$posts = get_posts( array( 'post_type' => array( 'np_threadi_entry', 'np_threadi_source' ), 'post_status' => 'any', 'numberposts' => -1, 'fields' => 'ids' ) );
+        `$posts = get_posts( array( 'post_type' => array( 'threadi_np_entry', 'threadi_np_source' ), 'post_status' => 'any', 'numberposts' => -1, 'fields' => 'ids' ) );
         foreach ( $posts as $post_id ) {
             wp_delete_post( $post_id, true );
         }
 
         // the page of the now page, and pages created by tests.
-        $pages = get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'numberposts' => -1, 'meta_key' => '_now_pages_threadi_test', 'fields' => 'ids' ) );
-        $pages[] = absint( get_option( \\NowPagesThreadi\\NowPages\\Now_Page::OPTION, 0 ) );
+        $pages = get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'numberposts' => -1, 'meta_key' => '_threadi_now_pages_test', 'fields' => 'ids' ) );
+        $pages[] = absint( get_option( \\ThreadiNowPages\\NowPages\\Now_Page::OPTION, 0 ) );
         foreach ( array_filter( $pages ) as $post_id ) {
             wp_delete_post( $post_id, true );
         }
-        delete_option( \\NowPagesThreadi\\NowPages\\Now_Page::OPTION );
+        delete_option( \\ThreadiNowPages\\NowPages\\Now_Page::OPTION );
 
-        foreach ( get_terms( array( 'taxonomy' => \\NowPagesThreadi\\NowPages\\Categories::TAXONOMY, 'hide_empty' => false, 'fields' => 'ids' ) ) as $term_id ) {
-            wp_delete_term( $term_id, \\NowPagesThreadi\\NowPages\\Categories::TAXONOMY );
+        foreach ( get_terms( array( 'taxonomy' => \\ThreadiNowPages\\NowPages\\Categories::TAXONOMY, 'hide_empty' => false, 'fields' => 'ids' ) ) as $term_id ) {
+            wp_delete_term( $term_id, \\ThreadiNowPages\\NowPages\\Categories::TAXONOMY );
         }
 
-        update_option( 'now_pages_threadi_delay_hours', 6 );
-        update_option( 'now_pages_threadi_group_by_category', 1 );`
+        update_option( 'threadi_now_pages_delay_hours', 6 );
+        update_option( 'threadi_now_pages_group_by_category', 1 );`
     );
 }
 
@@ -112,7 +112,7 @@ export async function addEntry(cli: Cli, text: string, hoursAgo: number, categor
         `$time = time() - (int) round( $args['hours'] * HOUR_IN_SECONDS );
         $post_id = wp_insert_post(
             array(
-                'post_type'     => 'np_threadi_entry',
+                'post_type'     => 'threadi_np_entry',
                 'post_status'   => 'publish',
                 'post_title'    => '',
                 'post_content'  => $args['text'],
@@ -123,7 +123,7 @@ export async function addEntry(cli: Cli, text: string, hoursAgo: number, categor
         );
 
         if ( '' !== $args['category'] ) {
-            $taxonomy = \\NowPagesThreadi\\NowPages\\Categories::TAXONOMY;
+            $taxonomy = \\ThreadiNowPages\\NowPages\\Categories::TAXONOMY;
             $term     = term_exists( $args['category'], $taxonomy );
             if ( ! $term ) {
                 $term = wp_insert_term( $args['category'], $taxonomy );

@@ -6,19 +6,19 @@
  * exist — the state a site is in directly after activation. That is exactly
  * where the typed $interval property blew up before.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Plugin\Intervals;
-use NowPagesThreadi\Plugin\Schedules;
-use NowPagesThreadi\Plugin\Schedules\Import;
-use NowPagesThreadi\Plugin\Schedules\Report;
-use NowPagesThreadi\Plugin\Schedules_Base;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Plugin\Intervals;
+use ThreadiNowPages\Plugin\Schedules;
+use ThreadiNowPages\Plugin\Schedules\Import;
+use ThreadiNowPages\Plugin\Schedules\Report;
+use ThreadiNowPages\Plugin\Schedules_Base;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 
 /**
  * Object to test the schedules.
@@ -32,9 +32,9 @@ class SchedulesTest extends NowPagesTestCase {
 	public function set_up(): void {
 		parent::set_up();
 
-		delete_option( 'now_pages_threadi_schedule_interval' );
-		delete_option( 'now_pages_threadi_email_interval_report' );
-		delete_option( 'now_pages_threadi_email_report' );
+		delete_option( 'threadi_now_pages_schedule_interval' );
+		delete_option( 'threadi_now_pages_email_interval_report' );
+		delete_option( 'threadi_now_pages_email_report' );
 	}
 
 	/**
@@ -78,7 +78,7 @@ class SchedulesTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_configured_interval_wins(): void {
-		update_option( 'now_pages_threadi_schedule_interval', 'daily' );
+		update_option( 'threadi_now_pages_schedule_interval', 'daily' );
 
 		$this->assertSame( 'daily', ( new Import() )->get_interval() );
 	}
@@ -89,7 +89,7 @@ class SchedulesTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_empty_option_falls_back_to_the_default(): void {
-		update_option( 'now_pages_threadi_schedule_interval', '' );
+		update_option( 'threadi_now_pages_schedule_interval', '' );
 
 		$schedule = new Import();
 
@@ -102,11 +102,11 @@ class SchedulesTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_interval_can_be_filtered(): void {
-		add_filter( 'now_pages_threadi_schedule_interval', static fn (): string => 'hourly' );
+		add_filter( 'threadi_now_pages_schedule_interval', static fn (): string => 'hourly' );
 
 		$interval = ( new Import() )->get_interval();
 
-		remove_all_filters( 'now_pages_threadi_schedule_interval' );
+		remove_all_filters( 'threadi_now_pages_schedule_interval' );
 
 		$this->assertSame( 'hourly', $interval );
 	}
@@ -167,7 +167,7 @@ class SchedulesTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_disabled_report_installs_no_event(): void {
-		update_option( 'now_pages_threadi_email_report', 0 );
+		update_option( 'threadi_now_pages_email_report', 0 );
 
 		$schedule = new Report();
 
@@ -183,7 +183,7 @@ class SchedulesTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_enabled_report_installs_an_event(): void {
-		update_option( 'now_pages_threadi_email_report', 1 );
+		update_option( 'threadi_now_pages_email_report', 1 );
 
 		$schedule = new Report();
 
@@ -201,7 +201,7 @@ class SchedulesTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_delete_removes_the_event(): void {
-		update_option( 'now_pages_threadi_email_report', 1 );
+		update_option( 'threadi_now_pages_email_report', 1 );
 
 		$schedule = new Report();
 
@@ -236,7 +236,7 @@ class SchedulesTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_installing_twice_creates_only_one_event(): void {
-		update_option( 'now_pages_threadi_email_report', 1 );
+		update_option( 'threadi_now_pages_email_report', 1 );
 
 		$schedule = new Report();
 
@@ -265,8 +265,8 @@ class SchedulesTest extends NowPagesTestCase {
 			$this->markTestSkipped( 'Not enough registered intervals to test a change.' );
 		}
 
-		update_option( 'now_pages_threadi_email_report', 1 );
-		update_option( 'now_pages_threadi_email_interval_report', $intervals[0] );
+		update_option( 'threadi_now_pages_email_report', 1 );
+		update_option( 'threadi_now_pages_email_interval_report', $intervals[0] );
 
 		$schedule = new Report();
 		$schedule->delete();
@@ -275,7 +275,7 @@ class SchedulesTest extends NowPagesTestCase {
 		$this->assertSame( $intervals[0], wp_get_schedule( $schedule->get_name(), $schedule->get_args() ) );
 
 		// change the interval and install again.
-		update_option( 'now_pages_threadi_email_interval_report', $intervals[1] );
+		update_option( 'threadi_now_pages_email_interval_report', $intervals[1] );
 
 		$schedule = new Report();
 		$schedule->install();
@@ -292,7 +292,7 @@ class SchedulesTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_reconcile_removes_duplicate_events(): void {
-		update_option( 'now_pages_threadi_email_report', 1 );
+		update_option( 'threadi_now_pages_email_report', 1 );
 
 		$schedule = new Report();
 		$schedule->delete();
@@ -313,10 +313,10 @@ class SchedulesTest extends NowPagesTestCase {
 		$this->assertSame( 2, $schedule->get_event_count() );
 
 		// reconcile only the report schedule.
-		$only_report = static fn (): array => array( '\NowPagesThreadi\Plugin\Schedules\Report' );
-		add_filter( 'now_pages_threadi_schedules', $only_report );
+		$only_report = static fn (): array => array( '\ThreadiNowPages\Plugin\Schedules\Report' );
+		add_filter( 'threadi_now_pages_schedules', $only_report );
 		Schedules::get_instance()->reconcile_events( Schedules::get_instance()->get_wp_events() );
-		remove_filter( 'now_pages_threadi_schedules', $only_report );
+		remove_filter( 'threadi_now_pages_schedules', $only_report );
 
 		$this->assertSame( 1, $this->count_events( $schedule->get_name() ) );
 
@@ -358,8 +358,8 @@ class SchedulesTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_unknown_interval_falls_back_to_the_default(): void {
-		update_option( 'now_pages_threadi_email_report', 1 );
-		update_option( 'now_pages_threadi_email_interval_report', 'some_other_plugin_interval' );
+		update_option( 'threadi_now_pages_email_report', 1 );
+		update_option( 'threadi_now_pages_email_interval_report', 'some_other_plugin_interval' );
 
 		$schedule = new Report();
 		$schedule->delete();
@@ -379,14 +379,14 @@ class SchedulesTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_an_unknown_interval_keeps_the_saved_one(): void {
-		update_option( 'now_pages_threadi_schedule_interval', Intervals::DISABLED );
+		update_option( 'threadi_now_pages_schedule_interval', Intervals::DISABLED );
 
-		$callback = array( \NowPagesThreadi\Plugin\Settings::get_instance(), 'sanitize_interval_setting' );
-		add_filter( 'sanitize_option_now_pages_threadi_schedule_interval', $callback );
+		$callback = array( \ThreadiNowPages\Plugin\Settings::get_instance(), 'sanitize_interval_setting' );
+		add_filter( 'sanitize_option_threadi_now_pages_schedule_interval', $callback );
 
-		$this->assertSame( Intervals::DISABLED, sanitize_option( 'now_pages_threadi_schedule_interval', 'now_pages_threadi_does_not_exist' ) );
-		$this->assertSame( Intervals::DISABLED, sanitize_option( 'now_pages_threadi_schedule_interval', '' ) );
+		$this->assertSame( Intervals::DISABLED, sanitize_option( 'threadi_now_pages_schedule_interval', 'threadi_now_pages_does_not_exist' ) );
+		$this->assertSame( Intervals::DISABLED, sanitize_option( 'threadi_now_pages_schedule_interval', '' ) );
 
-		remove_filter( 'sanitize_option_now_pages_threadi_schedule_interval', $callback );
+		remove_filter( 'sanitize_option_threadi_now_pages_schedule_interval', $callback );
 	}
 }

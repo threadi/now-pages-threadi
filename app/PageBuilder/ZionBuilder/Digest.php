@@ -2,19 +2,19 @@
 /**
  * This file contains an element for Zion Builder.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder\ZionBuilder;
+namespace ThreadiNowPages\PageBuilder\ZionBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Display_Settings;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Display_Settings;
 use ZionBuilder\Elements\Element;
 
 /**
@@ -27,7 +27,7 @@ class Digest extends Element {
 	 * @return string
 	 */
 	public function get_name(): string {
-		return __( 'Digest', 'now-pages-threadi' );
+		return __( 'Digest', 'threadi-now-pages' );
 	}
 
 	/**
@@ -36,7 +36,7 @@ class Digest extends Element {
 	 * @return string
 	 */
 	public function get_type(): string {
-		return 'now_pages_threadi_digest';
+		return 'threadi_now_pages_digest';
 	}
 
 	/**
@@ -45,7 +45,7 @@ class Digest extends Element {
 	 * @return string
 	 */
 	public function get_category(): string {
-		return 'now-pages-threadi';
+		return 'threadi-now-pages';
 	}
 
 	/**
@@ -88,8 +88,8 @@ class Digest extends Element {
 			array(
 				'type'        => 'select',
 				'default'     => Digests::get_instance()->get_default_period(),
-				'title'       => esc_html__( 'Period', 'now-pages-threadi' ),
-				'description' => esc_html__( 'Which period the shown entries are from.', 'now-pages-threadi' ),
+				'title'       => esc_html__( 'Period', 'threadi-now-pages' ),
+				'description' => esc_html__( 'Which period the shown entries are from.', 'threadi-now-pages' ),
 				'options'     => $periods,
 			)
 		);
@@ -99,8 +99,8 @@ class Digest extends Element {
 			array(
 				'type'        => 'select',
 				'default'     => Digests::get_instance()->get_default_format(),
-				'title'       => esc_html__( 'Format', 'now-pages-threadi' ),
-				'description' => esc_html__( 'How the entries are rendered.', 'now-pages-threadi' ),
+				'title'       => esc_html__( 'Format', 'threadi-now-pages' ),
+				'description' => esc_html__( 'How the entries are rendered.', 'threadi-now-pages' ),
 				'options'     => $formats,
 			)
 		);
@@ -110,17 +110,17 @@ class Digest extends Element {
 			array(
 				'type'        => 'checkbox_switch',
 				'default'     => false,
-				'title'       => esc_html__( 'Use own display settings', 'now-pages-threadi' ),
-				'description' => esc_html__( 'Without this the element follows the settings of your website.', 'now-pages-threadi' ),
+				'title'       => esc_html__( 'Use own display settings', 'threadi-now-pages' ),
+				'description' => esc_html__( 'Without this the element follows the settings of your website.', 'threadi-now-pages' ),
 			)
 		);
 
 		$switches = array(
-			'show_time'         => esc_html__( 'Show times', 'now-pages-threadi' ),
-			'show_source'       => esc_html__( 'Show data source', 'now-pages-threadi' ),
-			'link_source'       => esc_html__( 'Link the data source', 'now-pages-threadi' ),
-			'show_period'       => esc_html__( 'Show period of entries', 'now-pages-threadi' ),
-			'group_by_category' => esc_html__( 'Group by category', 'now-pages-threadi' ),
+			'show_time'         => esc_html__( 'Show times', 'threadi-now-pages' ),
+			'show_source'       => esc_html__( 'Show data source', 'threadi-now-pages' ),
+			'link_source'       => esc_html__( 'Link the data source', 'threadi-now-pages' ),
+			'show_period'       => esc_html__( 'Show period of entries', 'threadi-now-pages' ),
+			'group_by_category' => esc_html__( 'Group by category', 'threadi-now-pages' ),
 		);
 
 		foreach ( $switches as $name => $title ) {

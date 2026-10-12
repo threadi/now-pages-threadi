@@ -8,12 +8,12 @@
  * provider: everything with a feed runs through RSS_Provider, they only
  * differ in how the URL is assembled.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Presets;
+namespace ThreadiNowPages\Presets;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;

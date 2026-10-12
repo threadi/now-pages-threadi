@@ -16,12 +16,12 @@
  * something has reached other servers it cannot be taken back reliably,
  * so sharing too early would defeat the delay for good.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Fediverse;
+namespace ThreadiNowPages\Fediverse;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -29,18 +29,18 @@ defined( 'ABSPATH' ) || exit;
 use DateInterval;
 use DateTimeImmutable;
 use easySettingsForWordPress\Fields\Select;
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Helper\Format;
-use NowPagesThreadi\Helper\Singleton_Interface;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\NowPages\Frontend;
-use NowPagesThreadi\NowPages\Now_Page;
-use NowPagesThreadi\Plugin\Log;
-use NowPagesThreadi\Plugin\Settings;
-use NowPagesThreadi\Presets\Presets;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Helper\Format;
+use ThreadiNowPages\Helper\Singleton_Interface;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\NowPages\Frontend;
+use ThreadiNowPages\NowPages\Now_Page;
+use ThreadiNowPages\Plugin\Log;
+use ThreadiNowPages\Plugin\Settings;
+use ThreadiNowPages\Presets\Presets;
 use WP_Post;
 use WP_Query;
 
@@ -76,49 +76,49 @@ class Fediverse implements Singleton_Interface {
 	 *
 	 * @var string
 	 */
-	public const OPTION_MODE = 'now_pages_threadi_fediverse_mode';
+	public const OPTION_MODE = 'threadi_now_pages_fediverse_mode';
 
 	/**
 	 * Option: the period a summary covers (day or week).
 	 *
 	 * @var string
 	 */
-	public const OPTION_INTERVAL = 'now_pages_threadi_fediverse_interval';
+	public const OPTION_INTERVAL = 'threadi_now_pages_fediverse_interval';
 
 	/**
 	 * Option: the GMT timestamp since when things are shared. Nothing older is ever shared.
 	 *
 	 * @var string
 	 */
-	public const OPTION_SINCE = 'now_pages_threadi_fediverse_since';
+	public const OPTION_SINCE = 'threadi_now_pages_fediverse_since';
 
 	/**
 	 * Option: the end of the last period a summary was handled for, in the time of the website.
 	 *
 	 * @var string
 	 */
-	public const OPTION_LAST_DIGEST = 'now_pages_threadi_fediverse_last_digest';
+	public const OPTION_LAST_DIGEST = 'threadi_now_pages_fediverse_last_digest';
 
 	/**
 	 * Option: the ID of the user summaries are published as.
 	 *
 	 * @var string
 	 */
-	public const OPTION_AUTHOR = 'now_pages_threadi_fediverse_author';
+	public const OPTION_AUTHOR = 'threadi_now_pages_fediverse_author';
 
 	/**
 	 * Post meta on an entry: the ID of the update it was shared with, 0 if it was skipped.
 	 *
 	 * @var string
 	 */
-	public const META_UPDATE = '_now_pages_threadi_fediverse_update';
+	public const META_UPDATE = '_threadi_now_pages_fediverse_update';
 
 	/**
 	 * Post meta on an update: the ID of the entry it shares.
 	 *
 	 * @var string
 	 */
-	public const META_ENTRY = '_now_pages_threadi_fediverse_entry';
+	public const META_ENTRY = '_threadi_now_pages_fediverse_entry';
 
 	/**
 	 * Post meta on a source: 1 if its entries are not shared, 0 if they are.
@@ -132,7 +132,7 @@ class Fediverse implements Singleton_Interface {
 	 *
 	 * @var string
 	 */
-	public const SETTINGS_TAB = 'now_pages_threadi_fediverse';
+	public const SETTINGS_TAB = 'threadi_now_pages_fediverse';
 
 	/**
 	 * How many single entries are shared per run. Protects followers from a flood after a big import.
@@ -190,7 +190,7 @@ class Fediverse implements Singleton_Interface {
 		 *
 		 * @param bool $active True if the ActivityPub plugin is active.
 		 */
-		return (bool) apply_filters( 'now_pages_threadi_fediverse_is_available', defined( 'ACTIVITYPUB_PLUGIN_VERSION' ) );
+		return (bool) apply_filters( 'threadi_now_pages_fediverse_is_available', defined( 'ACTIVITYPUB_PLUGIN_VERSION' ) );
 	}
 
 	/**
@@ -480,21 +480,21 @@ class Fediverse implements Singleton_Interface {
 	 */
 	public function get_digest_content( DateTimeImmutable $start, DateTimeImmutable $end ): string {
 		// the notice about the delay is meant for somebody looking at the now page.
-		add_filter( 'now_pages_threadi_digest_delay_notice', '__return_empty_string', PHP_INT_MAX );
+		add_filter( 'threadi_now_pages_digest_delay_notice', '__return_empty_string', PHP_INT_MAX );
 
 		$digest = ( new Digest_Builder() )->build(
 			array(
 				'period'      => 'range',
 				'start'       => $start->format( 'Y-m-d H:i:s' ),
 				'end'         => $end->format( 'Y-m-d H:i:s' ),
-				'format'      => (string) get_option( 'now_pages_threadi_frontend_format', Digests::get_instance()->get_default_format() ),
+				'format'      => (string) get_option( 'threadi_now_pages_frontend_format', Digests::get_instance()->get_default_format() ),
 				'show_period' => false,
 				'show_time'   => false,
 				'show_source' => false,
 			)
 		);
 
-		remove_filter( 'now_pages_threadi_digest_delay_notice', '__return_empty_string', PHP_INT_MAX );
+		remove_filter( 'threadi_now_pages_digest_delay_notice', '__return_empty_string', PHP_INT_MAX );
 
 		$digest = $this->get_note_html( $digest );
 
@@ -516,7 +516,7 @@ class Fediverse implements Singleton_Interface {
 		 * @param DateTimeImmutable $start   The start of the period.
 		 * @param DateTimeImmutable $end     The end of the period.
 		 */
-		return (string) apply_filters( 'now_pages_threadi_fediverse_digest_content', $content, $start, $end );
+		return (string) apply_filters( 'threadi_now_pages_fediverse_digest_content', $content, $start, $end );
 	}
 
 	/**
@@ -533,11 +533,11 @@ class Fediverse implements Singleton_Interface {
 		// a single day.
 		if ( $start->format( 'Y-m-d' ) === $end->format( 'Y-m-d' ) ) {
 			/* translators: %1$s will be replaced by a date. */
-			return sprintf( __( 'What I was up to on %1$s:', 'now-pages-threadi' ), wp_date( $format, $start->getTimestamp() ) );
+			return sprintf( __( 'What I was up to on %1$s:', 'threadi-now-pages' ), wp_date( $format, $start->getTimestamp() ) );
 		}
 
 		/* translators: %1$s and %2$s will be replaced by dates. */
-		return sprintf( __( 'What I was up to from %1$s to %2$s:', 'now-pages-threadi' ), wp_date( $format, $start->getTimestamp() ), wp_date( $format, $end->getTimestamp() ) );
+		return sprintf( __( 'What I was up to from %1$s to %2$s:', 'threadi-now-pages' ), wp_date( $format, $start->getTimestamp() ), wp_date( $format, $end->getTimestamp() ) );
 	}
 
 	/**
@@ -636,7 +636,7 @@ class Fediverse implements Singleton_Interface {
 		 *
 		 * @param int $limit The number of entries.
 		 */
-		$limit   = max( 1, absint( apply_filters( 'now_pages_threadi_fediverse_entries_per_run', self::ENTRIES_PER_RUN ) ) );
+		$limit   = max( 1, absint( apply_filters( 'threadi_now_pages_fediverse_entries_per_run', self::ENTRIES_PER_RUN ) ) );
 		$created = 0;
 
 		foreach ( $entries as $entry ) {
@@ -690,7 +690,7 @@ class Fediverse implements Singleton_Interface {
 		 * @param WP_Post $entry     The entry.
 		 * @param int     $source_id The ID of its source, 0 for an entry written by hand.
 		 */
-		return (bool) apply_filters( 'now_pages_threadi_fediverse_share_entry', $shared, $entry, $source_id );
+		return (bool) apply_filters( 'threadi_now_pages_fediverse_share_entry', $shared, $entry, $source_id );
 	}
 
 	/**
@@ -737,7 +737,7 @@ class Fediverse implements Singleton_Interface {
 		 * @param string  $content The content, simple HTML.
 		 * @param WP_Post $entry   The entry.
 		 */
-		return (string) apply_filters( 'now_pages_threadi_fediverse_entry_content', $content, $entry );
+		return (string) apply_filters( 'threadi_now_pages_fediverse_entry_content', $content, $entry );
 	}
 
 	/**
@@ -780,7 +780,7 @@ class Fediverse implements Singleton_Interface {
 
 		// bail if the update could not be created.
 		if ( is_wp_error( $post_id ) ) {
-			Log::get_instance()->add( __( 'An update for the Fediverse could not be created:', 'now-pages-threadi' ) . ' <code>' . esc_html( $post_id->get_error_message() ) . '</code>', 'error', 'system' );
+			Log::get_instance()->add( __( 'An update for the Fediverse could not be created:', 'threadi-now-pages' ) . ' <code>' . esc_html( $post_id->get_error_message() ) . '</code>', 'error', 'system' );
 
 			return 0;
 		}
@@ -793,7 +793,7 @@ class Fediverse implements Singleton_Interface {
 		 * @param int $post_id  The ID of the update.
 		 * @param int $entry_id The ID of the entry it shares, 0 for a summary.
 		 */
-		do_action( 'now_pages_threadi_fediverse_update_created', absint( $post_id ), $entry_id );
+		do_action( 'threadi_now_pages_fediverse_update_created', absint( $post_id ), $entry_id );
 
 		return absint( $post_id );
 	}
@@ -892,7 +892,7 @@ class Fediverse implements Singleton_Interface {
 	 */
 	public function add_settings(): void {
 		// bail if the settings are not needed in this request.
-		if ( ! \NowPagesThreadi\Helper\Plugin::is_settings_request() ) {
+		if ( ! \ThreadiNowPages\Helper\Plugin::is_settings_request() ) {
 			return;
 		}
 
@@ -900,10 +900,10 @@ class Fediverse implements Singleton_Interface {
 
 		// add the tab behind "AI".
 		$tab = Settings::get_instance()->get_settings_page()->add_tab( self::SETTINGS_TAB, 46 );
-		$tab->set_title( __( 'Fediverse', 'now-pages-threadi' ) );
+		$tab->set_title( __( 'Fediverse', 'threadi-now-pages' ) );
 
-		$section = $tab->add_section( 'now_pages_threadi_fediverse_settings', 10 );
-		$section->set_title( __( 'Share your now page in the Fediverse', 'now-pages-threadi' ) );
+		$section = $tab->add_section( 'threadi_now_pages_fediverse_settings', 10 );
+		$section->set_title( __( 'Share your now page in the Fediverse', 'threadi-now-pages' ) );
 		$section->set_callback( array( $this, 'show_intro' ) );
 
 		// add setting.
@@ -912,13 +912,13 @@ class Fediverse implements Singleton_Interface {
 		$mode_setting->set_type( 'string' );
 		$mode_setting->set_default( self::MODE_OFF );
 		$field = new Select( $settings_obj );
-		$field->set_title( __( 'What to share', 'now-pages-threadi' ) );
-		$field->set_description( __( 'A summary is one post per day or week, written like your now page. Single entries are one post per entry - choose this only if your sources do not produce many entries, your followers get each one. Either way only what visitors of your now page can see is shared, and not before the privacy delay has passed. Sharing starts with what happens from now on.', 'now-pages-threadi' ) );
+		$field->set_title( __( 'What to share', 'threadi-now-pages' ) );
+		$field->set_description( __( 'A summary is one post per day or week, written like your now page. Single entries are one post per entry - choose this only if your sources do not produce many entries, your followers get each one. Either way only what visitors of your now page can see is shared, and not before the privacy delay has passed. Sharing starts with what happens from now on.', 'threadi-now-pages' ) );
 		$field->set_options(
 			array(
-				self::MODE_OFF     => __( 'Nothing', 'now-pages-threadi' ),
-				self::MODE_DIGEST  => __( 'A summary', 'now-pages-threadi' ),
-				self::MODE_ENTRIES => __( 'Single entries', 'now-pages-threadi' ),
+				self::MODE_OFF     => __( 'Nothing', 'threadi-now-pages' ),
+				self::MODE_DIGEST  => __( 'A summary', 'threadi-now-pages' ),
+				self::MODE_ENTRIES => __( 'Single entries', 'threadi-now-pages' ),
 			)
 		);
 		$field->set_readonly( ! $this->is_activitypub_active() );
@@ -930,12 +930,12 @@ class Fediverse implements Singleton_Interface {
 		$setting->set_type( 'string' );
 		$setting->set_default( 'day' );
 		$field = new Select( $settings_obj );
-		$field->set_title( __( 'Summary of', 'now-pages-threadi' ) );
-		$field->set_description( __( 'The summary of a day or week is shared once it is over and the privacy delay has passed. Nothing is shared for a period without entries.', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Summary of', 'threadi-now-pages' ) );
+		$field->set_description( __( 'The summary of a day or week is shared once it is over and the privacy delay has passed. Nothing is shared for a period without entries.', 'threadi-now-pages' ) );
 		$field->set_options(
 			array(
-				'day'  => __( 'each day', 'now-pages-threadi' ),
-				'week' => __( 'each week', 'now-pages-threadi' ),
+				'day'  => __( 'each day', 'threadi-now-pages' ),
+				'week' => __( 'each week', 'threadi-now-pages' ),
 			)
 		);
 		$field->add_depend( $mode_setting, self::MODE_DIGEST );
@@ -948,15 +948,15 @@ class Fediverse implements Singleton_Interface {
 	 * @return void
 	 */
 	public function show_intro(): void {
-		echo '<p>' . esc_html__( 'People on Mastodon and other services of the Fediverse can follow your website and reply to what you share. Replies, likes and boosts show up as comments on the shared post in your backend.', 'now-pages-threadi' ) . '</p>';
-		echo '<p>' . esc_html__( 'What is shared does not become a page of your website. It is only delivered to your followers, and its link leads to your now page. Keep in mind that something which has reached other servers cannot be taken back reliably.', 'now-pages-threadi' ) . '</p>';
+		echo '<p>' . esc_html__( 'People on Mastodon and other services of the Fediverse can follow your website and reply to what you share. Replies, likes and boosts show up as comments on the shared post in your backend.', 'threadi-now-pages' ) . '</p>';
+		echo '<p>' . esc_html__( 'What is shared does not become a page of your website. It is only delivered to your followers, and its link leads to your now page. Keep in mind that something which has reached other servers cannot be taken back reliably.', 'threadi-now-pages' ) . '</p>';
 
 		// bail with a hint if nothing federates our updates.
 		if ( ! $this->is_activitypub_active() ) {
-			$text = __( 'This needs the plugin <strong>ActivityPub</strong>, which connects your website with the Fediverse.', 'now-pages-threadi' );
+			$text = __( 'This needs the plugin <strong>ActivityPub</strong>, which connects your website with the Fediverse.', 'threadi-now-pages' );
 
 			if ( current_user_can( 'install_plugins' ) ) {
-				$text .= ' <a href="' . esc_url( admin_url( 'plugin-install.php?s=activitypub&tab=search&type=term' ) ) . '">' . esc_html__( 'Install it', 'now-pages-threadi' ) . '</a>';
+				$text .= ' <a href="' . esc_url( admin_url( 'plugin-install.php?s=activitypub&tab=search&type=term' ) ) . '">' . esc_html__( 'Install it', 'threadi-now-pages' ) . '</a>';
 			}
 
 			echo '<p><span class="dashicons dashicons-info-outline" aria-hidden="true"></span> ' . wp_kses_post( $text ) . '</p>';
@@ -977,7 +977,7 @@ class Fediverse implements Singleton_Interface {
 		echo wp_kses_post(
 			sprintf(
 				/* translators: %1$d will be replaced by a number, %2$s by a URL. */
-				_n( '%1$d post has been shared so far. <a href="%2$s">Show what was shared</a>', '%1$d posts have been shared so far. <a href="%2$s">Show what was shared</a>', $count, 'now-pages-threadi' ),
+				_n( '%1$d post has been shared so far. <a href="%2$s">Show what was shared</a>', '%1$d posts have been shared so far. <a href="%2$s">Show what was shared</a>', $count, 'threadi-now-pages' ),
 				$count,
 				esc_url( $url )
 			)

@@ -5,17 +5,17 @@
  * One month, two months, six months - they differ in a single number, so
  * they share everything else.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests\Periods;
+namespace ThreadiNowPages\Digests\Periods;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Period_Base;
+use ThreadiNowPages\Digests\Period_Base;
 
 /**
  * Object for periods covering whole months.
@@ -60,14 +60,14 @@ abstract class Months_Base extends Period_Base {
 		if ( 1 === $this->get_months() ) {
 			return sprintf(
 			/* translators: %1$s will be replaced by a month and year. */
-				__( 'From %1$s', 'now-pages-threadi' ),
+				__( 'From %1$s', 'threadi-now-pages' ),
 				mysql2date( 'F Y', $range['after'] )
 			);
 		}
 
 		return sprintf(
 		/* translators: %1$s will be replaced by a month and year, %2$s by a month and year. */
-			__( 'From %1$s to %2$s', 'now-pages-threadi' ),
+			__( 'From %1$s to %2$s', 'threadi-now-pages' ),
 			mysql2date( 'F Y', $range['after'] ),
 			mysql2date( 'F Y', $range['before'] )
 		);

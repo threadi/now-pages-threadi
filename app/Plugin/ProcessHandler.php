@@ -2,17 +2,17 @@
 /**
  * File for an object to handle AJAX-driven processes.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
+use ThreadiNowPages\Helper\Plugin;
 
 /**
  * Object to handle AJAX-driven processes.
@@ -21,7 +21,7 @@ class ProcessHandler {
 	/**
 	 * Prefix of the transients which hold the values of a process.
 	 */
-	private const TRANSIENT_PREFIX = 'now_pages_threadi_process_';
+	private const TRANSIENT_PREFIX = 'threadi_now_pages_process_';
 
 	/**
 	 * Seconds the values of a process are kept.
@@ -36,7 +36,7 @@ class ProcessHandler {
 	/**
 	 * Name of the option used by older versions for all process values.
 	 */
-	private const LEGACY_OPTION = 'now_pages_threadi_process_values';
+	private const LEGACY_OPTION = 'threadi_now_pages_process_values';
 
 	/**
 	 * The process ID for the actual request.
@@ -82,8 +82,8 @@ class ProcessHandler {
 	 */
 	public function init(): void {
 		add_action( 'admin_enqueue_scripts', array( $this, 'add_js' ), 10, 0 );
-		add_action( 'wp_ajax_now_pages_threadi_process_info', array( $this, 'get_process_info_by_ajax' ) );
-		add_action( 'wp_ajax_now_pages_threadi_get_import_dialog', array( $this, 'get_import_dialog_by_ajax' ) );
+		add_action( 'wp_ajax_threadi_now_pages_process_info', array( $this, 'get_process_info_by_ajax' ) );
+		add_action( 'wp_ajax_threadi_now_pages_get_import_dialog', array( $this, 'get_import_dialog_by_ajax' ) );
 		add_action( 'admin_init', array( $this, 'delete_legacy_option' ) );
 	}
 
@@ -109,23 +109,23 @@ class ProcessHandler {
 	public function add_js(): void {
 		// backend-JS.
 		wp_enqueue_script(
-			'now-pages-threadi-processhandler-admin',
+			'threadi-now-pages-processhandler-admin',
 			Plugin::get_plugin_url() . 'admin/progresshandler.js',
-			array( 'jquery', 'now-pages-threadi-admin' ),
+			array( 'jquery', 'threadi-now-pages-admin' ),
 			Plugin::get_file_version( Plugin::get_plugin_path() . 'admin/progresshandler.js' ),
 			true
 		);
 
 		// add php-vars to our js-script.
 		wp_localize_script(
-			'now-pages-threadi-processhandler-admin',
-			'nowPagesThreadiProgressHandlerJsVars',
+			'threadi-now-pages-processhandler-admin',
+			'threadiNowPagesProgressHandlerJsVars',
 			array(
 				'ajax_url'           => admin_url( 'admin-ajax.php' ),
-				'test_email_nonce'   => wp_create_nonce( 'now-pages-threadi-test-email' ),
-				'start_nonce'        => wp_create_nonce( 'now-pages-threadi-import-start' ),
-				'process_info_nonce' => wp_create_nonce( 'get-now-pages-threadi-process-info' ),
-				'title'              => __( 'Import new entries', 'now-pages-threadi' ),
+				'test_email_nonce'   => wp_create_nonce( 'threadi-now-pages-test-email' ),
+				'start_nonce'        => wp_create_nonce( 'threadi-now-pages-import-start' ),
+				'process_info_nonce' => wp_create_nonce( 'get-threadi-now-pages-process-info' ),
+				'title'              => __( 'Import new entries', 'threadi-now-pages' ),
 			)
 		);
 	}
@@ -146,7 +146,7 @@ class ProcessHandler {
 	 */
 	public function get_process_info_by_ajax(): void {
 		// check nonce.
-		check_ajax_referer( 'get-now-pages-threadi-process-info', 'nonce' );
+		check_ajax_referer( 'get-threadi-now-pages-process-info', 'nonce' );
 
 		// bail if the capability check fails.
 		if ( ! current_user_can( Settings::get_instance()->get_settings_obj()->get_capability() ) ) {
@@ -405,15 +405,15 @@ class ProcessHandler {
 	private function get_failure_dialog(): array {
 		return array(
 			'detail' => array(
-				'title'   => __( 'The process has not been completed', 'now-pages-threadi' ),
+				'title'   => __( 'The process has not been completed', 'threadi-now-pages' ),
 				'texts'   => array(
-					'<p>' . __( 'The process did not report a result for a long time. It may have been stopped by an error. Please check the log.', 'now-pages-threadi' ) . '</p>',
+					'<p>' . __( 'The process did not report a result for a long time. It may have been stopped by an error. Please check the log.', 'threadi-now-pages' ) . '</p>',
 				),
 				'buttons' => array(
 					array(
 						'action'  => 'closeDialog();',
 						'variant' => 'primary',
-						'text'    => __( 'OK', 'now-pages-threadi' ),
+						'text'    => __( 'OK', 'threadi-now-pages' ),
 					),
 				),
 			),
@@ -427,7 +427,7 @@ class ProcessHandler {
 	 */
 	public function get_import_dialog_by_ajax(): void {
 		// check nonce.
-		check_ajax_referer( 'now-pages-threadi-get-import-dialog', 'nonce' );
+		check_ajax_referer( 'threadi-now-pages-get-import-dialog', 'nonce' );
 
 		// bail if the capability check fails.
 		if ( ! current_user_can( Settings::get_instance()->get_settings_obj()->get_capability() ) ) {
@@ -445,22 +445,22 @@ class ProcessHandler {
 	 */
 	public function get_import_dialog(): array {
 		return array(
-			'title'   => __( 'Import your entries', 'now-pages-threadi' ),
+			'title'   => __( 'Import your entries', 'threadi-now-pages' ),
 			'texts'   => array(
-				'<p><strong>' . __( 'Do you really want to import new entries from your sources?', 'now-pages-threadi' ) . '</strong></p>',
-				'<p>' . __( 'This will update the entries for display on your Now Page.', 'now-pages-threadi' ) . '</p>',
-				'<p>' . __( 'You do not have to do this manually, since the process is automated for you as well.', 'now-pages-threadi' ) . '</p>',
+				'<p><strong>' . __( 'Do you really want to import new entries from your sources?', 'threadi-now-pages' ) . '</strong></p>',
+				'<p>' . __( 'This will update the entries for display on your Now Page.', 'threadi-now-pages' ) . '</p>',
+				'<p>' . __( 'You do not have to do this manually, since the process is automated for you as well.', 'threadi-now-pages' ) . '</p>',
 			),
 			'buttons' => array(
 				array(
-					'action'  => 'now_pages_threadi_import("' . esc_attr( self::get_instance()->create_id() ) . '");',
+					'action'  => 'threadi_now_pages_import("' . esc_attr( self::get_instance()->create_id() ) . '");',
 					'variant' => 'primary',
-					'text'    => __( 'Yes, import them', 'now-pages-threadi' ),
+					'text'    => __( 'Yes, import them', 'threadi-now-pages' ),
 				),
 				array(
 					'action'  => 'closeDialog();',
 					'variant' => 'primary',
-					'text'    => __( 'Cancel', 'now-pages-threadi' ),
+					'text'    => __( 'Cancel', 'threadi-now-pages' ),
 				),
 			),
 		);

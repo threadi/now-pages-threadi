@@ -2,15 +2,15 @@
 /**
  * File to test the 1:1 list format.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Digests\Formats\Verbatim_Format;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Digests\Formats\Verbatim_Format;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 use WP_Post;
 
 /**
@@ -28,7 +28,7 @@ class VerbatimFormatTest extends NowPagesTestCase {
 	private function create_entry( string $content = 'Bin einkaufen.', int $source_id = 0 ): WP_Post {
 		$post_id = self::factory()->post->create(
 			array(
-				'post_type'    => 'np_threadi_entry',
+				'post_type'    => 'threadi_np_entry',
 				'post_status'  => 'publish',
 				'post_title'   => '',
 				'post_content' => $content,
@@ -50,7 +50,7 @@ class VerbatimFormatTest extends NowPagesTestCase {
 	private function create_source( string $title = 'Mastodon' ): int {
 		return self::factory()->post->create(
 			array(
-				'post_type'  => 'np_threadi_source',
+				'post_type'  => 'threadi_np_source',
 				'post_title' => $title,
 			)
 		);
@@ -128,7 +128,7 @@ class VerbatimFormatTest extends NowPagesTestCase {
 	 */
 	public function test_time_is_hidden_if_the_author_hides_it(): void {
 		$author = self::factory()->user->create( array( 'role' => 'author' ) );
-		update_user_meta( $author, 'now_pages_threadi_show_time', 0 );
+		update_user_meta( $author, 'threadi_now_pages_show_time', 0 );
 
 		$entry = $this->create_entry();
 		wp_update_post(
@@ -261,7 +261,7 @@ class VerbatimFormatTest extends NowPagesTestCase {
 	public function test_source_url_can_be_filtered(): void {
 		$source_id = $this->create_source();
 
-		add_filter( 'now_pages_threadi_digest_source_url', static fn (): string => 'https://example.org/profile' );
+		add_filter( 'threadi_now_pages_digest_source_url', static fn (): string => 'https://example.org/profile' );
 
 		$output = $this->render(
 			array( $this->create_entry( 'Bin einkaufen.', $source_id ) ),
@@ -271,7 +271,7 @@ class VerbatimFormatTest extends NowPagesTestCase {
 			)
 		);
 
-		remove_all_filters( 'now_pages_threadi_digest_source_url' );
+		remove_all_filters( 'threadi_now_pages_digest_source_url' );
 
 		$this->assertStringContainsString( 'https://example.org/profile', $output );
 	}

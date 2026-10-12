@@ -2,7 +2,7 @@
 /**
  * Tasks to run during uninstallation of this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
@@ -22,7 +22,7 @@ if ( PHP_VERSION_ID < 80200 ) { // @phpstan-ignore if.alwaysFalse,smaller.always
 
 // get plugin-path: must point to the main plugin file, as the settings, the
 // encryption and the templates derive the plugin slug and paths from it.
-const NOWPAGES_PLUGIN = __DIR__ . '/now-pages-threadi.php';
+const NOWPAGES_PLUGIN = __DIR__ . '/threadi-now-pages.php';
 
 // get plugin-version.
 const NOWPAGES_PLUGIN_VERSION = '@@VersionNumber@@';
@@ -31,4 +31,4 @@ const NOWPAGES_PLUGIN_VERSION = '@@VersionNumber@@';
 require_once __DIR__ . '/vendor/autoload.php';
 
 // run the deinstallation.
-\NowPagesThreadi\Plugin\Uninstallation::get_instance()->run( true );
+\ThreadiNowPages\Plugin\Uninstallation::get_instance()->run( true );

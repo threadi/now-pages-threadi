@@ -2,21 +2,21 @@
 /**
  * File to handle output of the digest as Elementor widget.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder\Elementor;
+namespace ThreadiNowPages\PageBuilder\Elementor;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Display_Settings;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Display_Settings;
 
 /**
  * Object to show the digest as Elementor widget.
@@ -27,7 +27,7 @@ class Digest extends Widget_Base {
 	 *
 	 * @var string
 	 */
-	protected string $name = 'now-pages-threadi-digest';
+	protected string $name = 'threadi-now-pages-digest';
 
 	/**
 	 * Return the plugin name.
@@ -44,7 +44,7 @@ class Digest extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title(): string {
-		return __( 'Digest', 'now-pages-threadi' );
+		return __( 'Digest', 'threadi-now-pages' );
 	}
 
 	/**
@@ -67,7 +67,7 @@ class Digest extends Widget_Base {
 	 * @return array Widget categories.
 	 */
 	public function get_categories(): array {
-		return array( 'now-pages-threadi' );
+		return array( 'threadi-now-pages' );
 	}
 
 	/**
@@ -97,7 +97,7 @@ class Digest extends Widget_Base {
 		$this->start_controls_section(
 			'section_content',
 			array(
-				'label' => __( 'Settings', 'now-pages-threadi' ),
+				'label' => __( 'Settings', 'threadi-now-pages' ),
 			)
 		);
 
@@ -105,7 +105,7 @@ class Digest extends Widget_Base {
 			'period',
 			array(
 				'type'        => Controls_Manager::SELECT2,
-				'label'       => esc_html__( 'Period', 'now-pages-threadi' ),
+				'label'       => esc_html__( 'Period', 'threadi-now-pages' ),
 				'multiple'    => false,
 				'label_block' => true,
 				'options'     => $periods,
@@ -117,7 +117,7 @@ class Digest extends Widget_Base {
 			'format',
 			array(
 				'type'        => Controls_Manager::SELECT2,
-				'label'       => esc_html__( 'Format', 'now-pages-threadi' ),
+				'label'       => esc_html__( 'Format', 'threadi-now-pages' ),
 				'multiple'    => false,
 				'label_block' => true,
 				'options'     => $formats,
@@ -130,17 +130,17 @@ class Digest extends Widget_Base {
 		$this->start_controls_section(
 			'section_display',
 			array(
-				'label' => __( 'Display', 'now-pages-threadi' ),
+				'label' => __( 'Display', 'threadi-now-pages' ),
 			)
 		);
 
 		$this->add_responsive_control(
 			'override_display',
 			array(
-				'label'        => esc_html__( 'Use own display settings', 'now-pages-threadi' ),
+				'label'        => esc_html__( 'Use own display settings', 'threadi-now-pages' ),
 				'type'         => Controls_Manager::SWITCHER,
-				'label_on'     => esc_html__( 'Show', 'now-pages-threadi' ),
-				'label_off'    => esc_html__( 'Hide', 'now-pages-threadi' ),
+				'label_on'     => esc_html__( 'Show', 'threadi-now-pages' ),
+				'label_off'    => esc_html__( 'Hide', 'threadi-now-pages' ),
 				'return_value' => 'yes',
 				'default'      => 'no',
 			)
@@ -149,12 +149,12 @@ class Digest extends Widget_Base {
 		$this->add_responsive_control(
 			'show_time',
 			array(
-				'label'        => esc_html__( 'Show times', 'now-pages-threadi' ),
+				'label'        => esc_html__( 'Show times', 'threadi-now-pages' ),
 				'type'         => Controls_Manager::SWITCHER,
-				'label_on'     => esc_html__( 'Show', 'now-pages-threadi' ),
-				'label_off'    => esc_html__( 'Hide', 'now-pages-threadi' ),
+				'label_on'     => esc_html__( 'Show', 'threadi-now-pages' ),
+				'label_off'    => esc_html__( 'Hide', 'threadi-now-pages' ),
 				'return_value' => 'yes',
-				'default'      => 1 !== absint( get_option( 'now_pages_threadi_show_time' ) ) ? 'no' : 'yes',
+				'default'      => 1 !== absint( get_option( 'threadi_now_pages_show_time' ) ) ? 'no' : 'yes',
 				'condition'    => array(
 					'override_display' => 'yes',
 				),
@@ -164,12 +164,12 @@ class Digest extends Widget_Base {
 		$this->add_responsive_control(
 			'show_source',
 			array(
-				'label'        => esc_html__( 'Show data source', 'now-pages-threadi' ),
+				'label'        => esc_html__( 'Show data source', 'threadi-now-pages' ),
 				'type'         => Controls_Manager::SWITCHER,
-				'label_on'     => esc_html__( 'Show', 'now-pages-threadi' ),
-				'label_off'    => esc_html__( 'Hide', 'now-pages-threadi' ),
+				'label_on'     => esc_html__( 'Show', 'threadi-now-pages' ),
+				'label_off'    => esc_html__( 'Hide', 'threadi-now-pages' ),
 				'return_value' => 'yes',
-				'default'      => 1 !== absint( get_option( 'now_pages_threadi_show_source' ) ) ? 'no' : 'yes',
+				'default'      => 1 !== absint( get_option( 'threadi_now_pages_show_source' ) ) ? 'no' : 'yes',
 				'condition'    => array(
 					'override_display' => 'yes',
 				),
@@ -179,12 +179,12 @@ class Digest extends Widget_Base {
 		$this->add_responsive_control(
 			'link_source',
 			array(
-				'label'        => esc_html__( 'Link the data source', 'now-pages-threadi' ),
+				'label'        => esc_html__( 'Link the data source', 'threadi-now-pages' ),
 				'type'         => Controls_Manager::SWITCHER,
-				'label_on'     => esc_html__( 'Show', 'now-pages-threadi' ),
-				'label_off'    => esc_html__( 'Hide', 'now-pages-threadi' ),
+				'label_on'     => esc_html__( 'Show', 'threadi-now-pages' ),
+				'label_off'    => esc_html__( 'Hide', 'threadi-now-pages' ),
 				'return_value' => 'yes',
-				'default'      => 1 !== absint( get_option( 'now_pages_threadi_link_source' ) ) ? 'no' : 'yes',
+				'default'      => 1 !== absint( get_option( 'threadi_now_pages_link_source' ) ) ? 'no' : 'yes',
 				'condition'    => array(
 					'override_display' => 'yes',
 				),
@@ -194,12 +194,12 @@ class Digest extends Widget_Base {
 		$this->add_responsive_control(
 			'show_period',
 			array(
-				'label'        => esc_html__( 'Show period of entries', 'now-pages-threadi' ),
+				'label'        => esc_html__( 'Show period of entries', 'threadi-now-pages' ),
 				'type'         => Controls_Manager::SWITCHER,
-				'label_on'     => esc_html__( 'Show', 'now-pages-threadi' ),
-				'label_off'    => esc_html__( 'Hide', 'now-pages-threadi' ),
+				'label_on'     => esc_html__( 'Show', 'threadi-now-pages' ),
+				'label_off'    => esc_html__( 'Hide', 'threadi-now-pages' ),
 				'return_value' => 'yes',
-				'default'      => 1 !== absint( get_option( 'now_pages_threadi_show_period' ) ) ? 'no' : 'yes',
+				'default'      => 1 !== absint( get_option( 'threadi_now_pages_show_period' ) ) ? 'no' : 'yes',
 				'condition'    => array(
 					'override_display' => 'yes',
 				),
@@ -209,12 +209,12 @@ class Digest extends Widget_Base {
 		$this->add_responsive_control(
 			'group_by_category',
 			array(
-				'label'        => esc_html__( 'Group by category', 'now-pages-threadi' ),
+				'label'        => esc_html__( 'Group by category', 'threadi-now-pages' ),
 				'type'         => Controls_Manager::SWITCHER,
-				'label_on'     => esc_html__( 'Show', 'now-pages-threadi' ),
-				'label_off'    => esc_html__( 'Hide', 'now-pages-threadi' ),
+				'label_on'     => esc_html__( 'Show', 'threadi-now-pages' ),
+				'label_off'    => esc_html__( 'Hide', 'threadi-now-pages' ),
 				'return_value' => 'yes',
-				'default'      => 1 !== absint( get_option( 'now_pages_threadi_group_by_category' ) ) ? 'no' : 'yes',
+				'default'      => 1 !== absint( get_option( 'threadi_now_pages_group_by_category' ) ) ? 'no' : 'yes',
 				'condition'    => array(
 					'override_display' => 'yes',
 				),

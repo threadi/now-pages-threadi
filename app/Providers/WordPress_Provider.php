@@ -7,12 +7,12 @@
  * account and no configuration beyond a post type - it works right after
  * installing the plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Providers;
+namespace ThreadiNowPages\Providers;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -20,12 +20,12 @@ defined( 'ABSPATH' ) || exit;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
-use NowPagesThreadi\Helper\Languages;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Plugin\Log;
-use NowPagesThreadi\Plugin\Post_Types;
-use NowPagesThreadi\Sources\Sources;
+use ThreadiNowPages\Helper\Languages;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Plugin\Log;
+use ThreadiNowPages\Plugin\Post_Types;
+use ThreadiNowPages\Sources\Sources;
 use WP_Comment;
 use WP_Post;
 use WP_Query;
@@ -48,7 +48,7 @@ class WordPress_Provider extends Provider_Base {
 	 *
 	 * @var string
 	 */
-	private const USER_META_DISABLED = 'now_pages_threadi_disable_now_page';
+	private const USER_META_DISABLED = 'threadi_now_pages_disable_now_page';
 
 	/**
 	 * Initialize this provider.
@@ -81,7 +81,7 @@ class WordPress_Provider extends Provider_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'This website', 'now-pages-threadi' );
+		return __( 'This website', 'threadi-now-pages' );
 	}
 
 	/**
@@ -90,7 +90,7 @@ class WordPress_Provider extends Provider_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'Reads what happens on this website: published posts and approved comments. Needs no account and no external service.', 'now-pages-threadi' );
+		return __( 'Reads what happens on this website: published posts and approved comments. Needs no account and no external service.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -101,27 +101,27 @@ class WordPress_Provider extends Provider_Base {
 	public function get_config_fields(): array {
 		return array(
 			'wp_post_types' => array(
-				'label'            => __( 'Post types', 'now-pages-threadi' ),
+				'label'            => __( 'Post types', 'threadi-now-pages' ),
 				'type'             => 'multiselect',
-				'description'      => __( 'Which content should be watched. Nothing selected means posts only.', 'now-pages-threadi' ),
+				'description'      => __( 'Which content should be watched. Nothing selected means posts only.', 'threadi-now-pages' ),
 				'options_callback' => array( $this, 'get_post_type_options' ),
 			),
 			'wp_author'     => array(
-				'label'            => __( 'Only this author', 'now-pages-threadi' ),
+				'label'            => __( 'Only this author', 'threadi-now-pages' ),
 				'type'             => 'select',
-				'description'      => __( 'Read only the activity of this user.', 'now-pages-threadi' ),
+				'description'      => __( 'Read only the activity of this user.', 'threadi-now-pages' ),
 				'options_callback' => array( $this, 'get_author_options' ),
 				'default_callback' => array( $this, 'get_default_author' ),
 				'personal_options' => true,
 			),
 			'wp_comments'   => array(
-				'label'       => __( 'Include comments', 'now-pages-threadi' ),
+				'label'       => __( 'Include comments', 'threadi-now-pages' ),
 				'type'        => 'checkbox',
 				'default'     => 0,
-				'description' => __( 'Also read approved comments. Only comments written by a registered user are used.', 'now-pages-threadi' ),
+				'description' => __( 'Also read approved comments. Only comments written by a registered user are used.', 'threadi-now-pages' ),
 			),
 			'wp_max_items'  => array(
-				'label'   => __( 'Max. items per run', 'now-pages-threadi' ),
+				'label'   => __( 'Max. items per run', 'threadi-now-pages' ),
 				'type'    => 'number',
 				'default' => 10,
 				'min'     => 1,
@@ -252,7 +252,7 @@ class WordPress_Provider extends Provider_Base {
 
 			$entry->text = sprintf(
 			/* translators: %1$s will be replaced by the title of a post. */
-				__( 'Published "%1$s"', 'now-pages-threadi' ),
+				__( 'Published "%1$s"', 'threadi-now-pages' ),
 				wp_strip_all_tags( get_the_title( $post ) )
 			);
 			$entry->date        = $this->get_date( (string) $post->post_date_gmt );
@@ -345,7 +345,7 @@ class WordPress_Provider extends Provider_Base {
 
 			$entry->text = sprintf(
 			/* translators: %1$s will be replaced by the title of a post. */
-				__( 'Commented on "%1$s"', 'now-pages-threadi' ),
+				__( 'Commented on "%1$s"', 'threadi-now-pages' ),
 				wp_strip_all_tags( get_the_title( (int) $comment->comment_post_ID ) )
 			);
 			$entry->date        = $this->get_date( (string) $comment->comment_date_gmt );
@@ -431,7 +431,7 @@ class WordPress_Provider extends Provider_Base {
 		} catch ( Exception $e ) {
 			// log this event.
 			Log::get_instance()->add(
-				__( 'A timestamp from this website could not be parsed. Error:', 'now-pages-threadi' ) . ' <code>' . esc_html( $e->getMessage() ) . '</code>',
+				__( 'A timestamp from this website could not be parsed. Error:', 'threadi-now-pages' ) . ' <code>' . esc_html( $e->getMessage() ) . '</code>',
 				'error',
 				'provider'
 			);
@@ -479,7 +479,7 @@ class WordPress_Provider extends Provider_Base {
 	public function get_author_options(): array {
 		// prepare the list of options.
 		$options = array(
-			'0' => __( 'All authors', 'now-pages-threadi' ),
+			'0' => __( 'All authors', 'threadi-now-pages' ),
 		);
 
 		// get the users.

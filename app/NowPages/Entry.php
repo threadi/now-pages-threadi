@@ -2,12 +2,12 @@
 /**
  * This file contains an object, which represents a single entry for now pages.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\NowPages;
+namespace ThreadiNowPages\NowPages;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;

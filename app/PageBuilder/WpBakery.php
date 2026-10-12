@@ -2,20 +2,20 @@
 /**
  * This file contains the support for WpBakery.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\PageBuilder\WpBakery\Digest;
-use NowPagesThreadi\Plugin\Post_Types;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\PageBuilder\WpBakery\Digest;
+use ThreadiNowPages\Plugin\Post_Types;
 
 /**
  * Registers and handles the support for WpBakery.
@@ -67,7 +67,7 @@ class WpBakery extends PageBuilder_Base {
 	 * @return string
 	 */
 	public function get_page_content(): string {
-		return '[vc_row][vc_column][now_pages_threadi_digest period="' . get_option( 'now_pages_threadi_frontend_period', 'live' ) . '" format="' . get_option( 'now_pages_threadi_frontend_format', 'verbatim' ) . '" override_display="no"][/vc_column][/vc_row]';
+		return '[vc_row][vc_column][threadi_now_pages_digest period="' . get_option( 'threadi_now_pages_frontend_period', 'live' ) . '" format="' . get_option( 'threadi_now_pages_frontend_format', 'verbatim' ) . '" override_display="no"][/vc_column][/vc_row]';
 	}
 
 	/**
@@ -96,7 +96,7 @@ class WpBakery extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'WpBakery', 'now-pages-threadi' );
+		return __( 'WpBakery', 'threadi-now-pages' );
 	}
 
 	/**

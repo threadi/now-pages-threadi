@@ -2,20 +2,20 @@
 /**
  * File for the object to handle the REST tasks.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder\Divi5\Digest;
+namespace ThreadiNowPages\PageBuilder\Divi5\Digest;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use ET\Builder\Framework\Controllers\RESTController;
 use ET\Builder\Framework\UserRole\UserRole;
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
 use WP_REST_Request;
 use WP_REST_Response;
 

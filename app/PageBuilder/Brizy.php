@@ -2,12 +2,12 @@
 /**
  * This file contains the support for Brizy.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -15,12 +15,12 @@ defined( 'ABSPATH' ) || exit;
 use Brizy_Content_Providers_AbstractProvider;
 use Brizy_Editor_ThirdParty_Extension;
 use Exception;
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\Plugin\Log;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\Plugin\Log;
 use WP_REST_Request;
 use WP_REST_Response;
 
@@ -81,7 +81,7 @@ class Brizy extends PageBuilder_Base {
 		try {
 			$extensions[] = new Brizy_Editor_ThirdParty_Extension( $public_url, $config_file );
 		} catch ( Exception $e ) {
-			Log::get_instance()->add( __( 'Brizy extension error:', 'now-pages-threadi' ) . '<code>' . $e->getMessage() . '</code>', 'error', 'pagebuilder' );
+			Log::get_instance()->add( __( 'Brizy extension error:', 'threadi-now-pages' ) . '<code>' . $e->getMessage() . '</code>', 'error', 'pagebuilder' );
 		}
 
 		// return the resulting list of extensions.
@@ -140,7 +140,7 @@ class Brizy extends PageBuilder_Base {
 
 		// collect the data.
 		$data = array(
-			'restUrl'        => esc_url_raw( rest_url( 'now-pages-threadi/v1/' ) ),
+			'restUrl'        => esc_url_raw( rest_url( 'threadi-now-pages/v1/' ) ),
 			'nonce'          => wp_create_nonce( 'wp_rest' ),
 			'formats'        => $formats,
 			'default_format' => Digests::get_instance()->get_default_format(),
@@ -150,16 +150,16 @@ class Brizy extends PageBuilder_Base {
 		);
 
 		wp_register_script(
-			'now-pages-threadi-brizy-data',
+			'threadi-now-pages-brizy-data',
 			false,
 			array(),
 			NOWPAGES_PLUGIN_VERSION,
 			true
 		);
-		wp_enqueue_script( 'now-pages-threadi-brizy-data' );
+		wp_enqueue_script( 'threadi-now-pages-brizy-data' );
 		wp_add_inline_script(
-			'now-pages-threadi-brizy-data',
-			'window.nowPagesThreadiBrizy = ' . wp_json_encode( $data ) . ';',
+			'threadi-now-pages-brizy-data',
+			'window.threadiNowPagesBrizy = ' . wp_json_encode( $data ) . ';',
 			'before'
 		);
 	}
@@ -180,7 +180,7 @@ class Brizy extends PageBuilder_Base {
 	 */
 	public function register_rest_routes(): void {
 		register_rest_route(
-			'now-pages-threadi/v1',
+			'threadi-now-pages/v1',
 			'/digest',
 			array(
 				'methods'             => 'GET',
@@ -242,7 +242,7 @@ class Brizy extends PageBuilder_Base {
 		return array(
 			'brizy_enabled'      => 1,
 			'_wp_page_template'  => 'brizy-blank-template.php',
-			'brizy_post_uid'     => md5( uniqid( 'now-pages-threadi', true ) ),
+			'brizy_post_uid'     => md5( uniqid( 'threadi-now-pages', true ) ),
 			'brizy'              => array(
 				'brizy-post' => array(
 					'editor_version'     => defined( 'BRIZY_MINIMUM_COMPILER_VERSION' ) ? BRIZY_MINIMUM_COMPILER_VERSION : '375-wp',
@@ -290,8 +290,8 @@ class Brizy extends PageBuilder_Base {
 															'thirdPartyId' => 'Now.Pages.Digest',
 															'items'        => array(),
 															'_id'          => $this->get_element_id(),
-															'period'       => get_option( 'now_pages_threadi_frontend_period', 'live' ),
-															'format'       => get_option( 'now_pages_threadi_frontend_format', 'verbatim' ),
+															'period'       => get_option( 'threadi_now_pages_frontend_period', 'live' ),
+															'format'       => get_option( 'threadi_now_pages_frontend_format', 'verbatim' ),
 														),
 													),
 												),
@@ -332,7 +332,7 @@ class Brizy extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Brizy', 'now-pages-threadi' );
+		return __( 'Brizy', 'threadi-now-pages' );
 	}
 
 	/**

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="now-pages-threadi" basedir="." default="help">
+<project name="threadi-now-pages" basedir="." default="help">
 
     <!-- Include config file containing  -->
     <loadproperties srcFile="build.properties" />
@@ -135,7 +135,7 @@
 	<!-- generate documentation -->
 	<target name="generate-documentation" depends="composer-install">
 		<exec dir="${src.dir}" failonerror="false" executable="vendor/bin/wp-documentor">
-			<arg line="parse app --format=markdown --output=docs/hooks.md --prefix=now_pages_threadi --exclude=Crypt.php --exclude=Transients.php"/>
+			<arg line="parse app --format=markdown --output=docs/hooks.md --prefix=threadi_now_pages --exclude=Crypt.php --exclude=Transients.php"/>
 		</exec>
 	</target>
 

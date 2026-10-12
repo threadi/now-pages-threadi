@@ -2,7 +2,7 @@
 
 Die Ausgabe der Now Pages Einträge kann auch über einen Shortcode erfolgen:
 
-`[now_pages_threadi_digest]`
+`[threadi_now_pages_digest]`
 
 Über Parameter in dem Shortcode kann die Ausgabe weiter spezifiziert werden. Ohne diese greifen die im Plugin hinterlegten Einstellungen.
 
@@ -20,7 +20,7 @@ Die Ausgabe der Now Pages Einträge kann auch über einen Shortcode erfolgen:
   - 6month
   - week
 
-Beispiel: `[now_pages_threadi_digest period="day"]`
+Beispiel: `[threadi_now_pages_digest period="day"]`
 
 ### format
 
@@ -29,7 +29,7 @@ Beispiel: `[now_pages_threadi_digest period="day"]`
     - verbatim
     - narrative
 
-Beispiel: `[now_pages_threadi_digest format="verbatim"]`
+Beispiel: `[threadi_now_pages_digest format="verbatim"]`
 
 ### show_time
 
@@ -38,7 +38,7 @@ Beispiel: `[now_pages_threadi_digest format="verbatim"]`
   - true
   - false
 
-Beispiel: `[now_pages_threadi_digest show_time="true"]`
+Beispiel: `[threadi_now_pages_digest show_time="true"]`
 
 ### delay_hours
 
@@ -47,7 +47,7 @@ Beispiel: `[now_pages_threadi_digest show_time="true"]`
 - die Angabe ist in Stunden
 - der Wert kann das eingestellte Delay (global oder beim Benutzer) nur erhöhen, nie verringern
 
-Beispiel: `[now_pages_threadi_digest delay_hours="24"]`
+Beispiel: `[threadi_now_pages_digest delay_hours="24"]`
 
 ### group_by_category
 
@@ -56,7 +56,7 @@ Beispiel: `[now_pages_threadi_digest delay_hours="24"]`
     - true
     - false
 
-Beispiel: `[now_pages_threadi_digest group_by_category="true"]`
+Beispiel: `[threadi_now_pages_digest group_by_category="true"]`
 
 ### show_source
 
@@ -65,7 +65,7 @@ Beispiel: `[now_pages_threadi_digest group_by_category="true"]`
     - true
     - false
 
-Beispiel: `[now_pages_threadi_digest show_source="true"]`
+Beispiel: `[threadi_now_pages_digest show_source="true"]`
 
 ### link_source
 
@@ -75,11 +75,11 @@ Beispiel: `[now_pages_threadi_digest show_source="true"]`
     - true
     - false
 
-Beispiel: `[now_pages_threadi_digest link_source="true"]`
+Beispiel: `[threadi_now_pages_digest link_source="true"]`
 
 ### category
 
 - Legt die Kategorie fest deren Einträge ausgegeben werden sollen
 - mögliche Werte entsprechen den term_id's der im Projekt hinterlegten Kategorien
 
-Beispiel: `[now_pages_threadi_digest category="42"]`
+Beispiel: `[threadi_now_pages_digest category="42"]`

@@ -14,20 +14,20 @@
  *
  * No support for recuring event.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Providers;
+namespace ThreadiNowPages\Providers;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use DateTimeImmutable;
-use NowPagesThreadi\Helper\ICS_Parser;
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Plugin\Log;
+use ThreadiNowPages\Helper\ICS_Parser;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Plugin\Log;
 
 /**
  * Object for the iCalendar provider.
@@ -48,7 +48,7 @@ class ICS_Provider extends HTTP_Provider_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Calendar (iCalendar/ICS)', 'now-pages-threadi' );
+		return __( 'Calendar (iCalendar/ICS)', 'threadi-now-pages' );
 	}
 
 	/**
@@ -57,7 +57,7 @@ class ICS_Provider extends HTTP_Provider_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'Reads an ICS calendar feed and shows what you are doing right now. Works with Google Calendar, Nextcloud, iCloud, Outlook and conference schedules from pretalx or Sessionize.', 'now-pages-threadi' );
+		return __( 'Reads an ICS calendar feed and shows what you are doing right now. Works with Google Calendar, Nextcloud, iCloud, Outlook and conference schedules from pretalx or Sessionize.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -68,30 +68,30 @@ class ICS_Provider extends HTTP_Provider_Base {
 	public function get_config_fields(): array {
 		return array(
 			'ics_url'            => array(
-				'label'       => __( 'Calendar URL', 'now-pages-threadi' ),
+				'label'       => __( 'Calendar URL', 'threadi-now-pages' ),
 				'type'        => 'url',
 				'required'    => true,
-				'description' => __( 'The ICS address of the calendar. webcal:// addresses work too. Careful with the "secret address" of a private Google calendar - anyone with database access can read it here.', 'now-pages-threadi' ),
+				'description' => __( 'The ICS address of the calendar. webcal:// addresses work too. Careful with the "secret address" of a private Google calendar - anyone with database access can read it here.', 'threadi-now-pages' ),
 				'placeholder' => 'https://example.com/calendar.ics',
 			),
 			'ics_include'        => array(
-				'label'       => __( 'Only appointments containing', 'now-pages-threadi' ),
+				'label'       => __( 'Only appointments containing', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => false,
-				'description' => __( 'Optional. Only appointments whose title contains this text are imported. Useful for shared calendars - for example "Europe" on the WordCamp Central feed.', 'now-pages-threadi' ),
-				'placeholder' => __( 'WordCamp Europe', 'now-pages-threadi' ),
+				'description' => __( 'Optional. Only appointments whose title contains this text are imported. Useful for shared calendars - for example "Europe" on the WordCamp Central feed.', 'threadi-now-pages' ),
+				'placeholder' => __( 'WordCamp Europe', 'threadi-now-pages' ),
 			),
 			'ics_lookahead_days' => array(
-				'label'       => __( 'Announce days ahead', 'now-pages-threadi' ),
+				'label'       => __( 'Announce days ahead', 'threadi-now-pages' ),
 				'type'        => 'number',
 				'default'     => 0,
 				'min'         => 0,
 				'max'         => 30,
 				'step'        => 1,
-				'description' => __( 'Zero shows only what is running right now. A higher value also announces upcoming appointments, once each.', 'now-pages-threadi' ),
+				'description' => __( 'Zero shows only what is running right now. A higher value also announces upcoming appointments, once each.', 'threadi-now-pages' ),
 			),
 			'ics_max_items'      => array(
-				'label'   => __( 'Max. items per run', 'now-pages-threadi' ),
+				'label'   => __( 'Max. items per run', 'threadi-now-pages' ),
 				'type'    => 'number',
 				'default' => 10,
 				'min'     => 1,
@@ -146,7 +146,7 @@ class ICS_Provider extends HTTP_Provider_Base {
 			$to   = $now->modify( '+' . max( 1, $lookahead ) . ' days' );
 		} catch ( \Exception $e ) {
 			// log this error.
-			Log::get_instance()->add( __( 'Error during formatting of a timestamp from an ICS.', 'now-pages-threadi' ) . ' <code>' . esc_html( $e->getMessage() ) . '</code>', 'error', 'provider' );
+			Log::get_instance()->add( __( 'Error during formatting of a timestamp from an ICS.', 'threadi-now-pages' ) . ' <code>' . esc_html( $e->getMessage() ) . '</code>', 'error', 'provider' );
 
 			// do nothing more.
 			return $entries;
@@ -252,7 +252,7 @@ class ICS_Provider extends HTTP_Provider_Base {
 		if ( '' !== $event['location'] ) {
 			return sprintf(
 				/* translators: %1$s will be replaced by an appointment title, %2$s by a location. */
-				__( 'Currently at %1$s, %2$s', 'now-pages-threadi' ),
+				__( 'Currently at %1$s, %2$s', 'threadi-now-pages' ),
 				$event['summary'],
 				$event['location']
 			);
@@ -260,7 +260,7 @@ class ICS_Provider extends HTTP_Provider_Base {
 
 		return sprintf(
 			/* translators: %1$s will be replaced by an appointment title. */
-			__( 'Currently at %1$s', 'now-pages-threadi' ),
+			__( 'Currently at %1$s', 'threadi-now-pages' ),
 			$event['summary']
 		);
 	}
@@ -279,7 +279,7 @@ class ICS_Provider extends HTTP_Provider_Base {
 		if ( '' !== $event['location'] ) {
 			return sprintf(
 				/* translators: %1$s will be replaced by an appointment title, %2$s by a location, %3$s by a date. */
-				__( 'Will be at %1$s, %2$s, on %3$s', 'now-pages-threadi' ),
+				__( 'Will be at %1$s, %2$s, on %3$s', 'threadi-now-pages' ),
 				$event['summary'],
 				$event['location'],
 				$date
@@ -288,7 +288,7 @@ class ICS_Provider extends HTTP_Provider_Base {
 
 		return sprintf(
 			/* translators: %1$s will be replaced by an appointment title, %2$s by a date. */
-			__( 'Will be at %1$s on %2$s', 'now-pages-threadi' ),
+			__( 'Will be at %1$s on %2$s', 'threadi-now-pages' ),
 			$event['summary'],
 			$date
 		);

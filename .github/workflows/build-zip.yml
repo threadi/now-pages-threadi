@@ -19,7 +19,7 @@ permissions:
 env:
   # the name of the plugin folder and of the zip. Independent of how the repository is called.
   # do not call this PLUGIN_SLUG: wordpress/plugin-check-action sets a variable of that name itself.
-  RELEASE_SLUG: now-pages-threadi
+  RELEASE_SLUG: threadi-now-pages
 
 jobs:
   build:

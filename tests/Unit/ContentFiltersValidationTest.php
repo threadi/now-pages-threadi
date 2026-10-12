@@ -6,18 +6,18 @@
  * on a field no entry has never matches. In the form both look like rules
  * which are in effect, so the user has to be told when they are saved.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Dependencies\easyTransientsForWordPress\Transients;
-use NowPagesThreadi\NowPages\Content_Filters;
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Providers\Providers;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Dependencies\easyTransientsForWordPress\Transients;
+use ThreadiNowPages\NowPages\Content_Filters;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Providers\Providers;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 
 /**
  * Object to test Content_Filters::validate() and what is built on it.
@@ -26,7 +26,7 @@ class ContentFiltersValidationTest extends NowPagesTestCase {
 	/**
 	 * The name of the hint.
 	 */
-	private const HINT = 'now_pages_threadi_content_filter_rules';
+	private const HINT = 'threadi_now_pages_content_filter_rules';
 
 	/**
 	 * Start without a hint.

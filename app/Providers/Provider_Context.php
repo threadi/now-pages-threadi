@@ -6,12 +6,12 @@
  * running for, plus a small state store for cursors, ETags and similar
  * values it wants to remember between two runs.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Providers;
+namespace ThreadiNowPages\Providers;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -25,21 +25,21 @@ class Provider_Context {
 	 *
 	 * @var string
 	 */
-	private const STATE_META = 'now_pages_threadi_provider_state';
+	private const STATE_META = 'threadi_now_pages_provider_state';
 
 	/**
 	 * The post meta key the timestamp of the last run is stored under.
 	 *
 	 * @var string
 	 */
-	private const LAST_RUN_META = 'now_pages_threadi_provider_last_run';
+	private const LAST_RUN_META = 'threadi_now_pages_provider_last_run';
 
 	/**
 	 * The post meta key the timestamp of the last started run is stored under.
 	 *
 	 * @var string
 	 */
-	private const LAST_ATTEMPT_META = 'now_pages_threadi_provider_last_attempt';
+	private const LAST_ATTEMPT_META = 'threadi_now_pages_provider_last_attempt';
 
 	/**
 	 * The prefix of state keys which hold ETags.

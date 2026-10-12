@@ -2,20 +2,20 @@
 /**
  * This file contains the generic content filter for imported entries.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\NowPages;
+namespace ThreadiNowPages\NowPages;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Dependencies\easyTransientsForWordPress\Transients;
-use NowPagesThreadi\Plugin\Log;
-use NowPagesThreadi\Providers\Provider_Interface;
-use NowPagesThreadi\Providers\Providers;
+use ThreadiNowPages\Dependencies\easyTransientsForWordPress\Transients;
+use ThreadiNowPages\Plugin\Log;
+use ThreadiNowPages\Providers\Provider_Interface;
+use ThreadiNowPages\Providers\Providers;
 
 /**
  * Object, which decides whether an entry passes its configured field rules.
@@ -26,7 +26,7 @@ class Content_Filters {
 	 *
 	 * @var string
 	 */
-	public const OPTION = 'now_pages_threadi_content_filter_rules';
+	public const OPTION = 'threadi_now_pages_content_filter_rules';
 
 	/**
 	 * The post meta holding the rules of a single source.
@@ -88,7 +88,7 @@ class Content_Filters {
 	 */
 	public function init(): void {
 		// use hooks.
-		add_filter( 'now_pages_threadi_log_categories', array( $this, 'add_log_category' ) );
+		add_filter( 'threadi_now_pages_log_categories', array( $this, 'add_log_category' ) );
 	}
 
 	/**
@@ -99,7 +99,7 @@ class Content_Filters {
 	 * @return array<string,string>
 	 */
 	public function add_log_category( array $categories ): array {
-		$categories['content_filter'] = __( 'Content filter', 'now-pages-threadi' );
+		$categories['content_filter'] = __( 'Content filter', 'threadi-now-pages' );
 
 		return $categories;
 	}
@@ -144,7 +144,7 @@ class Content_Filters {
 			}
 
 			if ( ! $matched_any ) {
-				return $this->describe_rule( $field_rules[0] ) . ' ' . __( '(or a similar rule for the same field)', 'now-pages-threadi' );
+				return $this->describe_rule( $field_rules[0] ) . ' ' . __( '(or a similar rule for the same field)', 'threadi-now-pages' );
 			}
 		}
 
@@ -252,8 +252,8 @@ class Content_Filters {
 	private function describe_rule( array $rule ): string {
 		return sprintf(
 		/* translators: %1$s: action (include/exclude), %2$s: field, %3$s: operator, %4$s: value. */
-			__( '%1$s rule "%2$s %3$s %4$s"', 'now-pages-threadi' ),
-			'exclude' === $rule['action'] ? __( 'Exclude', 'now-pages-threadi' ) : __( 'Include', 'now-pages-threadi' ),
+			__( '%1$s rule "%2$s %3$s %4$s"', 'threadi-now-pages' ),
+			'exclude' === $rule['action'] ? __( 'Exclude', 'threadi-now-pages' ) : __( 'Include', 'threadi-now-pages' ),
 			$rule['field'],
 			$rule['operator'],
 			$rule['value']
@@ -287,7 +287,7 @@ class Content_Filters {
 		 * @param array<int,array{action:string,field:string,operator:string,value:string}> $rules      The parsed rules.
 		 * @param int                                                                        $sources_id The ID of the used source.
 		 */
-		return apply_filters( 'now_pages_threadi_content_filter_rules', $rules, $sources_id );
+		return apply_filters( 'threadi_now_pages_content_filter_rules', $rules, $sources_id );
 	}
 
 	/**
@@ -492,7 +492,7 @@ class Content_Filters {
 		 * @param string[]                $fields   The names of the fields.
 		 * @param Provider_Interface|null $provider The provider, null for all providers.
 		 */
-		return (array) apply_filters( 'now_pages_threadi_content_filter_fields', $fields, $provider );
+		return (array) apply_filters( 'threadi_now_pages_content_filter_fields', $fields, $provider );
 	}
 
 	/**
@@ -519,12 +519,12 @@ class Content_Filters {
 		}
 
 		$headline = $provider instanceof Provider_Interface
-			? __( 'Some content filter rules of this source do not work as written:', 'now-pages-threadi' )
-			: __( 'Some of the site-wide content filter rules do not work as written:', 'now-pages-threadi' );
+			? __( 'Some content filter rules of this source do not work as written:', 'threadi-now-pages' )
+			: __( 'Some of the site-wide content filter rules do not work as written:', 'threadi-now-pages' );
 
 		// shown once on the next page: no dismissible time, it is gone after that.
 		$transient_obj = Transients::get_instance()->add();
-		$transient_obj->set_name( 'now_pages_threadi_content_filter_rules' );
+		$transient_obj->set_name( 'threadi_now_pages_content_filter_rules' );
 		$transient_obj->set_message( '<strong>' . esc_html( $headline ) . '</strong><ul class="ul-disc">' . $items . '</ul>' );
 		$transient_obj->set_type( 'error' );
 		$transient_obj->save();
@@ -561,17 +561,17 @@ class Content_Filters {
 
 		switch ( $reason ) {
 			case 'action':
-				return __( 'is ignored: a rule has to start with "include" or "exclude".', 'now-pages-threadi' );
+				return __( 'is ignored: a rule has to start with "include" or "exclude".', 'threadi-now-pages' );
 			case 'operator':
 				/* translators: %1$s will be replaced by what was entered, %2$s by a list of operators. */
-				return sprintf( __( 'is ignored: "%1$s" is not an operator. Possible are: %2$s.', 'now-pages-threadi' ), trim( $parts[2] ?? '' ), implode( ', ', self::OPERATORS ) );
+				return sprintf( __( 'is ignored: "%1$s" is not an operator. Possible are: %2$s.', 'threadi-now-pages' ), trim( $parts[2] ?? '' ), implode( ', ', self::OPERATORS ) );
 			case 'field':
 				/* translators: %1$s will be replaced by a field name, %2$s by a list of field names. */
-				return sprintf( __( 'never matches: there is no field "%1$s". Available are: %2$s.', 'now-pages-threadi' ), trim( $parts[1] ?? '' ), implode( ', ', $fields ) );
+				return sprintf( __( 'never matches: there is no field "%1$s". Available are: %2$s.', 'threadi-now-pages' ), trim( $parts[1] ?? '' ), implode( ', ', $fields ) );
 			case 'regex':
-				return __( 'never matches: the regular expression is not valid.', 'now-pages-threadi' );
+				return __( 'never matches: the regular expression is not valid.', 'threadi-now-pages' );
 			default:
-				return __( 'is ignored: a rule has four parts, action:field:operator:value.', 'now-pages-threadi' );
+				return __( 'is ignored: a rule has four parts, action:field:operator:value.', 'threadi-now-pages' );
 		}
 	}
 
@@ -586,10 +586,10 @@ class Content_Filters {
 		// a valid expression which took too long, e.g. by catastrophic backtracking.
 		if ( in_array( preg_last_error(), array( PREG_BACKTRACK_LIMIT_ERROR, PREG_RECURSION_LIMIT_ERROR, PREG_JIT_STACKLIMIT_ERROR ), true ) ) {
 			/* translators: %s will be replaced by a regular expression. */
-			return $is_exclude ? __( 'A regular expression in a content filter rule took too long and was stopped, the entry is skipped: %s', 'now-pages-threadi' ) : __( 'A regular expression in a content filter rule took too long and was stopped, rule ignored: %s', 'now-pages-threadi' );
+			return $is_exclude ? __( 'A regular expression in a content filter rule took too long and was stopped, the entry is skipped: %s', 'threadi-now-pages' ) : __( 'A regular expression in a content filter rule took too long and was stopped, rule ignored: %s', 'threadi-now-pages' );
 		}
 
 		/* translators: %s will be replaced by a regular expression. */
-		return $is_exclude ? __( 'Invalid regular expression in a content filter rule, the entry is skipped: %s', 'now-pages-threadi' ) : __( 'Invalid regular expression in a content filter rule, rule ignored: %s', 'now-pages-threadi' );
+		return $is_exclude ? __( 'Invalid regular expression in a content filter rule, the entry is skipped: %s', 'threadi-now-pages' ) : __( 'Invalid regular expression in a content filter rule, rule ignored: %s', 'threadi-now-pages' );
 	}
 }

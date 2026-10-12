@@ -2,17 +2,17 @@
 /**
  * This file contains the Last.fm preset.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Presets\Preset;
+namespace ThreadiNowPages\Presets\Preset;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Presets\Preset_Base;
+use ThreadiNowPages\Presets\Preset_Base;
 
 /**
  * Object for the Last.fm preset.
@@ -33,7 +33,7 @@ class LastFm extends Preset_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Last.fm', 'now-pages-threadi' );
+		return __( 'Last.fm', 'threadi-now-pages' );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class LastFm extends Preset_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'What you are listening to. Needs a free API key, which you create once on last.fm.', 'now-pages-threadi' );
+		return __( 'What you are listening to. Needs a free API key, which you create once on last.fm.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -74,10 +74,10 @@ class LastFm extends Preset_Base {
 	public function get_setup_fields(): array {
 		return array(
 			'lastfm_username' => array(
-				'label'       => __( 'Username', 'now-pages-threadi' ),
+				'label'       => __( 'Username', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => true,
-				'description' => __( 'Your account on Last.fm. Its listening history has to be public.', 'now-pages-threadi' ),
+				'description' => __( 'Your account on Last.fm. Its listening history has to be public.', 'threadi-now-pages' ),
 				'placeholder' => 'rj',
 			),
 		);

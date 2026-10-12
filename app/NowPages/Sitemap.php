@@ -2,18 +2,18 @@
 /**
  * File to manage our own sitemap provider for now pages.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\NowPages;
+namespace ThreadiNowPages\NowPages;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Display_Settings;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Display_Settings;
 use WP_Sitemaps_Provider;
 use WP_User;
 
@@ -24,7 +24,7 @@ class Sitemap extends WP_Sitemaps_Provider {
 	/**
 	 * Name of the transient which caches the sitemap entries.
 	 */
-	private const CACHE_KEY = 'now_pages_threadi_sitemap_entries';
+	private const CACHE_KEY = 'threadi_now_pages_sitemap_entries';
 
 	/**
 	 * Lifetime of the cached sitemap entries in seconds.
@@ -129,7 +129,7 @@ class Sitemap extends WP_Sitemaps_Provider {
 				 * @param array<string,mixed> $entry The sitemap entry (loc/lastmod/changefreq/priority only).
 				 * @param WP_User|null        $user  The user this entry is for, null for the global now page.
 				 */
-				$entries[] = apply_filters( 'now_pages_threadi_sitemap_entry', $entry, null );
+				$entries[] = apply_filters( 'threadi_now_pages_sitemap_entry', $entry, null );
 			}
 		}
 
@@ -148,7 +148,7 @@ class Sitemap extends WP_Sitemaps_Provider {
 			);
 
 			/** This filter is documented above. */
-			$entries[] = apply_filters( 'now_pages_threadi_sitemap_entry', $entry, $user );
+			$entries[] = apply_filters( 'threadi_now_pages_sitemap_entry', $entry, $user );
 		}
 
 		set_transient( self::CACHE_KEY, $entries, self::CACHE_TIME );
@@ -220,11 +220,11 @@ class Sitemap extends WP_Sitemaps_Provider {
 	 */
 	private function get_global_args(): array {
 		$args = array(
-			'period' => get_option( 'now_pages_threadi_frontend_period' ),
-			'format' => get_option( 'now_pages_threadi_frontend_format' ),
+			'period' => get_option( 'threadi_now_pages_frontend_period' ),
+			'format' => get_option( 'threadi_now_pages_frontend_format' ),
 		);
 
 		/** This filter is documented in Frontend::prepare(). */
-		return apply_filters( 'now_pages_threadi_frontend_digest_args', $args, null );
+		return apply_filters( 'threadi_now_pages_frontend_digest_args', $args, null );
 	}
 }

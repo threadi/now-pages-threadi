@@ -2,21 +2,21 @@
 /**
  * This file contains the narrative (flowing text) digest format.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests\Formats;
+namespace ThreadiNowPages\Digests\Formats;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Digest_Format_Interface;
-use NowPagesThreadi\Digests\Summarizer_Interface;
-use NowPagesThreadi\Digests\Summarizers;
-use NowPagesThreadi\NowPages\Categories;
-use NowPagesThreadi\Plugin\Templates;
+use ThreadiNowPages\Digests\Digest_Format_Interface;
+use ThreadiNowPages\Digests\Summarizer_Interface;
+use ThreadiNowPages\Digests\Summarizers;
+use ThreadiNowPages\NowPages\Categories;
+use ThreadiNowPages\Plugin\Templates;
 use WP_Error;
 use WP_Post;
 
@@ -26,7 +26,7 @@ use WP_Post;
  * 12km mit dem Fahrrad gefahren."
  *
  * When group_by_category is enabled (default), entries are split by
- * "now_pages_threadi_category" and each group is summarized on its own under a heading.
+ * "threadi_now_pages_category" and each group is summarized on its own under a heading.
  * That yields thematic blocks such as:
  *
  *   ### Work
@@ -61,13 +61,13 @@ class Narrative_Format implements Digest_Format_Interface {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Narrative summary', 'now-pages-threadi' );
+		return __( 'Narrative summary', 'threadi-now-pages' );
 	}
 
 	/**
 	 * Render the given entries as a narrative summary.
 	 *
-	 * @param array<int,WP_Post>  $entries  Chronologically sorted np_threadi_entry posts.
+	 * @param array<int,WP_Post>  $entries  Chronologically sorted threadi_np_entry posts.
 	 * @param array<string,mixed> $settings Output settings, see Digest_Builder::build().
 	 *
 	 * @return string
@@ -96,7 +96,7 @@ class Narrative_Format implements Digest_Format_Interface {
 
 		// use the fallback if the summarizer cannot run on this site right now.
 		if ( ! $summarizer->is_available() ) {
-			do_action( 'now_pages_threadi_digest_error', new WP_Error( 'now_pages_threadi_summarizer_unavailable', __( 'The configured summarizer is not available.', 'now-pages-threadi' ) ), $summarizer_slug, '' );
+			do_action( 'threadi_now_pages_digest_error', new WP_Error( 'threadi_now_pages_summarizer_unavailable', __( 'The configured summarizer is not available.', 'threadi-now-pages' ) ), $summarizer_slug, '' );
 
 			$summarizer = $this->get_fallback_summarizer( $summarizer );
 
@@ -227,7 +227,7 @@ class Narrative_Format implements Digest_Format_Interface {
 				 * @param string   $summarizer The summarizer slug that failed.
 				 * @param string   $label      Category label of the failed block (empty if ungrouped).
 				 */
-				do_action( 'now_pages_threadi_digest_error', $text, $summarizer_slug, $label );
+				do_action( 'threadi_now_pages_digest_error', $text, $summarizer_slug, $label );
 
 				$text = '';
 			}

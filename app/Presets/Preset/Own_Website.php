@@ -2,17 +2,17 @@
 /**
  * This file contains the preset for the website itself.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Presets\Preset;
+namespace ThreadiNowPages\Presets\Preset;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Presets\Preset_Base;
+use ThreadiNowPages\Presets\Preset_Base;
 
 /**
  * Object for the preset of the website itself.
@@ -33,7 +33,7 @@ class Own_Website extends Preset_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'This website', 'now-pages-threadi' );
+		return __( 'This website', 'threadi-now-pages' );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Own_Website extends Preset_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'What you publish here. Works right away - no account, no key, no external service.', 'now-pages-threadi' );
+		return __( 'What you publish here. Works right away - no account, no key, no external service.', 'threadi-now-pages' );
 	}
 
 	/**

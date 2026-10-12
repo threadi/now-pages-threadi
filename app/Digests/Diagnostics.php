@@ -5,20 +5,20 @@
  * It explains why a digest looks the way it does: which display settings won,
  * which time range was queried and how many entries each filter removed.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests;
+namespace ThreadiNowPages\Digests;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Languages;
-use NowPagesThreadi\NowPages\Categories;
-use NowPagesThreadi\NowPages\Frontend;
-use NowPagesThreadi\Plugin\Settings;
+use ThreadiNowPages\Helper\Languages;
+use ThreadiNowPages\NowPages\Categories;
+use ThreadiNowPages\NowPages\Frontend;
+use ThreadiNowPages\Plugin\Settings;
 use WP_Post;
 use WP_Query;
 use WP_User;
@@ -32,7 +32,7 @@ class Diagnostics {
 	 *
 	 * @var string
 	 */
-	public const QUERY_PARAM = 'now-pages-threadi-debug';
+	public const QUERY_PARAM = 'threadi-now-pages-debug';
 
 	/**
 	 * Instance of actual object.
@@ -73,7 +73,7 @@ class Diagnostics {
 	 */
 	public function init(): void {
 		// use hooks.
-		add_filter( 'now_pages_threadi_frontend_content', array( $this, 'add_diagnostics' ), 100, 2 );
+		add_filter( 'threadi_now_pages_frontend_content', array( $this, 'add_diagnostics' ), 100, 2 );
 	}
 
 	/**
@@ -134,10 +134,10 @@ class Diagnostics {
 		);
 
 		// build the panel - as this is only for projects-owners, this is not in a template.
-		return '<div class="now-pages-threadi-diagnostics"><h2>'
-				. esc_html__( 'Now Pages – diagnostics', 'now-pages-threadi' )
+		return '<div class="threadi-now-pages-diagnostics"><h2>'
+				. esc_html__( 'Now Pages – diagnostics', 'threadi-now-pages' )
 				. '</h2><p class="description">'
-				. esc_html__( 'Only visible to administrators. This panel explains how the output above came about.', 'now-pages-threadi' )
+				. esc_html__( 'Only visible to administrators. This panel explains how the output above came about.', 'threadi-now-pages' )
 				. '</p>'
 				. implode( '', array_filter( $blocks ) )
 				. '</div>';
@@ -221,7 +221,7 @@ class Diagnostics {
 				'reasons' => array(
 					array(
 						'code'    => 'unknown_format',
-						'message' => __( 'The configured format does not exist, so the digest stays empty.', 'now-pages-threadi' ),
+						'message' => __( 'The configured format does not exist, so the digest stays empty.', 'threadi-now-pages' ),
 					),
 				),
 			);
@@ -238,7 +238,7 @@ class Diagnostics {
 			$reasons[] = array(
 				'code'    => 'not_published',
 				/* translators: %1$s will be replaced by a post status. */
-				'message' => sprintf( __( 'The entry is not published (status: %1$s).', 'now-pages-threadi' ), $entry->post_status ),
+				'message' => sprintf( __( 'The entry is not published (status: %1$s).', 'threadi-now-pages' ), $entry->post_status ),
 			);
 		}
 
@@ -249,20 +249,20 @@ class Diagnostics {
 		if ( '' !== $after && $entry->post_date < $after ) {
 			$reasons[] = array(
 				'code'    => 'before_period',
-				'message' => __( 'The entry is older than the start of the period.', 'now-pages-threadi' ),
+				'message' => __( 'The entry is older than the start of the period.', 'threadi-now-pages' ),
 			);
 		}
 
 		if ( '' !== $before_raw && $entry->post_date > $before_raw ) {
 			$reasons[] = array(
 				'code'    => 'after_period',
-				'message' => __( 'The entry is dated after the end of the period.', 'now-pages-threadi' ),
+				'message' => __( 'The entry is dated after the end of the period.', 'threadi-now-pages' ),
 			);
 		} elseif ( '' !== $before && $entry->post_date > $before ) {
 			$reasons[] = array(
 				'code'    => 'hidden_by_delay',
 				/* translators: %1$d will be replaced by a number of hours. */
-				'message' => sprintf( __( 'The entry is newer than the privacy delay of %1$d hours and will show up once it is older.', 'now-pages-threadi' ), absint( $args['delay_hours'] ?? 0 ) ),
+				'message' => sprintf( __( 'The entry is newer than the privacy delay of %1$d hours and will show up once it is older.', 'threadi-now-pages' ), absint( $args['delay_hours'] ?? 0 ) ),
 			);
 		}
 
@@ -273,7 +273,7 @@ class Diagnostics {
 				$reasons[] = array(
 					'code'    => 'other_language',
 					/* translators: %1$s will be replaced by the language of the entry, %2$s by the language of the digest. */
-					'message' => sprintf( __( 'The entry is in language "%1$s", the digest shows "%2$s".', 'now-pages-threadi' ), '' === $language ? '–' : $language, (string) $args['language'] ),
+					'message' => sprintf( __( 'The entry is in language "%1$s", the digest shows "%2$s".', 'threadi-now-pages' ), '' === $language ? '–' : $language, (string) $args['language'] ),
 				);
 			}
 		}
@@ -281,14 +281,14 @@ class Diagnostics {
 		if ( ! empty( $args['category'] ) && ! has_term( absint( $args['category'] ), Categories::TAXONOMY, $entry ) ) {
 			$reasons[] = array(
 				'code'    => 'other_category',
-				'message' => __( 'The entry is not in the category the digest is limited to.', 'now-pages-threadi' ),
+				'message' => __( 'The entry is not in the category the digest is limited to.', 'threadi-now-pages' ),
 			);
 		}
 
 		if ( ! empty( $args['user_id'] ) && absint( $entry->post_author ) !== absint( $args['user_id'] ) ) {
 			$reasons[] = array(
 				'code'    => 'other_author',
-				'message' => __( 'The entry belongs to another author than the digest.', 'now-pages-threadi' ),
+				'message' => __( 'The entry belongs to another author than the digest.', 'threadi-now-pages' ),
 			);
 		}
 
@@ -296,7 +296,7 @@ class Diagnostics {
 		if ( empty( $args['user_id'] ) && in_array( absint( $entry->post_author ), array_map( 'absint', (array) ( $query_args['author__not_in'] ?? array() ) ), true ) ) {
 			$reasons[] = array(
 				'code'    => 'author_disabled',
-				'message' => __( 'The author of the entry disabled the own now page, so the entry is not shown across all authors.', 'now-pages-threadi' ),
+				'message' => __( 'The author of the entry disabled the own now page, so the entry is not shown across all authors.', 'threadi-now-pages' ),
 			);
 		}
 
@@ -306,7 +306,7 @@ class Diagnostics {
 			$reasons[] = array(
 				'code'    => 'hidden_by_user_delay',
 				/* translators: %1$d will be replaced by a number of hours. */
-				'message' => sprintf( __( 'The author of the entry set a personal privacy delay of %1$d hours. The entry will show up once it is older.', 'now-pages-threadi' ), $this->get_user_delay( absint( $entry->post_author ) ) ),
+				'message' => sprintf( __( 'The author of the entry set a personal privacy delay of %1$d hours. The entry will show up once it is older.', 'threadi-now-pages' ), $this->get_user_delay( absint( $entry->post_author ) ) ),
 			);
 		}
 
@@ -314,7 +314,7 @@ class Diagnostics {
 		if ( ! $shown && empty( $reasons ) ) {
 			$reasons[] = array(
 				'code'    => 'filtered',
-				'message' => __( 'The entry matches all settings, but a filter (now_pages_threadi_digest_query_args) removed it from the query.', 'now-pages-threadi' ),
+				'message' => __( 'The entry matches all settings, but a filter (threadi_now_pages_digest_query_args) removed it from the query.', 'threadi-now-pages' ),
 			);
 		}
 
@@ -322,7 +322,7 @@ class Diagnostics {
 		if ( $shown && empty( $args['ignore_overrides'] ) && null !== Categories::get_instance()->get_override_text_for_entry( $entry ) ) {
 			$reasons[] = array(
 				'code'    => 'replaced_by_override',
-				'message' => __( 'The entry is part of the digest, but its category or source replaces it with a fixed override text.', 'now-pages-threadi' ),
+				'message' => __( 'The entry is part of the digest, but its category or source replaces it with a fixed override text.', 'threadi-now-pages' ),
 			);
 		}
 
@@ -366,47 +366,47 @@ class Diagnostics {
 		$format      = $format_obj instanceof Digest_Format_Interface
 			? $format_obj->get_label()
 			/* translators: %1$s will be replaced by a format slug. */
-			: sprintf( __( 'unknown (%1$s)', 'now-pages-threadi' ), '' === $format_slug ? '–' : $format_slug );
+			: sprintf( __( 'unknown (%1$s)', 'threadi-now-pages' ), '' === $format_slug ? '–' : $format_slug );
 
 		// collect the rows.
 		$rows = array(
-			__( 'Author', 'now-pages-threadi' )   => $user instanceof WP_User
+			__( 'Author', 'threadi-now-pages' )   => $user instanceof WP_User
 				? $user->display_name
-				: __( 'all authors (global route)', 'now-pages-threadi' ),
-			__( 'Period', 'now-pages-threadi' )   => (string) ( $args['period'] ?? '' ),
-			__( 'Format', 'now-pages-threadi' )   => $format,
-			__( 'Language', 'now-pages-threadi' ) => '' !== (string) ( $args['language'] ?? '' )
+				: __( 'all authors (global route)', 'threadi-now-pages' ),
+			__( 'Period', 'threadi-now-pages' )   => (string) ( $args['period'] ?? '' ),
+			__( 'Format', 'threadi-now-pages' )   => $format,
+			__( 'Language', 'threadi-now-pages' ) => '' !== (string) ( $args['language'] ?? '' )
 				? (string) $args['language']
-				: __( 'not restricted', 'now-pages-threadi' ),
+				: __( 'not restricted', 'threadi-now-pages' ),
 		);
 
 		// explain why visitors may not see this page at all.
 		// check the route the digest was built for: an author is only given on the author route.
-		$visibility = __( 'yes', 'now-pages-threadi' );
+		$visibility = __( 'yes', 'threadi-now-pages' );
 		if ( $user instanceof WP_User && ! Frontend::get_instance()->is_public( true ) ) {
-			$visibility = __( 'no - the setup has not been finished or the user URL of now pages is disabled.', 'now-pages-threadi' );
+			$visibility = __( 'no - the setup has not been finished or the user URL of now pages is disabled.', 'threadi-now-pages' );
 		} elseif ( ! $user instanceof WP_User && ! Frontend::get_instance()->is_public() ) {
-			$visibility = __( 'no - the setup has not been finished or global URL of now pages is disabled.', 'now-pages-threadi' );
+			$visibility = __( 'no - the setup has not been finished or global URL of now pages is disabled.', 'threadi-now-pages' );
 		}
-		$rows[ __( 'Publicly visible', 'now-pages-threadi' ) ] = $visibility;
+		$rows[ __( 'Publicly visible', 'threadi-now-pages' ) ] = $visibility;
 
 		// warn if the format could not be resolved.
 		$hint = '';
 		if ( ! empty( $trace['error'] ) && 'unknown_format' === $trace['error'] ) {
 			$hint = '<p><strong>'
-					. esc_html__( 'The configured format does not exist, so the digest stayed empty.', 'now-pages-threadi' )
+					. esc_html__( 'The configured format does not exist, so the digest stayed empty.', 'threadi-now-pages' )
 					. '</strong></p>';
 
 			// the digest used the default format instead.
 			if ( ! empty( $trace['format_fallback'] ) && is_string( $trace['format_fallback'] ) ) {
 				$hint = '<p><strong>'
 						/* translators: %1$s will be replaced by the slug of a format. */
-						. sprintf( esc_html__( 'The configured format does not exist, the default format %1$s is used instead.', 'now-pages-threadi' ), '<code>' . esc_html( $trace['format_fallback'] ) . '</code>' )
+						. sprintf( esc_html__( 'The configured format does not exist, the default format %1$s is used instead.', 'threadi-now-pages' ), '<code>' . esc_html( $trace['format_fallback'] ) . '</code>' )
 						. '</strong></p>';
 			}
 		}
 
-		return '<h3>' . esc_html__( 'Scope', 'now-pages-threadi' ) . '</h3>'
+		return '<h3>' . esc_html__( 'Scope', 'threadi-now-pages' ) . '</h3>'
 				. $this->render_table( $rows )
 				. $hint;
 	}
@@ -426,11 +426,11 @@ class Diagnostics {
 
 		// human-readable names for the display settings.
 		$titles = array(
-			'show_time'         => __( 'Show times', 'now-pages-threadi' ),
-			'show_source'       => __( 'Show data source', 'now-pages-threadi' ),
-			'link_source'       => __( 'Link the data source', 'now-pages-threadi' ),
-			'group_by_category' => __( 'Group by category', 'now-pages-threadi' ),
-			'delay_hours'       => __( 'Delay (hours)', 'now-pages-threadi' ),
+			'show_time'         => __( 'Show times', 'threadi-now-pages' ),
+			'show_source'       => __( 'Show data source', 'threadi-now-pages' ),
+			'link_source'       => __( 'Link the data source', 'threadi-now-pages' ),
+			'group_by_category' => __( 'Group by category', 'threadi-now-pages' ),
+			'delay_hours'       => __( 'Delay (hours)', 'threadi-now-pages' ),
 		);
 
 		// collect the rows.
@@ -443,7 +443,7 @@ class Diagnostics {
 				array(
 					'text' => sprintf(
 					/* translators: %1$s will be replaced by a value, %2$s by its origin. */
-						__( '%1$s - from: %2$s', 'now-pages-threadi' ),
+						__( '%1$s - from: %2$s', 'threadi-now-pages' ),
 						$this->format_value( $args[ $key ] ?? null ),
 						$labels[ $origin ] ?? $origin
 					),
@@ -452,10 +452,10 @@ class Diagnostics {
 			);
 		}
 
-		return '<h3>' . esc_html__( 'Display settings in effect', 'now-pages-threadi' ) . '</h3>'
+		return '<h3>' . esc_html__( 'Display settings in effect', 'threadi-now-pages' ) . '</h3>'
 				. $this->render_table( $rows )
 				. '<p class="description">'
-				. esc_html__( 'A shortcode or block attribute beats the user profile, the profile beats the site-wide setting, and that beats the plugin default.', 'now-pages-threadi' )
+				. esc_html__( 'A shortcode or block attribute beats the user profile, the profile beats the site-wide setting, and that beats the plugin default.', 'threadi-now-pages' )
 				. '</p>';
 	}
 
@@ -476,18 +476,18 @@ class Diagnostics {
 
 		// collect the rows.
 		$rows = array(
-			__( 'From', 'now-pages-threadi' ) => $this->format_date( (string) $after ),
-			__( 'To', 'now-pages-threadi' )   => $this->format_date( (string) $before ),
+			__( 'From', 'threadi-now-pages' ) => $this->format_date( (string) $after ),
+			__( 'To', 'threadi-now-pages' )   => $this->format_date( (string) $before ),
 		);
 
 		// explain the delay, if it shortened the range.
 		if ( ! empty( $trace['delay_applied'] ) ) {
-			$rows[ __( 'Without delay up to', 'now-pages-threadi' ) ] = $this->format_date( (string) $trace['before_raw'] );
+			$rows[ __( 'Without delay up to', 'threadi-now-pages' ) ] = $this->format_date( (string) $trace['before_raw'] );
 		}
 
-		$rows[ __( 'Entries shown', 'now-pages-threadi' ) ] = (string) ( $trace['found'] ?? 0 );
+		$rows[ __( 'Entries shown', 'threadi-now-pages' ) ] = (string) ( $trace['found'] ?? 0 );
 
-		return '<h3>' . esc_html__( 'Queried time range', 'now-pages-threadi' ) . '</h3>'
+		return '<h3>' . esc_html__( 'Queried time range', 'threadi-now-pages' ) . '</h3>'
 				. $this->render_table( $rows );
 	}
 
@@ -509,18 +509,18 @@ class Diagnostics {
 
 		// show a hint if nothing was filtered out.
 		if ( empty( $excluded ) ) {
-			return '<h3>' . esc_html__( 'Filtered out', 'now-pages-threadi' ) . '</h3>'
-					. '<p>' . esc_html__( 'No entries were removed by the active filters.', 'now-pages-threadi' ) . '</p>';
+			return '<h3>' . esc_html__( 'Filtered out', 'threadi-now-pages' ) . '</h3>'
+					. '<p>' . esc_html__( 'No entries were removed by the active filters.', 'threadi-now-pages' ) . '</p>';
 		}
 
 		// human-readable reasons.
 		$reasons = array(
-			'delay'           => __( 'hidden by the delay', 'now-pages-threadi' ),
-			'language'        => __( 'written in another language', 'now-pages-threadi' ),
-			'category'        => __( 'in another category', 'now-pages-threadi' ),
-			'author'          => __( 'belonging to another author', 'now-pages-threadi' ),
-			'author_disabled' => __( 'belonging to authors who disabled their now page', 'now-pages-threadi' ),
-			'user_delay'      => __( 'hidden by the personal delay of their author', 'now-pages-threadi' ),
+			'delay'           => __( 'hidden by the delay', 'threadi-now-pages' ),
+			'language'        => __( 'written in another language', 'threadi-now-pages' ),
+			'category'        => __( 'in another category', 'threadi-now-pages' ),
+			'author'          => __( 'belonging to another author', 'threadi-now-pages' ),
+			'author_disabled' => __( 'belonging to authors who disabled their now page', 'threadi-now-pages' ),
+			'user_delay'      => __( 'hidden by the personal delay of their author', 'threadi-now-pages' ),
 		);
 
 		// collect the list items.
@@ -529,17 +529,17 @@ class Diagnostics {
 			$items .= '<li>' . esc_html(
 				sprintf(
 					/* translators: %1$d will be replaced by a number, %2$s by a reason. */
-					_n( '%1$d entry %2$s', '%1$d entries %2$s', $count, 'now-pages-threadi' ),
+					_n( '%1$d entry %2$s', '%1$d entries %2$s', $count, 'threadi-now-pages' ),
 					$count,
 					$reasons[ $reason ] ?? $reason
 				)
 			) . '</li>';
 		}
 
-		return '<h3>' . esc_html__( 'Filtered out', 'now-pages-threadi' ) . '</h3>'
+		return '<h3>' . esc_html__( 'Filtered out', 'threadi-now-pages' ) . '</h3>'
 				. '<ul>' . $items . '</ul>'
 				. '<p class="description">'
-				. esc_html__( 'Each number compares the result against the same query without that single filter. An entry excluded by two filters is counted twice.', 'now-pages-threadi' )
+				. esc_html__( 'Each number compares the result against the same query without that single filter. An entry excluded by two filters is counted twice.', 'threadi-now-pages' )
 				. '</p>';
 	}
 
@@ -742,7 +742,7 @@ class Diagnostics {
 					. '<td>' . $cell . '</td></tr>';
 		}
 
-		return '<table class="now-pages-threadi-diagnostics-table"><tbody>' . $html . '</tbody></table>';
+		return '<table class="threadi-now-pages-diagnostics-table"><tbody>' . $html . '</tbody></table>';
 	}
 
 	/**
@@ -755,7 +755,7 @@ class Diagnostics {
 	private function format_value( mixed $value ): string {
 		// show booleans as words.
 		if ( is_bool( $value ) ) {
-			return $value ? __( 'on', 'now-pages-threadi' ) : __( 'off', 'now-pages-threadi' );
+			return $value ? __( 'on', 'threadi-now-pages' ) : __( 'off', 'threadi-now-pages' );
 		}
 
 		// show empty values as a dash.
@@ -803,7 +803,7 @@ class Diagnostics {
 
 			return array(
 				'url'      => get_edit_user_link( $user->ID ) . ( '' !== $anchor ? '#' . $anchor : '' ),
-				'url_text' => __( 'edit profile', 'now-pages-threadi' ),
+				'url_text' => __( 'edit profile', 'threadi-now-pages' ),
 			);
 		}
 
@@ -817,10 +817,10 @@ class Diagnostics {
 
 		// everything else is (or would be) the site-wide setting.
 		return array(
-			'url'      => Settings::get_instance()->get_url( 'now_pages_threadi_display' ),
+			'url'      => Settings::get_instance()->get_url( 'threadi_now_pages_display' ),
 			'url_text' => 'default' === $origin
-				? __( 'set site-wide', 'now-pages-threadi' )
-				: __( 'change setting', 'now-pages-threadi' ),
+				? __( 'set site-wide', 'threadi-now-pages' )
+				: __( 'change setting', 'threadi-now-pages' ),
 		);
 	}
 }

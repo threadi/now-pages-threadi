@@ -2,17 +2,17 @@
 /**
  * File to test the iCalendar parser.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use NowPagesThreadi\Helper\ICS_Parser;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Helper\ICS_Parser;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 
 /**
  * Object to test ICS_Parser.

@@ -5,7 +5,7 @@
  * @param string $text The entry text.
  *
  * @version: 1.0.0
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
@@ -13,4 +13,4 @@ declare(strict_types=1);
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-echo '<p class="now-pages-threadi-digest-narrative">' . wp_kses_post( $text ) . '</p>';
+echo '<p class="threadi-now-pages-digest-narrative">' . wp_kses_post( $text ) . '</p>';

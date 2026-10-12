@@ -6,17 +6,17 @@
  * nobody notices: a wrong widget name or a missing encoding step produces
  * a page that looks fine until somebody opens it in the builder.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\PageBuilder\Page_Builders;
-use NowPagesThreadi\PageBuilder\Pagelayer\Digest as Pagelayer_Digest;
-use NowPagesThreadi\PageBuilder\PageBuilder_Base;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\PageBuilder\Page_Builders;
+use ThreadiNowPages\PageBuilder\Pagelayer\Digest as Pagelayer_Digest;
+use ThreadiNowPages\PageBuilder\PageBuilder_Base;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 
 /**
  * Object to test the page content of every page builder.
@@ -122,7 +122,7 @@ class PageBuilderContentTest extends NowPagesTestCase {
 	public function test_the_shortcode_is_the_fallback(): void {
 		$page_builder_obj = $this->get_page_builder( 'shortcode' );
 
-		$this->assertStringContainsString( 'now_pages_threadi_digest', $page_builder_obj->get_page_content() );
+		$this->assertStringContainsString( 'threadi_now_pages_digest', $page_builder_obj->get_page_content() );
 		$this->assertFalse( $page_builder_obj->is_active() );
 		$this->assertSame( 0, $page_builder_obj->get_priority() );
 	}
@@ -157,7 +157,7 @@ class PageBuilderContentTest extends NowPagesTestCase {
 	public function test_gutenberg_starts_with_our_block(): void {
 		$content = $this->get_page_builder( 'gutenberg' )->get_page_content();
 
-		$this->assertStringContainsString( 'wp:now-pages-threadi/digest', $content );
+		$this->assertStringContainsString( 'wp:threadi-now-pages/digest', $content );
 	}
 
 	/**
@@ -173,7 +173,7 @@ class PageBuilderContentTest extends NowPagesTestCase {
 		$data = json_decode( (string) $meta['_elementor_data'], true );
 
 		$this->assertIsArray( $data, 'The Elementor data is not valid JSON.' );
-		$this->assertStringContainsString( 'now-pages-threadi-digest', (string) wp_json_encode( $data ) );
+		$this->assertStringContainsString( 'threadi-now-pages-digest', (string) wp_json_encode( $data ) );
 	}
 
 	/**
@@ -190,7 +190,7 @@ class PageBuilderContentTest extends NowPagesTestCase {
 
 		$element = $meta['_bricks_page_content_2'][0];
 
-		$this->assertSame( 'now-pages-threadi-digest', $element['name'] );
+		$this->assertSame( 'threadi-now-pages-digest', $element['name'] );
 		$this->assertNotSame( '', $element['id'] );
 	}
 
@@ -254,7 +254,7 @@ class PageBuilderContentTest extends NowPagesTestCase {
 		$elements = json_decode( (string) $meta['_zionbuilder_page_elements'], true );
 
 		$this->assertIsArray( $elements, 'The zion elements are not valid JSON.' );
-		$this->assertStringContainsString( 'now_pages_threadi_digest', (string) wp_json_encode( $elements ) );
+		$this->assertStringContainsString( 'threadi_now_pages_digest', (string) wp_json_encode( $elements ) );
 	}
 
 	/**
@@ -299,7 +299,7 @@ class PageBuilderContentTest extends NowPagesTestCase {
 
 		$widget = $blocks[0]['innerBlocks'][0]['innerBlocks'][0];
 
-		$this->assertSame( 'pagelayer/now_pages_threadi_pagelayer_digest', $widget['blockName'] );
+		$this->assertSame( 'pagelayer/threadi_now_pages_pagelayer_digest', $widget['blockName'] );
 		$this->assertNotEmpty( $widget['attrs']['period'] );
 		$this->assertNotEmpty( $widget['attrs']['pagelayer-id'] );
 

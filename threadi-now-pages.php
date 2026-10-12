@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Now Pages by threadi
+ * Plugin Name:       threadi Now Pages
  * Description:       Show what you are actually doing on your website.
  * Requires at least: 7.0
  * Requires PHP:      8.2
@@ -9,9 +9,9 @@
  * Author URI:        https://www.thomaszwirner.de
  * License:           GPLv3
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
- * Text Domain:       now-pages-threadi
+ * Text Domain:       threadi-now-pages
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
@@ -24,9 +24,9 @@ if ( PHP_VERSION_ID < 80200 ) { // @phpstan-ignore if.alwaysFalse,smaller.always
 	return;
 }
 
-use NowPagesThreadi\Plugin\Activation;
-use NowPagesThreadi\Plugin\Deactivation;
-use NowPagesThreadi\Plugin\Init;
+use ThreadiNowPages\Plugin\Activation;
+use ThreadiNowPages\Plugin\Deactivation;
+use ThreadiNowPages\Plugin\Init;
 
 // get plugin-path.
 const NOWPAGES_PLUGIN = __FILE__;

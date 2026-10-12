@@ -2,12 +2,12 @@
 /**
  * This file contains the six months period.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests\Periods;
+namespace ThreadiNowPages\Digests\Periods;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -29,7 +29,7 @@ class Months6 extends Months_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Six months', 'now-pages-threadi' );
+		return __( 'Six months', 'threadi-now-pages' );
 	}
 
 	/**
@@ -38,7 +38,7 @@ class Months6 extends Months_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'The month a date falls into and the five before it.', 'now-pages-threadi' );
+		return __( 'The month a date falls into and the five before it.', 'threadi-now-pages' );
 	}
 
 	/**

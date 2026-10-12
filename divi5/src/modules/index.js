@@ -9,6 +9,6 @@ import { digest, digestMetadata } from "./digest";
 /**
  * Register our modules.
  */
-addAction('divi.moduleLibrary.registerModuleLibraryStore.after', 'now-pages-threadi', () => {
+addAction('divi.moduleLibrary.registerModuleLibraryStore.after', 'threadi-now-pages', () => {
 	registerModule(digestMetadata, digest);
 });

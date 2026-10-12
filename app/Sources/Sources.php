@@ -6,34 +6,34 @@
  * Sources are the way we manage the usage of providers in backend.
  * We register our own cpt for it and manage their configuration.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Sources;
+namespace ThreadiNowPages\Sources;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Dependencies\easyTransientsForWordPress\Transients;
-use NowPagesThreadi\Fediverse\Fediverse;
-use NowPagesThreadi\Helper\Format;
-use NowPagesThreadi\Helper\Languages;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\NowPages\Categories;
-use NowPagesThreadi\NowPages\Content_Filters;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\NowPages\Frontend;
-use NowPagesThreadi\Plugin\Crypt;
-use NowPagesThreadi\Plugin\Log;
-use NowPagesThreadi\Plugin\Post_Type_Base;
-use NowPagesThreadi\Plugin\ProcessHandler;
-use NowPagesThreadi\Plugin\Setup;
-use NowPagesThreadi\Providers\Provider_Context;
-use NowPagesThreadi\Providers\Provider_Interface;
-use NowPagesThreadi\Providers\Providers;
+use ThreadiNowPages\Dependencies\easyTransientsForWordPress\Transients;
+use ThreadiNowPages\Fediverse\Fediverse;
+use ThreadiNowPages\Helper\Format;
+use ThreadiNowPages\Helper\Languages;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\NowPages\Categories;
+use ThreadiNowPages\NowPages\Content_Filters;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\NowPages\Frontend;
+use ThreadiNowPages\Plugin\Crypt;
+use ThreadiNowPages\Plugin\Log;
+use ThreadiNowPages\Plugin\Post_Type_Base;
+use ThreadiNowPages\Plugin\ProcessHandler;
+use ThreadiNowPages\Plugin\Setup;
+use ThreadiNowPages\Providers\Provider_Context;
+use ThreadiNowPages\Providers\Provider_Interface;
+use ThreadiNowPages\Providers\Providers;
 use WP_Error;
 use WP_Post;
 use WP_Query;
@@ -46,7 +46,7 @@ class Sources extends Post_Type_Base {
 	/**
 	 * Name of the option used as lock against parallel imports.
 	 */
-	public const IMPORT_LOCK_OPTION = 'now_pages_threadi_import_lock';
+	public const IMPORT_LOCK_OPTION = 'threadi_now_pages_import_lock';
 
 	/**
 	 * Seconds after which an import lock is treated as left over from a crashed run.
@@ -75,7 +75,7 @@ class Sources extends Post_Type_Base {
 	 *
 	 * @var string
 	 */
-	protected string $slug = 'np_threadi_source';
+	protected string $slug = 'threadi_np_source';
 
 	/**
 	 * Initialize this object.
@@ -106,19 +106,19 @@ class Sources extends Post_Type_Base {
 	 */
 	protected function get_labels(): array {
 		return array(
-			'name'                  => __( 'Now Page Sources', 'now-pages-threadi' ),
-			'singular_name'         => __( 'Now Page Source', 'now-pages-threadi' ),
-			'menu_name'             => __( 'Now Page Sources', 'now-pages-threadi' ),
-			'parent_item_colon'     => __( 'Parent Now Page Source', 'now-pages-threadi' ),
-			'all_items'             => __( 'All Now Page Sources', 'now-pages-threadi' ),
-			'view_item'             => __( 'View Now Page Source in frontend', 'now-pages-threadi' ),
-			'view_items'            => __( 'View Now Page Sources', 'now-pages-threadi' ),
-			'edit_item'             => __( 'View Now Page Source', 'now-pages-threadi' ),
-			'search_items'          => __( 'Search Now Page Source', 'now-pages-threadi' ),
-			'not_found'             => __( 'No Now Page sources found', 'now-pages-threadi' ),
-			'item_link'             => _x( 'Now Page Source Link', 'navigation link block title', 'now-pages-threadi' ),
-			'item_link_description' => _x( 'A link to a Now Page Source.', 'navigation link block description', 'now-pages-threadi' ),
-			'add_new_item'          => __( 'Add New Now Page Source', 'now-pages-threadi' ),
+			'name'                  => __( 'Now Page Sources', 'threadi-now-pages' ),
+			'singular_name'         => __( 'Now Page Source', 'threadi-now-pages' ),
+			'menu_name'             => __( 'Now Page Sources', 'threadi-now-pages' ),
+			'parent_item_colon'     => __( 'Parent Now Page Source', 'threadi-now-pages' ),
+			'all_items'             => __( 'All Now Page Sources', 'threadi-now-pages' ),
+			'view_item'             => __( 'View Now Page Source in frontend', 'threadi-now-pages' ),
+			'view_items'            => __( 'View Now Page Sources', 'threadi-now-pages' ),
+			'edit_item'             => __( 'View Now Page Source', 'threadi-now-pages' ),
+			'search_items'          => __( 'Search Now Page Source', 'threadi-now-pages' ),
+			'not_found'             => __( 'No Now Page sources found', 'threadi-now-pages' ),
+			'item_link'             => _x( 'Now Page Source Link', 'navigation link block title', 'threadi-now-pages' ),
+			'item_link_description' => _x( 'A link to a Now Page Source.', 'navigation link block description', 'threadi-now-pages' ),
+			'add_new_item'          => __( 'Add New Now Page Source', 'threadi-now-pages' ),
 		);
 	}
 
@@ -201,7 +201,7 @@ class Sources extends Post_Type_Base {
 		// add a meta-box to choose the provider.
 		add_meta_box(
 			$this->get_slug() . '-provider',
-			__( 'Provider', 'now-pages-threadi' ),
+			__( 'Provider', 'threadi-now-pages' ),
 			array( $this, 'show_provider_selection' ),
 			$this->get_slug()
 		);
@@ -209,14 +209,14 @@ class Sources extends Post_Type_Base {
 		// add a meta-box to choose the provider.
 		add_meta_box(
 			$this->get_slug() . '-provider-settings',
-			__( 'Settings', 'now-pages-threadi' ),
+			__( 'Settings', 'threadi-now-pages' ),
 			array( $this, 'show_provider_settings' ),
 			$this->get_slug()
 		);
 
 		add_meta_box(
 			$this->get_slug() . '-provider-additional',
-			__( 'Additional settings', 'now-pages-threadi' ),
+			__( 'Additional settings', 'threadi-now-pages' ),
 			array( $this, 'show_provider_additional_settings' ),
 			$this->get_slug()
 		);
@@ -248,22 +248,22 @@ class Sources extends Post_Type_Base {
 
 		// bail if list is empty.
 		if ( empty( $providers ) ) {
-			echo '<p>' . esc_html__( 'No providers are enabled.', 'now-pages-threadi' ) . '</p>';
+			echo '<p>' . esc_html__( 'No providers are enabled.', 'threadi-now-pages' ) . '</p>';
 			return;
 		}
 
 		// show them.
 		?>
-		<input type="hidden" name="now_pages_threadi_source_form" value="1">
+		<input type="hidden" name="threadi_now_pages_source_form" value="1">
 		<fieldset>
-			<label for="now-pages-threadi-provider"><?php echo esc_html__( 'Choose a provider', 'now-pages-threadi' ); ?></label>
-			<select id="now-pages-threadi-provider" name="now-pages-threadi-provider">
-				<option value=""><?php echo esc_html__( 'Please choose', 'now-pages-threadi' ); ?></option>
+			<label for="threadi-now-pages-provider"><?php echo esc_html__( 'Choose a provider', 'threadi-now-pages' ); ?></label>
+			<select id="threadi-now-pages-provider" name="threadi-now-pages-provider">
+				<option value=""><?php echo esc_html__( 'Please choose', 'threadi-now-pages' ); ?></option>
 				<?php
 				foreach ( $providers as $provider ) {
 					$label = $provider->get_label();
 					if ( ! $provider->is_enabled() ) {
-						$label .= ' ' . __( '(disabled)', 'now-pages-threadi' );
+						$label .= ' ' . __( '(disabled)', 'threadi-now-pages' );
 					}
 
 					echo '<option value="' . esc_attr( $provider->get_slug() ) . '"' . ( $actual_provider === $provider->get_slug() ? ' selected="selected"' : '' ) . '>' . esc_html( $label ) . '</option>';
@@ -273,7 +273,7 @@ class Sources extends Post_Type_Base {
 					?>
 					<p class="notice notice-warning inline">
 						<?php
-						echo esc_html__( 'This provider has been disabled. Its configuration is preserved, but it will not be executed.', 'now-pages-threadi' );
+						echo esc_html__( 'This provider has been disabled. Its configuration is preserved, but it will not be executed.', 'threadi-now-pages' );
 						?>
 					</p>
 					<?php
@@ -283,7 +283,7 @@ class Sources extends Post_Type_Base {
 			<p>
 				<?php
 				/* translators: %1$s will be replaced by a URL */
-				echo wp_kses_post( sprintf( __( 'Choose how you want to get the data for the entries on your Now Page. If you do not see a provider listed here, feel free <a href="%1$s" target="_blank">to post in our forum%2$s</a>. ', 'now-pages-threadi' ), Plugin::get_plugin_support_url(), Plugin::get_a11n_window_hint() ) );
+				echo wp_kses_post( sprintf( __( 'Choose how you want to get the data for the entries on your Now Page. If you do not see a provider listed here, feel free <a href="%1$s" target="_blank">to post in our forum%2$s</a>. ', 'threadi-now-pages' ), Plugin::get_plugin_support_url(), Plugin::get_a11n_window_hint() ) );
 				?>
 			</p>
 		</fieldset>
@@ -303,7 +303,7 @@ class Sources extends Post_Type_Base {
 
 		// bail if list is empty.
 		if ( empty( $providers ) ) {
-			echo '<p>' . esc_html__( 'No providers found.', 'now-pages-threadi' ) . '</p>';
+			echo '<p>' . esc_html__( 'No providers found.', 'threadi-now-pages' ) . '</p>';
 			return;
 		}
 
@@ -321,9 +321,9 @@ class Sources extends Post_Type_Base {
 		// show them.
 		?>
 		<fieldset>
-			<label for="now-pages-threadi-default-category"><?php echo esc_html__( 'Default category for imported entries', 'now-pages-threadi' ); ?></label>
-			<select id="now-pages-threadi-default-category" name="now-pages-threadi-default-category"<?php echo ( empty( $actual_provider ) ? ' disabled="disabled"' : '' ); ?>>
-				<option value="0"><?php echo esc_html__( '- none -', 'now-pages-threadi' ); ?></option>
+			<label for="threadi-now-pages-default-category"><?php echo esc_html__( 'Default category for imported entries', 'threadi-now-pages' ); ?></label>
+			<select id="threadi-now-pages-default-category" name="threadi-now-pages-default-category"<?php echo ( empty( $actual_provider ) ? ' disabled="disabled"' : '' ); ?>>
+				<option value="0"><?php echo esc_html__( '- none -', 'threadi-now-pages' ); ?></option>
 				<?php
 				foreach ( $categories as $term_id => $term_name ) {
 					printf(
@@ -337,19 +337,19 @@ class Sources extends Post_Type_Base {
 			</select>
 			<p>
 				<?php
-				echo esc_html__( 'If you change the category, the entries this source has already imported are moved to it as well.', 'now-pages-threadi' );
+				echo esc_html__( 'If you change the category, the entries this source has already imported are moved to it as well.', 'threadi-now-pages' );
 
 				// link to the place where the categories are managed, if the user may do that.
 				$categories_url = Categories::get_instance()->get_management_url();
 				if ( '' !== $categories_url ) {
-					echo ' ' . wp_kses_post( '<a href="' . esc_url( $categories_url ) . '" target="_blank">' . esc_html__( 'Manage the categories', 'now-pages-threadi' ) . Plugin::get_a11n_window_hint() . '</a>' );
+					echo ' ' . wp_kses_post( '<a href="' . esc_url( $categories_url ) . '" target="_blank">' . esc_html__( 'Manage the categories', 'threadi-now-pages' ) . Plugin::get_a11n_window_hint() . '</a>' );
 				}
 				?>
 			</p>
 		</fieldset>
 		<fieldset>
-			<label for="now-pages-threadi-language"><?php echo esc_html__( 'Language of this source', 'now-pages-threadi' ); ?></label>
-			<select id="now-pages-threadi-language" name="now-pages-threadi-language"<?php echo ( empty( $actual_provider ) ? ' disabled="disabled"' : '' ); ?>>
+			<label for="threadi-now-pages-language"><?php echo esc_html__( 'Language of this source', 'threadi-now-pages' ); ?></label>
+			<select id="threadi-now-pages-language" name="threadi-now-pages-language"<?php echo ( empty( $actual_provider ) ? ' disabled="disabled"' : '' ); ?>>
 				<?php
 				// add the WP-default language to the list, each language in the normalized form only once.
 				$languages = array_unique( array_filter( array_map( array( Languages::class, 'normalize_locale' ), array_merge( array( 'en_US' ), get_available_languages() ) ) ) );
@@ -366,10 +366,10 @@ class Sources extends Post_Type_Base {
 		if ( $actual_provider && Fediverse::MODE_ENTRIES === Fediverse::get_instance()->get_mode() && Fediverse::get_instance()->is_enabled() ) {
 			?>
 			<fieldset>
-				<label for="now-pages-threadi-fediverse-share"><?php echo esc_html__( 'Share in the Fediverse', 'now-pages-threadi' ); ?></label>
-				<input type="hidden" name="now-pages-threadi-fediverse-share" value="0">
-				<input type="checkbox" id="now-pages-threadi-fediverse-share" name="now-pages-threadi-fediverse-share" value="1"<?php checked( Fediverse::get_instance()->is_source_shared( $post->ID ) ); ?>>
-				<p><?php echo esc_html__( 'If checked, each entry of this source is shared as a post of its own. Uncheck it for sources with many entries, or with entries your followers already get elsewhere.', 'now-pages-threadi' ); ?></p>
+				<label for="threadi-now-pages-fediverse-share"><?php echo esc_html__( 'Share in the Fediverse', 'threadi-now-pages' ); ?></label>
+				<input type="hidden" name="threadi-now-pages-fediverse-share" value="0">
+				<input type="checkbox" id="threadi-now-pages-fediverse-share" name="threadi-now-pages-fediverse-share" value="1"<?php checked( Fediverse::get_instance()->is_source_shared( $post->ID ) ); ?>>
+				<p><?php echo esc_html__( 'If checked, each entry of this source is shared as a post of its own. Uncheck it for sources with many entries, or with entries your followers already get elsewhere.', 'threadi-now-pages' ); ?></p>
 			</fieldset>
 			<?php
 		}
@@ -377,13 +377,13 @@ class Sources extends Post_Type_Base {
 		if ( $actual_provider ) {
 			?>
 			<p>
-				<label for="now-pages-threadi-override-text"><?php esc_html_e( 'Fixed override text', 'now-pages-threadi' ); ?></label>
+				<label for="threadi-now-pages-override-text"><?php esc_html_e( 'Fixed override text', 'threadi-now-pages' ); ?></label>
 				<?php
 				wp_editor(
 					(string) get_post_meta( $post->ID, 'override_text', true ),
-					'now-pages-threadi-override-text',
+					'threadi-now-pages-override-text',
 					array(
-						'textarea_name' => 'now-pages-threadi-override-text',
+						'textarea_name' => 'threadi-now-pages-override-text',
 						'textarea_rows' => 4,
 						'media_buttons' => false,
 						'tinymce'       => true,
@@ -392,15 +392,15 @@ class Sources extends Post_Type_Base {
 				);
 				?>
 				<br>
-				<span class="description"><?php echo esc_html__( 'If set, whenever this source has 1 or more entries in a digest period AND no category-level override applies, this exact text is shown instead of the individual entries.', 'now-pages-threadi' ); ?></span>
+				<span class="description"><?php echo esc_html__( 'If set, whenever this source has 1 or more entries in a digest period AND no category-level override applies, this exact text is shown instead of the individual entries.', 'threadi-now-pages' ); ?></span>
 			</p>
 			<p>
-				<label for="now-pages-threadi-content-filter-rules"><?php echo esc_html__( 'Additional content filter rules', 'now-pages-threadi' ); ?></label>
-				<textarea id="now-pages-threadi-content-filter-rules" name="now-pages-threadi-content-filter-rules" rows="4" class="widefat"><?php echo esc_textarea( (string) get_post_meta( $post->ID, Content_Filters::SOURCE_META, true ) ); ?></textarea>
+				<label for="threadi-now-pages-content-filter-rules"><?php echo esc_html__( 'Additional content filter rules', 'threadi-now-pages' ); ?></label>
+				<textarea id="threadi-now-pages-content-filter-rules" name="threadi-now-pages-content-filter-rules" rows="4" class="widefat"><?php echo esc_textarea( (string) get_post_meta( $post->ID, Content_Filters::SOURCE_META, true ) ); ?></textarea>
 				<br>
 				<span class="description">
 					<?php
-					echo esc_html__( 'One rule per line, syntax: action:field:operator:value (e.g. include:author:equals:Jane Doe). These are added to the site-wide list, they do not replace it. Operators: equals, not_equals, contains, not_contains, word (the value as a whole word), regex. To split one feed into several sources, add it once per part and let each keep its part, e.g. include:url:contains:/support/topic/.', 'now-pages-threadi' );
+					echo esc_html__( 'One rule per line, syntax: action:field:operator:value (e.g. include:author:equals:Jane Doe). These are added to the site-wide list, they do not replace it. Operators: equals, not_equals, contains, not_contains, word (the value as a whole word), regex. To split one feed into several sources, add it once per part and let each keep its part, e.g. include:url:contains:/support/topic/.', 'threadi-now-pages' );
 					?>
 				</span>
 				<?php
@@ -411,11 +411,11 @@ class Sources extends Post_Type_Base {
 				<span class="description">
 					<?php
 					if ( empty( $filterable_fields ) ) {
-						echo esc_html__( 'Available fields for this provider: text, url, source_slug.', 'now-pages-threadi' );
+						echo esc_html__( 'Available fields for this provider: text, url, source_slug.', 'threadi-now-pages' );
 					} else {
 						printf(
 						/* translators: %s will be replaced by a comma-separated list of field names. */
-							esc_html__( 'Available fields for this provider: text, url, source_slug, %s.', 'now-pages-threadi' ),
+							esc_html__( 'Available fields for this provider: text, url, source_slug, %s.', 'threadi-now-pages' ),
 							esc_html( implode( ', ', array_keys( $filterable_fields ) ) )
 						);
 					}
@@ -446,7 +446,7 @@ class Sources extends Post_Type_Base {
 
 		// bail if our own metabox was not submitted.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- core verifies update-post_{ID} in edit_post() before save_post fires.
-		if ( ! isset( $_POST['now_pages_threadi_source_form'] ) ) {
+		if ( ! isset( $_POST['threadi_now_pages_source_form'] ) ) {
 			return;
 		}
 
@@ -468,7 +468,7 @@ class Sources extends Post_Type_Base {
 		}
 
 		// get and save the provider (only if it is valid and enabled).
-		$provider         = sanitize_key( $this->get_string_from_request( 'now-pages-threadi-provider' ) );
+		$provider         = sanitize_key( $this->get_string_from_request( 'threadi-now-pages-provider' ) );
 		$current_provider = (string) get_post_meta( $post_id, 'provider', true );
 		$provider_obj     = Providers::get_instance()->get_provider( $provider );
 		$provider_chosen  = false;
@@ -480,17 +480,17 @@ class Sources extends Post_Type_Base {
 		}
 
 		// get and save the given language.
-		$language = Languages::normalize_locale( sanitize_text_field( $this->get_string_from_request( 'now-pages-threadi-language' ) ) );
+		$language = Languages::normalize_locale( sanitize_text_field( $this->get_string_from_request( 'threadi-now-pages-language' ) ) );
 		update_post_meta( $post_id, 'language', $language );
 
 		// get and save the given default category.
 		$previous_category = absint( get_post_meta( $post_id, Categories::SOURCE_DEFAULT_META, true ) );
-		$default_category  = absint( $this->get_string_from_request( 'now-pages-threadi-default-category' ) );
+		$default_category  = absint( $this->get_string_from_request( 'threadi-now-pages-default-category' ) );
 		update_post_meta( $post_id, Categories::SOURCE_DEFAULT_META, $default_category );
 
 		// the entries this source has already imported follow its category. Only if the
 		// field was sent: it is disabled as long as no provider is chosen.
-		if ( null !== $this->get_from_request( 'now-pages-threadi-default-category' ) ) {
+		if ( null !== $this->get_from_request( 'threadi-now-pages-default-category' ) ) {
 			$this->report_moved_entries(
 				Categories::get_instance()->assign_to_source_entries( $post_id, $default_category, $previous_category ),
 				$default_category,
@@ -499,7 +499,7 @@ class Sources extends Post_Type_Base {
 		}
 
 		// get the fixed override text.
-		$override_text = wp_kses_post( $this->get_string_from_request( 'now-pages-threadi-override-text' ) );
+		$override_text = wp_kses_post( $this->get_string_from_request( 'threadi-now-pages-override-text' ) );
 
 		// an override of nothing but markup would replace a whole group with
 		// an empty paragraph, so store it as empty.
@@ -511,7 +511,7 @@ class Sources extends Post_Type_Base {
 		update_post_meta( $post_id, 'override_text', wp_slash( $override_text ) );
 
 		// get and save the additional content filter rules.
-		$content_filter_rules = Content_Filters::sanitize_rules( $this->get_string_from_request( 'now-pages-threadi-content-filter-rules' ) );
+		$content_filter_rules = Content_Filters::sanitize_rules( $this->get_string_from_request( 'threadi-now-pages-content-filter-rules' ) );
 
 		// the value is already unslashed, update_post_meta() would unslash it again and remove the backslashes of a regex.
 		update_post_meta( $post_id, Content_Filters::SOURCE_META, wp_slash( $content_filter_rules ) );
@@ -520,9 +520,9 @@ class Sources extends Post_Type_Base {
 		Content_Filters::get_instance()->report( $content_filter_rules, Providers::get_instance()->get_provider( $provider ) );
 
 		// save whether the entries of this source are shared in the Fediverse, if this was asked.
-		$fediverse_share = $this->get_from_request( 'now-pages-threadi-fediverse-share' );
+		$fediverse_share = $this->get_from_request( 'threadi-now-pages-fediverse-share' );
 		if ( null !== $fediverse_share ) {
-			update_post_meta( $post_id, Fediverse::META_SOURCE_EXCLUDED, '1' === $this->get_string_from_request( 'now-pages-threadi-fediverse-share' ) ? 0 : 1 );
+			update_post_meta( $post_id, Fediverse::META_SOURCE_EXCLUDED, '1' === $this->get_string_from_request( 'threadi-now-pages-fediverse-share' ) ? 0 : 1 );
 		}
 
 		// get the provider object.
@@ -535,7 +535,7 @@ class Sources extends Post_Type_Base {
 
 		// the fields of a provider are only part of the form if they were rendered for this provider.
 		// a missing value does not mean empty then: the form is sent when a provider is chosen.
-		if ( sanitize_key( $this->get_string_from_request( 'now-pages-threadi-provider-fields' ) ) !== $provider ) {
+		if ( sanitize_key( $this->get_string_from_request( 'threadi-now-pages-provider-fields' ) ) !== $provider ) {
 			// set the defaults of the fields of a provider which has just been chosen.
 			if ( $provider_chosen ) {
 				$this->save_default_config( $provider_obj, $post_id );
@@ -593,7 +593,7 @@ class Sources extends Post_Type_Base {
 					Log::get_instance()->add(
 						sprintf(
 						/* translators: %1$s will be replaced by a field name. */
-							__( 'The value for the field %1$s could not be encrypted, the previous value has been kept.', 'now-pages-threadi' ),
+							__( 'The value for the field %1$s could not be encrypted, the previous value has been kept.', 'threadi-now-pages' ),
 							'<code>' . esc_html( (string) $name ) . '</code>'
 						),
 						'error',
@@ -686,7 +686,7 @@ class Sources extends Post_Type_Base {
 
 		// bail if no slug is given.
 		if ( empty( $provider_slug ) ) {
-			echo '<p>' . esc_html__( 'Please choose a provider first.', 'now-pages-threadi' ) . '</p>';
+			echo '<p>' . esc_html__( 'Please choose a provider first.', 'threadi-now-pages' ) . '</p>';
 			return;
 		}
 
@@ -695,12 +695,12 @@ class Sources extends Post_Type_Base {
 
 		// bail if provider could not be loaded.
 		if ( ! $provider_obj instanceof Provider_Interface ) {
-			echo '<p>' . esc_html__( 'The configured provider could not be found.', 'now-pages-threadi' ) . '</p>';
+			echo '<p>' . esc_html__( 'The configured provider could not be found.', 'threadi-now-pages' ) . '</p>';
 			return;
 		}
 
 		// mark for which provider the fields are part of the form.
-		echo '<input type="hidden" name="now-pages-threadi-provider-fields" value="' . esc_attr( $provider_obj->get_slug() ) . '">';
+		echo '<input type="hidden" name="threadi-now-pages-provider-fields" value="' . esc_attr( $provider_obj->get_slug() ) . '">';
 
 		// extend the kses filter.
 		add_filter( 'wp_kses_allowed_html', array( $this, 'add_kses_html' ), 10, 2 );
@@ -867,13 +867,13 @@ class Sources extends Post_Type_Base {
 				}
 
 				do_action(
-					'now_pages_threadi_provider_error',
+					'threadi_now_pages_provider_error',
 					$provider_slug,
 					new WP_Error(
-						'now_pages_threadi_unknown_provider',
+						'threadi_now_pages_unknown_provider',
 						sprintf(
 						/* translators: %1$s will be replaced by a provider slug, %2$s by the title of a source. */
-							__( 'The provider %1$s configured on the source %2$s does not exist. It was probably provided by a plugin that is no longer active.', 'now-pages-threadi' ),
+							__( 'The provider %1$s configured on the source %2$s does not exist. It was probably provided by a plugin that is no longer active.', 'threadi-now-pages' ),
 							'<code>' . esc_html( $provider_slug ) . '</code>',
 							'<a href="' . esc_url( (string) get_edit_post_link( $post_id, '' ) ) . '">' . esc_html( get_the_title( $post_id ) ) . '</a>'
 						),
@@ -975,10 +975,10 @@ class Sources extends Post_Type_Base {
 			$new_columns[ $key ] = $label;
 
 			if ( 'title' === $key ) {
-				$new_columns['now_pages_threadi_provider'] = __( 'Provider', 'now-pages-threadi' );
-				$new_columns['now_pages_threadi_category'] = __( 'Category', 'now-pages-threadi' );
-				$new_columns['now_pages_threadi_language'] = __( 'Language', 'now-pages-threadi' );
-				$new_columns['now_pages_threadi_entries']  = __( 'Entries', 'now-pages-threadi' );
+				$new_columns['threadi_now_pages_provider'] = __( 'Provider', 'threadi-now-pages' );
+				$new_columns['threadi_now_pages_category'] = __( 'Category', 'threadi-now-pages' );
+				$new_columns['threadi_now_pages_language'] = __( 'Language', 'threadi-now-pages' );
+				$new_columns['threadi_now_pages_entries']  = __( 'Entries', 'threadi-now-pages' );
 			}
 		}
 
@@ -995,7 +995,7 @@ class Sources extends Post_Type_Base {
 	 */
 	public function render_columns( string $column, mixed $post_id ): void {
 		// show the provider in the list.
-		if ( 'now_pages_threadi_provider' === $column ) {
+		if ( 'threadi_now_pages_provider' === $column ) {
 			// get the configured provider.
 			$provider_slug = (string) get_post_meta( absint( $post_id ), 'provider', true );
 
@@ -1016,7 +1016,7 @@ class Sources extends Post_Type_Base {
 		}
 
 		// show the category the entries of this source get.
-		if ( 'now_pages_threadi_category' === $column ) {
+		if ( 'threadi_now_pages_category' === $column ) {
 			$term_id = absint( get_post_meta( absint( $post_id ), Categories::SOURCE_DEFAULT_META, true ) );
 			$term    = $term_id > 0 ? get_term( $term_id, Categories::TAXONOMY ) : null;
 
@@ -1040,7 +1040,7 @@ class Sources extends Post_Type_Base {
 		}
 
 		// show the language in the list.
-		if ( 'now_pages_threadi_language' === $column ) {
+		if ( 'threadi_now_pages_language' === $column ) {
 			// get the configured provider.
 			$language = (string) get_post_meta( absint( $post_id ), 'language', true );
 
@@ -1057,7 +1057,7 @@ class Sources extends Post_Type_Base {
 		}
 
 		// show the number of entries belonging to this source.
-		if ( 'now_pages_threadi_entries' === $column ) {
+		if ( 'threadi_now_pages_entries' === $column ) {
 			$source_id     = absint( $post_id );
 			$entries_count = $this->count_entries_for_source( $source_id );
 
@@ -1091,7 +1091,7 @@ class Sources extends Post_Type_Base {
 	 * @return array<string,string>
 	 */
 	public function add_sortable_provider_column( array $columns ): array {
-		$columns['now_pages_threadi_provider'] = 'now_pages_threadi_provider';
+		$columns['threadi_now_pages_provider'] = 'threadi_now_pages_provider';
 
 		return $columns;
 	}
@@ -1112,7 +1112,7 @@ class Sources extends Post_Type_Base {
 			return;
 		}
 
-		if ( 'now_pages_threadi_provider' !== $query->get( 'orderby' ) ) {
+		if ( 'threadi_now_pages_provider' !== $query->get( 'orderby' ) ) {
 			return;
 		}
 
@@ -1153,26 +1153,26 @@ class Sources extends Post_Type_Base {
 		// bail if another import is running (cron, manual import, CLI, …):
 		// parallel runs would create duplicate entries.
 		if ( ! $this->acquire_import_lock() ) {
-			Log::get_instance()->add( __( 'An import was skipped because another import is still running.', 'now-pages-threadi' ), 'info', 'system' );
+			Log::get_instance()->add( __( 'An import was skipped because another import is still running.', 'threadi-now-pages' ), 'info', 'system' );
 
 			$process_handler->set_message(
 				array(
 					'detail' => array(
-						'title'   => __( 'Import is already running', 'now-pages-threadi' ),
+						'title'   => __( 'Import is already running', 'threadi-now-pages' ),
 						'texts'   => array(
-							'<p>' . esc_html__( 'Another import is running at the moment. Please try again in a few minutes.', 'now-pages-threadi' ) . '</p>',
+							'<p>' . esc_html__( 'Another import is running at the moment. Please try again in a few minutes.', 'threadi-now-pages' ) . '</p>',
 						),
 						'buttons' => array(
 							array(
 								'action'  => 'closeDialog();',
 								'variant' => 'primary',
-								'text'    => __( 'OK', 'now-pages-threadi' ),
+								'text'    => __( 'OK', 'threadi-now-pages' ),
 							),
 						),
 					),
 				)
 			);
-			$process_handler->set_status( __( 'Import is already running', 'now-pages-threadi' ) );
+			$process_handler->set_status( __( 'Import is already running', 'threadi-now-pages' ) );
 			$process_handler->set_running( 0 );
 			return false;
 		}
@@ -1318,7 +1318,7 @@ class Sources extends Post_Type_Base {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param int $time_budget The time budget in seconds (0 = no limit).
 		 */
-		$time_budget = absint( apply_filters( 'now_pages_threadi_import_time_budget', self::IMPORT_TIME_BUDGET ) );
+		$time_budget = absint( apply_filters( 'threadi_now_pages_import_time_budget', self::IMPORT_TIME_BUDGET ) );
 
 		// try to get enough time for the import.
 		if ( function_exists( 'set_time_limit' ) && false === strpos( (string) ini_get( 'disable_functions' ), 'set_time_limit' ) ) {
@@ -1387,7 +1387,7 @@ class Sources extends Post_Type_Base {
 		// set basic settings for process handling.
 		$process_handler->set_count( 0 );
 		$process_handler->set_max_count( count( $sources ) );
-		$process_handler->set_status( __( 'Import is starting', 'now-pages-threadi' ) );
+		$process_handler->set_status( __( 'Import is starting', 'threadi-now-pages' ) );
 		$process_handler->set_running( time() );
 
 		// loop through them.
@@ -1397,7 +1397,7 @@ class Sources extends Post_Type_Base {
 				Log::get_instance()->add(
 					sprintf(
 						/* translators: %1$d will be replaced by a number of sources. */
-						__( 'The import stopped after its time budget, %1$d sources will be imported during the next run.', 'now-pages-threadi' ),
+						__( 'The import stopped after its time budget, %1$d sources will be imported during the next run.', 'threadi-now-pages' ),
 						count( $sources ) - $index
 					),
 					'info',
@@ -1429,7 +1429,7 @@ class Sources extends Post_Type_Base {
 				Log::get_instance()->add(
 					sprintf(
 					/* translators: %1$s will be replaced by a provider label, %2$s by a reason. */
-						__( 'The provider %1$s cannot run: %2$s', 'now-pages-threadi' ),
+						__( 'The provider %1$s cannot run: %2$s', 'threadi-now-pages' ),
 						'<code>' . esc_html( $source['provider']->get_label() ) . '</code>',
 						esc_html( $source['provider']->get_unavailable_reason() )
 					),
@@ -1446,17 +1446,17 @@ class Sources extends Post_Type_Base {
 
 			// update the message.
 			/* translators: %1$s will be replaced by a title. */
-			$process_handler->set_status( sprintf( __( 'Importing %1$s', 'now-pages-threadi' ), $source['title'] ) );
+			$process_handler->set_status( sprintf( __( 'Importing %1$s', 'threadi-now-pages' ), $source['title'] ) );
 
 			// import this source, one broken provider must not stop the others.
 			try {
 				$this->import_source( $source );
 			} catch ( \Throwable $e ) {
 				do_action(
-					'now_pages_threadi_provider_error',
+					'threadi_now_pages_provider_error',
 					$source['provider']->get_slug(),
 					new WP_Error(
-						'now_pages_threadi_provider_exception',
+						'threadi_now_pages_provider_exception',
 						$e->getMessage(),
 						array( 'source_id' => absint( $source['source_id'] ) )
 					)
@@ -1473,17 +1473,17 @@ class Sources extends Post_Type_Base {
 		// create dialog.
 		$dialog = array(
 			'detail' => array(
-				'title'   => __( 'Import has been run', 'now-pages-threadi' ),
+				'title'   => __( 'Import has been run', 'threadi-now-pages' ),
 				'texts'   => array(
-					'<p><strong>' . __( 'Your now pages are now up to date.', 'now-pages-threadi' ) . '</strong></p>',
+					'<p><strong>' . __( 'Your now pages are now up to date.', 'threadi-now-pages' ) . '</strong></p>',
 					/* translators: %1$s will be replaced by a URL. */
-					'<p>' . sprintf( __( 'Check your now page <a href="%1$s">here</a>.', 'now-pages-threadi' ), Frontend::get_instance()->get_global_now_page_url() ) . '</p>',
+					'<p>' . sprintf( __( 'Check your now page <a href="%1$s">here</a>.', 'threadi-now-pages' ), Frontend::get_instance()->get_global_now_page_url() ) . '</p>',
 				),
 				'buttons' => array(
 					array(
 						'action'  => 'closeDialog();',
 						'variant' => 'primary',
-						'text'    => __( 'OK', 'now-pages-threadi' ),
+						'text'    => __( 'OK', 'threadi-now-pages' ),
 					),
 				),
 			),
@@ -1492,7 +1492,7 @@ class Sources extends Post_Type_Base {
 
 		// update the counter.
 		$process_handler->set_count( count( $sources ) );
-		$process_handler->set_status( __( 'Import has been run', 'now-pages-threadi' ) );
+		$process_handler->set_status( __( 'Import has been run', 'threadi-now-pages' ) );
 	}
 
 	/**
@@ -1528,9 +1528,9 @@ class Sources extends Post_Type_Base {
 			 *
 			 * @since 1.0.0 Available since 1.0.0.
 			 * @param Entry $entry     The entry object.
-			 * @param int   $source_id The post ID of the np_threadi_source this entry came from (0 = none).
+			 * @param int   $source_id The post ID of the threadi_np_source this entry came from (0 = none).
 			 */
-			do_action( 'now_pages_threadi_entry_received', $entry, $source['source_id'] );
+			do_action( 'threadi_now_pages_entry_received', $entry, $source['source_id'] );
 
 			// show progress.
 			if ( $progress ) {
@@ -1585,13 +1585,13 @@ class Sources extends Post_Type_Base {
 			}
 
 			do_action(
-				'now_pages_threadi_provider_error',
+				'threadi_now_pages_provider_error',
 				$source['provider']->get_slug(),
 				new WP_Error(
-					'now_pages_threadi_secret_not_decryptable',
+					'threadi_now_pages_secret_not_decryptable',
 					sprintf(
 					/* translators: %1$s will be replaced by a field label, %2$s by the title of a source. */
-						__( 'The value of the field %1$s on the source %2$s could not be decrypted, so the source has not been imported. Probably the security keys of this website have changed. Please enter the value again.', 'now-pages-threadi' ),
+						__( 'The value of the field %1$s on the source %2$s could not be decrypted, so the source has not been imported. Probably the security keys of this website have changed. Please enter the value again.', 'threadi-now-pages' ),
 						'<code>' . esc_html( (string) ( $field['label'] ?? $name ) ) . '</code>',
 						'<a href="' . esc_url( (string) get_edit_post_link( absint( $source['source_id'] ), '' ) ) . '">' . esc_html( $source['title'] ) . '</a>'
 					),
@@ -1663,13 +1663,13 @@ class Sources extends Post_Type_Base {
 		// define the messages for our cpt.
 		$messages[ $this->get_slug() ] = array(
 			0  => '',
-			1  => __( 'The source has been updated.', 'now-pages-threadi' ),
-			4  => __( 'The source has been updated.', 'now-pages-threadi' ),
-			6  => __( 'The source has been saved.', 'now-pages-threadi' ),
-			7  => __( 'The source has been saved.', 'now-pages-threadi' ),
+			1  => __( 'The source has been updated.', 'threadi-now-pages' ),
+			4  => __( 'The source has been updated.', 'threadi-now-pages' ),
+			6  => __( 'The source has been saved.', 'threadi-now-pages' ),
+			7  => __( 'The source has been saved.', 'threadi-now-pages' ),
 			/* translators: %1$s will be replaced by a date. */
-			9  => sprintf( __( 'The source should be published on %1$s.', 'now-pages-threadi' ), $date ),
-			10 => __( 'The source has been updated.', 'now-pages-threadi' ),
+			9  => sprintf( __( 'The source should be published on %1$s.', 'threadi-now-pages' ), $date ),
+			10 => __( 'The source has been updated.', 'threadi-now-pages' ),
 		);
 
 		// return the resulting messages.
@@ -1685,21 +1685,21 @@ class Sources extends Post_Type_Base {
 			'%1$d source has been deleted.',
 			'%1$d sources have been deleted.',
 			absint( $bulk_counts['deleted'] ),
-			'now-pages-threadi'
+			'threadi-now-pages'
 		);
 		/* translators: %1$s will be replaced by a number. */
 		$bulk_messages[ $this->get_slug() ]['trashed'] = _n(
 			'%1$d source has been moved to trash.',
 			'%1$d sources have been moved to trash.',
 			absint( $bulk_counts['trashed'] ),
-			'now-pages-threadi'
+			'threadi-now-pages'
 		);
 		/* translators: %1$s will be replaced by a number. */
 		$bulk_messages[ $this->get_slug() ]['untrashed'] = _n(
 			'%1$d source has been revived from trash.',
 			'%1$d sources have been revived from trash.',
 			absint( $bulk_counts['untrashed'] ),
-			'now-pages-threadi'
+			'threadi-now-pages'
 		);
 		return $bulk_messages;
 	}
@@ -1754,7 +1754,7 @@ class Sources extends Post_Type_Base {
 		// Re-add the author box to the 'side' (right) position.
 		add_meta_box(
 			'authordiv',
-			__( 'Author', 'now-pages-threadi' ),
+			__( 'Author', 'threadi-now-pages' ),
 			'post_author_meta_box',
 			$this->get_slug(),
 			'side',
@@ -1777,7 +1777,7 @@ class Sources extends Post_Type_Base {
 
 		// bail if the user chose to configure a source by hand.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only routing.
-		if ( isset( $_GET['now_pages_threadi_manual'] ) ) {
+		if ( isset( $_GET['threadi_now_pages_manual'] ) ) {
 			return;
 		}
 
@@ -1904,11 +1904,11 @@ class Sources extends Post_Type_Base {
 
 		// add a hint the user sees on the next page load.
 		$transient_obj = Transients::get_instance()->add();
-		$transient_obj->set_name( 'now_pages_threadi_duplicate_source' );
+		$transient_obj->set_name( 'threadi_now_pages_duplicate_source' );
 		$transient_obj->set_message(
 			sprintf(
 			/* translators: %1$s will be replaced by a link to another source. */
-				__( 'This source has the same configuration as %1$s. Both will import the same entries. If each of them should keep another part, give them different content filter rules.', 'now-pages-threadi' ),
+				__( 'This source has the same configuration as %1$s. Both will import the same entries. If each of them should keep another part, give them different content filter rules.', 'threadi-now-pages' ),
 				'<a href="' . esc_url( (string) get_edit_post_link( $duplicate, '' ) ) . '">' . esc_html( get_the_title( $duplicate ) ) . '</a>'
 			)
 		);
@@ -1925,7 +1925,7 @@ class Sources extends Post_Type_Base {
 		 * @param int $post_id The post ID which is a duplicate.
 		 * @param array $identity The list of parameters to identify the duplicate.
 		 */
-		do_action( 'now_pages_threadi_source_duplicate', $provider_obj, $duplicate, $post_id, $identity );
+		do_action( 'threadi_now_pages_source_duplicate', $provider_obj, $duplicate, $post_id, $identity );
 	}
 
 	/**
@@ -1953,15 +1953,15 @@ class Sources extends Post_Type_Base {
 
 		if ( $term_id > 0 ) {
 			/* translators: %1$d will be replaced by a number, %2$s by the name of a category. */
-			$message = _n( '%1$d entry of this source has been moved to the category "%2$s".', '%1$d entries of this source have been moved to the category "%2$s".', $changed, 'now-pages-threadi' );
+			$message = _n( '%1$d entry of this source has been moved to the category "%2$s".', '%1$d entries of this source have been moved to the category "%2$s".', $changed, 'threadi-now-pages' );
 		} else {
 			/* translators: %1$d will be replaced by a number, %2$s by the name of a category. */
-			$message = _n( 'The category "%2$s" has been removed from %1$d entry of this source.', 'The category "%2$s" has been removed from %1$d entries of this source.', $changed, 'now-pages-threadi' );
+			$message = _n( 'The category "%2$s" has been removed from %1$d entry of this source.', 'The category "%2$s" has been removed from %1$d entries of this source.', $changed, 'threadi-now-pages' );
 		}
 
 		// shown once on the next page: no dismissible time, it is gone after that.
 		$transient_obj = Transients::get_instance()->add();
-		$transient_obj->set_name( 'now_pages_threadi_source_category' );
+		$transient_obj->set_name( 'threadi_now_pages_source_category' );
 		$transient_obj->set_message( esc_html( sprintf( $message, $changed, $term->name ) ) );
 		$transient_obj->set_type( 'success' );
 		$transient_obj->save();
@@ -2006,26 +2006,26 @@ class Sources extends Post_Type_Base {
 
 		// create dialog.
 		$dialog = array(
-			'title'   => __( 'Test the availability', 'now-pages-threadi' ),
+			'title'   => __( 'Test the availability', 'threadi-now-pages' ),
 			'texts'   => array(
-				'<p><strong>' . __( 'Do you want to check the availability of this source?', 'now-pages-threadi' ) . '</strong></p>',
+				'<p><strong>' . __( 'Do you want to check the availability of this source?', 'threadi-now-pages' ) . '</strong></p>',
 			),
 			'buttons' => array(
 				array(
-					'action'  => 'now_pages_threadi_check_source( ' . absint( $post->ID ) . ' );',
+					'action'  => 'threadi_now_pages_check_source( ' . absint( $post->ID ) . ' );',
 					'variant' => 'primary',
-					'text'    => __( 'Yes', 'now-pages-threadi' ),
+					'text'    => __( 'Yes', 'threadi-now-pages' ),
 				),
 				array(
 					'action'  => 'closeDialog();',
 					'variant' => 'secondary',
-					'text'    => __( 'No', 'now-pages-threadi' ),
+					'text'    => __( 'No', 'threadi-now-pages' ),
 				),
 			),
 		);
 
 		// add our source check.
-		$actions['now_pages_threadi_check'] = '<a href="#" class="easy-dialog-for-wordpress" data-dialog="' . esc_attr( Format::get_json( $dialog ) ) . '">' . esc_html__( 'Check availability', 'now-pages-threadi' ) . '</a>';
+		$actions['threadi_now_pages_check'] = '<a href="#" class="easy-dialog-for-wordpress" data-dialog="' . esc_attr( Format::get_json( $dialog ) ) . '">' . esc_html__( 'Check availability', 'threadi-now-pages' ) . '</a>';
 
 		// return the resulting actions.
 		return $actions;
@@ -2042,7 +2042,7 @@ class Sources extends Post_Type_Base {
 		return add_query_arg(
 			array(
 				'post_type'               => $this->get_slug(),
-				'now_pages_threadi_check' => $source_id,
+				'threadi_now_pages_check' => $source_id,
 			),
 			admin_url( 'edit.php' )
 		);

@@ -6,18 +6,18 @@
  * beside the services because that is where a source is added, and
  * nobody would look for it under a provider name.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Presets\Preset;
+namespace ThreadiNowPages\Presets\Preset;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Presets\Preset_Base;
-use NowPagesThreadi\Providers\Recurring_Provider;
+use ThreadiNowPages\Presets\Preset_Base;
+use ThreadiNowPages\Providers\Recurring_Provider;
 
 /**
  * Object for the preset of a routine.
@@ -38,7 +38,7 @@ class Routine extends Preset_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Something I do regularly', 'now-pages-threadi' );
+		return __( 'Something I do regularly', 'threadi-now-pages' );
 	}
 
 	/**
@@ -47,7 +47,7 @@ class Routine extends Preset_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'A sentence of your own which is repeated, for what no service knows about - like sports once a week.', 'now-pages-threadi' );
+		return __( 'A sentence of your own which is repeated, for what no service knows about - like sports once a week.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -67,11 +67,11 @@ class Routine extends Preset_Base {
 	public function get_setup_fields(): array {
 		return array(
 			'text' => array(
-				'label'       => __( 'Text of the entry', 'now-pages-threadi' ),
+				'label'       => __( 'Text of the entry', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => true,
-				'description' => __( 'The sentence which is repeated. It appears once per period of your now page; how often and whether you are asked first can be changed in the source afterwards.', 'now-pages-threadi' ),
-				'placeholder' => __( 'Went to the gym', 'now-pages-threadi' ),
+				'description' => __( 'The sentence which is repeated. It appears once per period of your now page; how often and whether you are asked first can be changed in the source afterwards.', 'threadi-now-pages' ),
+				'placeholder' => __( 'Went to the gym', 'threadi-now-pages' ),
 				// these are the words of the user: whoever proposes them has to show them first.
 				'review'      => true,
 			),

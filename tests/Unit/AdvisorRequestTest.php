@@ -6,16 +6,16 @@
  * of WordPress to a stub provider. This covers what AdvisorTest cannot -
  * which request is sent to a service, depending on what it is able to do.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Sources\Advisor;
-use NowPagesThreadi\Tests\NowPagesTestCase;
-use NowPagesThreadi\Tests\Unit\Stubs\Stub_Ai_State;
+use ThreadiNowPages\Sources\Advisor;
+use ThreadiNowPages\Tests\NowPagesTestCase;
+use ThreadiNowPages\Tests\Unit\Stubs\Stub_Ai_State;
 use ReflectionProperty;
 use WordPress\AiClient\Providers\Http\Exception\ClientException;
 use WordPress\AiClient\Providers\Http\Exception\NetworkException;
@@ -179,7 +179,7 @@ class AdvisorRequestTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_the_web_search_can_be_switched_off(): void {
-		add_filter( 'now_pages_threadi_advisor_use_web_search', '__return_false' );
+		add_filter( 'threadi_now_pages_advisor_use_web_search', '__return_false' );
 
 		Advisor::get_instance()->get_advice( 'My runs' );
 
@@ -278,11 +278,11 @@ class AdvisorRequestTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_the_rule_for_routines_follows_the_provider(): void {
-		update_option( 'now_pages_threadi_provider_recurring_enabled', 0 );
+		update_option( 'threadi_now_pages_provider_recurring_enabled', 0 );
 
 		Advisor::get_instance()->get_advice( 'I go running twice a week' );
 
-		delete_option( 'now_pages_threadi_provider_recurring_enabled' );
+		delete_option( 'threadi_now_pages_provider_recurring_enabled' );
 
 		$instruction = Stub_Ai_State::$calls[0]['instruction'];
 
@@ -295,11 +295,11 @@ class AdvisorRequestTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_the_model_is_not_told_about_push_sources(): void {
-		update_option( 'now_pages_threadi_provider_webhook_enabled', 1 );
+		update_option( 'threadi_now_pages_provider_webhook_enabled', 1 );
 
 		Advisor::get_instance()->get_advice( 'My posts on a service without a feed' );
 
-		delete_option( 'now_pages_threadi_provider_webhook_enabled' );
+		delete_option( 'threadi_now_pages_provider_webhook_enabled' );
 
 		$instruction = Stub_Ai_State::$calls[0]['instruction'];
 
@@ -319,7 +319,7 @@ class AdvisorRequestTest extends NowPagesTestCase {
 		// an existing source with a key and an address.
 		$source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'My secret calendar',
 				'meta_input'  => array(

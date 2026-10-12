@@ -6,17 +6,17 @@
  * in March". The window is fixed, so the same post shows the same
  * entries in two years - as long as they still exist.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests\Periods;
+namespace ThreadiNowPages\Digests\Periods;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Period_Base;
+use ThreadiNowPages\Digests\Period_Base;
 
 /**
  * Object for a freely chosen period.
@@ -35,7 +35,7 @@ class Range extends Period_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Custom range', 'now-pages-threadi' );
+		return __( 'Custom range', 'threadi-now-pages' );
 	}
 
 	/**
@@ -44,7 +44,7 @@ class Range extends Period_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'A window you define yourself, for example a single month you write about in a post.', 'now-pages-threadi' );
+		return __( 'A window you define yourself, for example a single month you write about in a post.', 'threadi-now-pages' );
 	}
 
 	/**

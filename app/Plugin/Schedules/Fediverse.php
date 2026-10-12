@@ -2,18 +2,18 @@
 /**
  * File to handle the schedule which shares the now page in the Fediverse.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin\Schedules;
+namespace ThreadiNowPages\Plugin\Schedules;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Plugin\Log;
-use NowPagesThreadi\Plugin\Schedules_Base;
+use ThreadiNowPages\Plugin\Log;
+use ThreadiNowPages\Plugin\Schedules_Base;
 
 /**
  * Object to share what is due in the Fediverse.
@@ -28,14 +28,14 @@ class Fediverse extends Schedules_Base {
 	 *
 	 * @var string
 	 */
-	protected string $name = 'now_pages_threadi_schedule_fediverse';
+	protected string $name = 'threadi_now_pages_schedule_fediverse';
 
 	/**
 	 * The default interval.
 	 *
 	 * @var string
 	 */
-	protected string $default_interval = 'now_pages_threadi_hourly';
+	protected string $default_interval = 'threadi_now_pages_hourly';
 
 	/**
 	 * Define the log category.
@@ -58,7 +58,7 @@ class Fediverse extends Schedules_Base {
 	 */
 	public function is_enabled(): bool {
 		// bail if nothing is shared.
-		if ( ! \NowPagesThreadi\Fediverse\Fediverse::get_instance()->is_enabled() ) {
+		if ( ! \ThreadiNowPages\Fediverse\Fediverse::get_instance()->is_enabled() ) {
 			return false;
 		}
 
@@ -71,7 +71,7 @@ class Fediverse extends Schedules_Base {
 	 * @return void
 	 */
 	public function run(): void {
-		$created = \NowPagesThreadi\Fediverse\Fediverse::get_instance()->run();
+		$created = \ThreadiNowPages\Fediverse\Fediverse::get_instance()->run();
 
 		// bail if nothing was shared.
 		if ( 0 === $created ) {
@@ -81,7 +81,7 @@ class Fediverse extends Schedules_Base {
 		Log::get_instance()->add(
 			sprintf(
 				/* translators: %1$d will be replaced by a number. */
-				_n( '%1$d post has been handed to the ActivityPub plugin to be shared in the Fediverse.', '%1$d posts have been handed to the ActivityPub plugin to be shared in the Fediverse.', $created, 'now-pages-threadi' ),
+				_n( '%1$d post has been handed to the ActivityPub plugin to be shared in the Fediverse.', '%1$d posts have been handed to the ActivityPub plugin to be shared in the Fediverse.', $created, 'threadi-now-pages' ),
 				$created
 			),
 			'info',

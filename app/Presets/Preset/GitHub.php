@@ -2,17 +2,17 @@
 /**
  * This file contains the GitHub preset.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Presets\Preset;
+namespace ThreadiNowPages\Presets\Preset;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Presets\Preset_Base;
+use ThreadiNowPages\Presets\Preset_Base;
 
 /**
  * Object for the GitHub preset.
@@ -33,7 +33,7 @@ class GitHub extends Preset_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'GitHub', 'now-pages-threadi' );
+		return __( 'GitHub', 'threadi-now-pages' );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class GitHub extends Preset_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'Your public activity: commits, pull requests, issues, releases and stars. Only a username is needed.', 'now-pages-threadi' );
+		return __( 'Your public activity: commits, pull requests, issues, releases and stars. Only a username is needed.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -71,10 +71,10 @@ class GitHub extends Preset_Base {
 	public function get_setup_fields(): array {
 		return array(
 			'github_username' => array(
-				'label'       => __( 'Username', 'now-pages-threadi' ),
+				'label'       => __( 'Username', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => true,
-				'description' => __( 'Your account name on GitHub.', 'now-pages-threadi' ),
+				'description' => __( 'Your account name on GitHub.', 'threadi-now-pages' ),
 				'placeholder' => 'octocat',
 			),
 		);

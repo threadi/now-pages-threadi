@@ -1,12 +1,12 @@
 {
-  "name": "now-pages-threadi-divi5/digest",
-  "d4Shortcode": "now_pages_threadi_digest",
+  "name": "threadi-now-pages-divi5/digest",
+  "d4Shortcode": "threadi_now_pages_digest",
   "title": "Digest",
   "titles": "Digest",
   "category": "module",
-  "moduleIcon": "now-pages-threadi/icon",
-  "moduleClassName": "now_pages_threadi_digest_module",
-  "moduleOrderClassName": "now_pages_threadi_digest_module",
+  "moduleIcon": "threadi-now-pages/icon",
+  "moduleClassName": "threadi_now_pages_digest_module",
+  "moduleOrderClassName": "threadi_now_pages_digest_module",
   "childrenName": [],
   "attributes": {
     "module": {

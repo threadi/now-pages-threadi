@@ -1,4 +1,4 @@
-=== Now Pages by threadi ===
+=== threadi Now Pages ===
 Contributors: threadi
 Tags: now page, slash pages, indieweb, personal website, activity
 Requires at least: 7.0
@@ -89,7 +89,7 @@ Use native widgets, elements and blocks to make your Now page look its best.
 * Kubio using the block
 * Nimble Builder using the classic WordPress widget
 * SeedProd Pro using the classic WordPress widget or shortcode
-* [Shortcode](https://github.com/threadi/now-pages-threadi/blob/master/docs/shortcodes.md): `[now_pages_threadi_digest]`
+* [Shortcode](https://github.com/threadi/threadi-now-pages/blob/master/docs/shortcodes.md): `[threadi_now_pages_digest]`
 * Visual Composer using the classic WordPress widget
 
 == External services ==
@@ -181,7 +181,7 @@ data from your site is transmitted.
 
 == Repository, documentation and reliability ==
 
-The development repository is on [GitHub](https://github.com/threadi/now-pages-threadi). Developers will find several [hooks](https://github.com/threadi/now-pages-threadi/blob/master/docs/hooks.md) there.
+The development repository is on [GitHub](https://github.com/threadi/threadi-now-pages). Developers will find several [hooks](https://github.com/threadi/threadi-now-pages/blob/master/docs/hooks.md) there.
 
 Each release is only published if it passes:
 
@@ -192,7 +192,7 @@ Each release is only published if it passes:
 
 == Installation ==
 
-1. Upload "now-pages-threadi" to the "/wp-content/plugins/" directory or install it via "Plugins → Add New".
+1. Upload "threadi-now-pages" to the "/wp-content/plugins/" directory or install it via "Plugins → Add New".
 2. Activate the plugin through the "Plugins" menu in WordPress.
 3. Start the setup – it creates your Now page and its first source.
 
@@ -218,4 +218,4 @@ No. AI is optional and only used if you connected an AI service under Settings �
 
 Initial release
 
-[older changes](https://github.com/threadi/now-pages-threadi/blob/master/changelog.md)
+[older changes](https://github.com/threadi/threadi-now-pages/blob/master/changelog.md)

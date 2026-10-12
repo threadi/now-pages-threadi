@@ -2,22 +2,22 @@
 /**
  * File to handle the report-schedule.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin\Schedules;
+namespace ThreadiNowPages\Plugin\Schedules;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Display_Settings;
-use NowPagesThreadi\NowPages\Entries;
-use NowPagesThreadi\NowPages\Frontend;
-use NowPagesThreadi\Plugin\Schedules_Base;
-use NowPagesThreadi\Sources\Sources;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Display_Settings;
+use ThreadiNowPages\NowPages\Entries;
+use ThreadiNowPages\NowPages\Frontend;
+use ThreadiNowPages\Plugin\Schedules_Base;
+use ThreadiNowPages\Sources\Sources;
 use WP_User;
 use WP_User_Query;
 
@@ -31,28 +31,28 @@ class EmptyNowPages extends Schedules_Base {
 	 *
 	 * @var string
 	 */
-	protected string $name = 'now_pages_threadi_schedule_empty_now_pages_threadi';
+	protected string $name = 'threadi_now_pages_schedule_empty_threadi_now_pages';
 
 	/**
 	 * Name of the option used to enable this event.
 	 *
 	 * @var string
 	 */
-	protected string $option_name = 'now_pages_threadi_email_empty_now_pages_threadi';
+	protected string $option_name = 'threadi_now_pages_email_empty_threadi_now_pages';
 
 	/**
 	 * Name of the option used for the interval of this event.
 	 *
 	 * @var string
 	 */
-	protected string $interval_option_name = 'now_pages_threadi_email_interval_empty_now_pages_threadi';
+	protected string $interval_option_name = 'threadi_now_pages_email_interval_empty_threadi_now_pages';
 
 	/**
 	 * Define the default interval.
 	 *
 	 * @var string
 	 */
-	protected string $default_interval = 'now_pages_threadi_daily';
+	protected string $default_interval = 'threadi_now_pages_daily';
 
 	/**
 	 * Send the first email one interval after the event has been created, not directly.
@@ -99,7 +99,7 @@ class EmptyNowPages extends Schedules_Base {
 
 		// get the entries on the now page.
 		$args    = array(
-			'period' => get_option( 'now_pages_threadi_frontend_period' ),
+			'period' => get_option( 'threadi_now_pages_frontend_period' ),
 			// use the verbatim format: a narrative summary may be empty for a moment
 			// (e.g. AI provider down), which would send a wrong hint.
 			'format' => 'verbatim',
@@ -110,12 +110,12 @@ class EmptyNowPages extends Schedules_Base {
 		// bail if list of entries is not empty.
 		if ( empty( $content ) ) {
 			// send the report.
-			$mail_object = new \NowPagesThreadi\Plugin\Emails\EmptyNowPages();
+			$mail_object = new \ThreadiNowPages\Plugin\Emails\EmptyNowPages();
 			$mail_object->send();
 		}
 
 		// if user pages are enabled and public, check them too.
-		if ( 1 === absint( get_option( 'now_pages_threadi_frontend_user_url' ) ) && Frontend::get_instance()->is_public( true ) ) {
+		if ( 1 === absint( get_option( 'threadi_now_pages_frontend_user_url' ) ) && Frontend::get_instance()->is_public( true ) ) {
 			$this->check_user_pages();
 		}
 	}
@@ -173,7 +173,7 @@ class EmptyNowPages extends Schedules_Base {
 
 				// get the entries on the now page.
 				$args    = array(
-					'period' => get_option( 'now_pages_threadi_frontend_period' ),
+					'period' => get_option( 'threadi_now_pages_frontend_period' ),
 					'format' => 'verbatim',
 					'user'   => $user->ID,
 				);
@@ -182,19 +182,19 @@ class EmptyNowPages extends Schedules_Base {
 
 				// bail if list of entries is not empty, and allow a new email for the next empty phase.
 				if ( ! empty( $content ) ) {
-					if ( get_user_meta( $user->ID, \NowPagesThreadi\Plugin\Emails\EmptyNowPages::USER_META_SENT, true ) ) {
-						delete_user_meta( $user->ID, \NowPagesThreadi\Plugin\Emails\EmptyNowPages::USER_META_SENT );
+					if ( get_user_meta( $user->ID, \ThreadiNowPages\Plugin\Emails\EmptyNowPages::USER_META_SENT, true ) ) {
+						delete_user_meta( $user->ID, \ThreadiNowPages\Plugin\Emails\EmptyNowPages::USER_META_SENT );
 					}
 					continue;
 				}
 
 				// bail if the user already got this email for the actual empty phase.
-				if ( get_user_meta( $user->ID, \NowPagesThreadi\Plugin\Emails\EmptyNowPages::USER_META_SENT, true ) ) {
+				if ( get_user_meta( $user->ID, \ThreadiNowPages\Plugin\Emails\EmptyNowPages::USER_META_SENT, true ) ) {
 					continue;
 				}
 
 				// send the report.
-				$mail_object = new \NowPagesThreadi\Plugin\Emails\EmptyNowPages();
+				$mail_object = new \ThreadiNowPages\Plugin\Emails\EmptyNowPages();
 				$mail_object->set_user( $user );
 				$mail_object->send();
 			}

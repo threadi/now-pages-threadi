@@ -7,12 +7,12 @@
  * on the upper bound applied afterward, and letting every period handle
  * it would repeat the logic and let a third party bypass it.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests;
+namespace ThreadiNowPages\Digests;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;

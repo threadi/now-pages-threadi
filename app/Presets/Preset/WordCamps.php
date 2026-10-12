@@ -2,17 +2,17 @@
 /**
  * This file contains the WordCamp preset.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Presets\Preset;
+namespace ThreadiNowPages\Presets\Preset;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Presets\Preset_Base;
+use ThreadiNowPages\Presets\Preset_Base;
 
 /**
  * Object for the WordCamp preset.
@@ -33,7 +33,7 @@ class WordCamps extends Preset_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'WordCamp', 'now-pages-threadi' );
+		return __( 'WordCamp', 'threadi-now-pages' );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class WordCamps extends Preset_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'Shows a WordCamp while it is running. Uses the official calendar of all upcoming events, so name the one you are attending.', 'now-pages-threadi' );
+		return __( 'Shows a WordCamp while it is running. Uses the official calendar of all upcoming events, so name the one you are attending.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -71,10 +71,10 @@ class WordCamps extends Preset_Base {
 	public function get_setup_fields(): array {
 		return array(
 			'wordcamp_filter' => array(
-				'label'       => __( 'Which WordCamp', 'now-pages-threadi' ),
+				'label'       => __( 'Which WordCamp', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => true,
-				'description' => __( 'Part of the name, for example "Europe" or "Leipzig". Only matching events are imported - the calendar holds every WordCamp worldwide.', 'now-pages-threadi' ),
+				'description' => __( 'Part of the name, for example "Europe" or "Leipzig". Only matching events are imported - the calendar holds every WordCamp worldwide.', 'threadi-now-pages' ),
 				'placeholder' => 'Europe',
 			),
 		);

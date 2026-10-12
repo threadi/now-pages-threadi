@@ -2,14 +2,14 @@
 /**
  * File containing a stub provider identified by two fields together.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
-namespace NowPagesThreadi\Tests\Unit\Stubs;
+namespace ThreadiNowPages\Tests\Unit\Stubs;
 
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Providers\Provider_Base;
-use NowPagesThreadi\Providers\Provider_Context;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Providers\Provider_Base;
+use ThreadiNowPages\Providers\Provider_Context;
 
 /**
  * A provider whose identity consists of two fields.

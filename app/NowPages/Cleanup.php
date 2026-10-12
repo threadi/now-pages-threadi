@@ -7,12 +7,12 @@
  * years ago. Deleting on a schedule would empty such a post without a
  * word, so this asks every time.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\NowPages;
+namespace ThreadiNowPages\NowPages;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -20,13 +20,13 @@ defined( 'ABSPATH' ) || exit;
 use easySettingsForWordPress\Fields\Button;
 use easySettingsForWordPress\Page;
 use easySettingsForWordPress\Tab;
-use NowPagesThreadi\Fediverse\Fediverse;
-use NowPagesThreadi\Helper\Format;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Interface;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\Plugin\Log;
-use NowPagesThreadi\Plugin\Settings;
+use ThreadiNowPages\Fediverse\Fediverse;
+use ThreadiNowPages\Helper\Format;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Interface;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\Plugin\Log;
+use ThreadiNowPages\Plugin\Settings;
 use WP_Post;
 use WP_Query;
 
@@ -85,7 +85,7 @@ class Cleanup implements Singleton_Interface {
 	public function init(): void {
 		add_action( 'init', array( $this, 'add_settings' ), 20 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'add_scripts' ) );
-		add_action( 'wp_ajax_now_pages_threadi_cleanup', array( $this, 'cleanup_via_ajax' ) );
+		add_action( 'wp_ajax_threadi_now_pages_cleanup', array( $this, 'cleanup_via_ajax' ) );
 	}
 
 	/**
@@ -111,7 +111,7 @@ class Cleanup implements Singleton_Interface {
 		}
 
 		// get the import tab: this belongs next to where the entries arrive.
-		$import_tab = $settings_page->get_tab( 'now_pages_threadi_import' );
+		$import_tab = $settings_page->get_tab( 'threadi_now_pages_import' );
 
 		// bail if the tab could not be loaded.
 		if ( ! $import_tab instanceof Tab ) {
@@ -119,8 +119,8 @@ class Cleanup implements Singleton_Interface {
 		}
 
 		// add our own section at the end of the tab.
-		$cleanup_section = $import_tab->add_section( 'now_pages_threadi_cleanup', 50 );
-		$cleanup_section->set_title( __( 'Cleanup', 'now-pages-threadi' ) );
+		$cleanup_section = $import_tab->add_section( 'threadi_now_pages_cleanup', 50 );
+		$cleanup_section->set_title( __( 'Cleanup', 'threadi-now-pages' ) );
 		$cleanup_section->set_callback( array( $this, 'show_hint' ) );
 		if ( method_exists( $cleanup_section, 'set_collapsed' ) ) { // @phpstan-ignore function.alreadyNarrowedType
 			$cleanup_section->set_collapsible( true );
@@ -128,13 +128,13 @@ class Cleanup implements Singleton_Interface {
 		}
 
 		// add the setting.
-		$setting = $settings_obj->add_setting( 'now_pages_threadi_cleanup' );
+		$setting = $settings_obj->add_setting( 'threadi_now_pages_cleanup' );
 		$setting->set_section( $cleanup_section );
 		$setting->set_autoload( false );
 		$setting->prevent_export( true );
 		$field = new Button( $settings_obj );
-		$field->set_title( __( 'Delete old entries', 'now-pages-threadi' ) );
-		$field->set_button_title( __( 'Choose an age', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Delete old entries', 'threadi-now-pages' ) );
+		$field->set_button_title( __( 'Choose an age', 'threadi-now-pages' ) );
 		$field->set_button_url( '#' );
 		$field->add_class( 'easy-dialog-for-wordpress' );
 		$field->add_data( 'dialog', Format::get_json( $this->get_dialog() ) );
@@ -148,7 +148,7 @@ class Cleanup implements Singleton_Interface {
 	 */
 	public function show_hint(): void {
 		echo '<p>';
-		echo esc_html__( 'Your now page keeps every entry it ever imported. That is what makes it possible to look back at a single month later on - and it also means the list grows for as long as you use the plugin. Here you can remove what has become too old for you.', 'now-pages-threadi' );
+		echo esc_html__( 'Your now page keeps every entry it ever imported. That is what makes it possible to look back at a single month later on - and it also means the list grows for as long as you use the plugin. Here you can remove what has become too old for you.', 'threadi-now-pages' );
 		echo '</p>';
 	}
 
@@ -159,13 +159,13 @@ class Cleanup implements Singleton_Interface {
 	 */
 	private function get_dialog(): array {
 		$texts = array(
-			'<p><strong>' . esc_html__( 'Which entries should be deleted?', 'now-pages-threadi' ) . '</strong></p>',
-			'<p>' . esc_html__( 'Everything older than the given age is removed permanently. This cannot be undone.', 'now-pages-threadi' ) . '</p>',
+			'<p><strong>' . esc_html__( 'Which entries should be deleted?', 'threadi-now-pages' ) . '</strong></p>',
+			'<p>' . esc_html__( 'Everything older than the given age is removed permanently. This cannot be undone.', 'threadi-now-pages' ) . '</p>',
 			sprintf(
-				'<p><label for="now-pages-threadi-cleanup-days">%1$s</label> <input type="number" id="now-pages-threadi-cleanup-days" class="small-text" value="%2$d" min="1" step="1"> %3$s</p>',
-				esc_html__( 'Delete entries older than', 'now-pages-threadi' ),
+				'<p><label for="threadi-now-pages-cleanup-days">%1$s</label> <input type="number" id="threadi-now-pages-cleanup-days" class="small-text" value="%2$d" min="1" step="1"> %3$s</p>',
+				esc_html__( 'Delete entries older than', 'threadi-now-pages' ),
 				absint( self::DEFAULT_DAYS ),
-				esc_html__( 'days', 'now-pages-threadi' )
+				esc_html__( 'days', 'threadi-now-pages' )
 			),
 		);
 
@@ -174,23 +174,23 @@ class Cleanup implements Singleton_Interface {
 		// the post stays, its digest turns up empty.
 		if ( $this->has_fixed_range_somewhere() ) {
 			$texts[] = '<p class="notice notice-warning inline" style="margin-left:0;padding:8px 12px;">'
-						. esc_html__( 'Somewhere on your website a post shows a fixed period of your now page. If its entries are deleted here, that post will be empty from then on.', 'now-pages-threadi' )
+						. esc_html__( 'Somewhere on your website a post shows a fixed period of your now page. If its entries are deleted here, that post will be empty from then on.', 'threadi-now-pages' )
 						. '</p>';
 		}
 
 		return array(
-			'title'   => __( 'Delete old entries', 'now-pages-threadi' ),
+			'title'   => __( 'Delete old entries', 'threadi-now-pages' ),
 			'texts'   => $texts,
 			'buttons' => array(
 				array(
-					'action'  => 'now_pages_threadi_cleanup_entries();',
+					'action'  => 'threadi_now_pages_cleanup_entries();',
 					'variant' => 'primary',
-					'text'    => __( 'Delete', 'now-pages-threadi' ),
+					'text'    => __( 'Delete', 'threadi-now-pages' ),
 				),
 				array(
 					'action'  => 'closeDialog();',
 					'variant' => 'secondary',
-					'text'    => __( 'Cancel', 'now-pages-threadi' ),
+					'text'    => __( 'Cancel', 'threadi-now-pages' ),
 				),
 			),
 		);
@@ -211,7 +211,7 @@ class Cleanup implements Singleton_Interface {
 
 		// embed our own JS script.
 		wp_enqueue_script(
-			'now-pages-threadi-cleanup',
+			'threadi-now-pages-cleanup',
 			Plugin::get_plugin_url() . 'admin/cleanup.js',
 			array( 'easy-dialog-for-wordpress' ),
 			Plugin::get_file_version( Plugin::get_plugin_path() . 'admin/cleanup.js' ),
@@ -220,16 +220,16 @@ class Cleanup implements Singleton_Interface {
 
 		// add php-vars to our js-script.
 		wp_localize_script(
-			'now-pages-threadi-cleanup',
-			'nowPagesThreadiCleanupVars',
+			'threadi-now-pages-cleanup',
+			'threadiNowPagesCleanupVars',
 			array(
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
-				'nonce'    => wp_create_nonce( 'now-pages-threadi-cleanup' ),
-				'title'    => __( 'Delete old entries', 'now-pages-threadi' ),
-				'running'  => __( 'Deleting the entries …', 'now-pages-threadi' ),
-				'invalid'  => __( 'Please give an age of at least one day.', 'now-pages-threadi' ),
-				'error'    => __( 'The entries could not be deleted. Please try again.', 'now-pages-threadi' ),
-				'ok'       => __( 'OK', 'now-pages-threadi' ),
+				'nonce'    => wp_create_nonce( 'threadi-now-pages-cleanup' ),
+				'title'    => __( 'Delete old entries', 'threadi-now-pages' ),
+				'running'  => __( 'Deleting the entries …', 'threadi-now-pages' ),
+				'invalid'  => __( 'Please give an age of at least one day.', 'threadi-now-pages' ),
+				'error'    => __( 'The entries could not be deleted. Please try again.', 'threadi-now-pages' ),
+				'ok'       => __( 'OK', 'threadi-now-pages' ),
 			)
 		);
 	}
@@ -241,7 +241,7 @@ class Cleanup implements Singleton_Interface {
 	 */
 	public function cleanup_via_ajax(): void {
 		// check the nonce.
-		check_ajax_referer( 'now-pages-threadi-cleanup', 'nonce' );
+		check_ajax_referer( 'threadi-now-pages-cleanup', 'nonce' );
 
 		// bail if the capability is missing.
 		if ( ! current_user_can( Settings::get_instance()->get_settings_obj()->get_capability() ) ) {
@@ -275,7 +275,7 @@ class Cleanup implements Singleton_Interface {
 			$texts = array(
 				'<p>' . sprintf(
 					/* translators: %1$d will be replaced by a number of days. */
-					esc_html( _n( 'No entry is older than %1$d day, so nothing was deleted.', 'No entry is older than %1$d days, so nothing was deleted.', $days, 'now-pages-threadi' ) ),
+					esc_html( _n( 'No entry is older than %1$d day, so nothing was deleted.', 'No entry is older than %1$d days, so nothing was deleted.', $days, 'threadi-now-pages' ) ),
 					absint( $days )
 				) . '</p>',
 			);
@@ -286,7 +286,7 @@ class Cleanup implements Singleton_Interface {
 		$texts = array(
 			'<p><strong>' . sprintf(
 				/* translators: %1$s will be replaced by a number of entries. */
-				esc_html( _n( '%1$s entry has been deleted.', '%1$s entries have been deleted.', $deleted, 'now-pages-threadi' ) ),
+				esc_html( _n( '%1$s entry has been deleted.', '%1$s entries have been deleted.', $deleted, 'threadi-now-pages' ) ),
 				esc_html( number_format_i18n( $deleted ) )
 			) . '</strong></p>',
 		);
@@ -296,7 +296,7 @@ class Cleanup implements Singleton_Interface {
 		if ( $remaining > 0 ) {
 			$texts[] = '<p>' . sprintf(
 				/* translators: %1$s will be replaced by a number of entries. */
-				esc_html( _n( '%1$s entry of that age is still there, because one run deletes a limited number. Press the button again to continue.', '%1$s entries of that age are still there, because one run deletes a limited number. Press the button again to continue.', $remaining, 'now-pages-threadi' ) ),
+				esc_html( _n( '%1$s entry of that age is still there, because one run deletes a limited number. Press the button again to continue.', '%1$s entries of that age are still there, because one run deletes a limited number. Press the button again to continue.', $remaining, 'threadi-now-pages' ) ),
 				esc_html( number_format_i18n( $remaining ) )
 			) . '</p>';
 		}
@@ -313,13 +313,13 @@ class Cleanup implements Singleton_Interface {
 	 */
 	private function get_dialog_around( array $texts ): array {
 		return array(
-			'title'   => __( 'Delete old entries', 'now-pages-threadi' ),
+			'title'   => __( 'Delete old entries', 'threadi-now-pages' ),
 			'texts'   => $texts,
 			'buttons' => array(
 				array(
 					'action'  => 'closeDialog();',
 					'variant' => 'primary',
-					'text'    => __( 'OK', 'now-pages-threadi' ),
+					'text'    => __( 'OK', 'threadi-now-pages' ),
 				),
 			),
 		);
@@ -345,7 +345,7 @@ class Cleanup implements Singleton_Interface {
 		 * @param int $max_per_run The limit of one run.
 		 * @param int $days        The age in days.
 		 */
-		$max_per_run = absint( apply_filters( 'now_pages_threadi_cleanup_max_per_run', $max_per_run, $days ) );
+		$max_per_run = absint( apply_filters( 'threadi_now_pages_cleanup_max_per_run', $max_per_run, $days ) );
 
 		// an entry deleted because of its age gets no gravestone of its own:
 		// keeping the hook would grow the list of remembered deletions by one
@@ -414,7 +414,7 @@ class Cleanup implements Singleton_Interface {
 		Log::get_instance()->add(
 			sprintf(
 				/* translators: %1$d will be replaced by a number of entries, %2$d by a number of days. */
-				__( 'Deleted %1$d entries which were older than %2$d days.', 'now-pages-threadi' ),
+				__( 'Deleted %1$d entries which were older than %2$d days.', 'threadi-now-pages' ),
 				$deleted,
 				$days
 			),
@@ -430,7 +430,7 @@ class Cleanup implements Singleton_Interface {
 		 * @param int $deleted How many entries were deleted.
 		 * @param int $days    The age in days.
 		 */
-		do_action( 'now_pages_threadi_cleanup_done', $deleted, $days );
+		do_action( 'threadi_now_pages_cleanup_done', $deleted, $days );
 
 		return $deleted;
 	}
@@ -526,7 +526,7 @@ class Cleanup implements Singleton_Interface {
 	 * @return bool
 	 */
 	private function has_fixed_range_somewhere(): bool {
-		$cache_key = 'now_pages_threadi_fixed_range_exists';
+		$cache_key = 'threadi_now_pages_fixed_range_exists';
 		$cached    = get_transient( $cache_key );
 
 		// a stored value is either a 1 or a 0.

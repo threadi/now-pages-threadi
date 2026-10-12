@@ -7,16 +7,16 @@
  * privacy delay has to hold - what has reached other servers cannot be
  * taken back.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Fediverse\Fediverse;
-use NowPagesThreadi\Presets\Presets;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Fediverse\Fediverse;
+use ThreadiNowPages\Presets\Presets;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 use WP_Query;
 
 /**
@@ -33,12 +33,12 @@ class FediverseTest extends NowPagesTestCase {
 
 		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
 
-		add_filter( 'now_pages_threadi_fediverse_is_available', '__return_true' );
-		add_filter( 'now_pages_threadi_is_public', '__return_true' );
+		add_filter( 'threadi_now_pages_fediverse_is_available', '__return_true' );
+		add_filter( 'threadi_now_pages_is_public', '__return_true' );
 
 		// no delay unless a test asks for one, so the tests do not depend on the time of day.
-		update_option( 'now_pages_threadi_delay_hours', 0 );
-		update_option( 'now_pages_threadi_frontend_format', 'verbatim' );
+		update_option( 'threadi_now_pages_delay_hours', 0 );
+		update_option( 'threadi_now_pages_frontend_format', 'verbatim' );
 	}
 
 	/**
@@ -66,7 +66,7 @@ class FediverseTest extends NowPagesTestCase {
 	private function create_entry( string $text, int $age, int $source_id = 0 ): int {
 		return self::factory()->post->create(
 			array(
-				'post_type'     => 'np_threadi_entry',
+				'post_type'     => 'threadi_np_entry',
 				'post_status'   => 'publish',
 				'post_title'    => '',
 				'post_content'  => $text,
@@ -90,7 +90,7 @@ class FediverseTest extends NowPagesTestCase {
 
 		return self::factory()->post->create(
 			array(
-				'post_type'     => 'np_threadi_entry',
+				'post_type'     => 'threadi_np_entry',
 				'post_status'   => 'publish',
 				'post_title'    => '',
 				'post_content'  => $text,
@@ -111,7 +111,7 @@ class FediverseTest extends NowPagesTestCase {
 	private function create_source( string $preset = '' ): int {
 		return self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'A source',
 				'meta_input'  => array(
@@ -132,7 +132,7 @@ class FediverseTest extends NowPagesTestCase {
 	private function get_updates( string $status = 'publish' ): array {
 		$query = new WP_Query(
 			array(
-				'post_type'      => 'np_threadi_update',
+				'post_type'      => 'threadi_np_update',
 				'post_status'    => $status,
 				'posts_per_page' => -1,
 				'orderby'        => 'ID',
@@ -162,7 +162,7 @@ class FediverseTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_nothing_is_shared_without_activitypub(): void {
-		remove_filter( 'now_pages_threadi_fediverse_is_available', '__return_true' );
+		remove_filter( 'threadi_now_pages_fediverse_is_available', '__return_true' );
 
 		$this->share( Fediverse::MODE_ENTRIES );
 		$this->create_entry( 'Wrote a test', HOUR_IN_SECONDS );
@@ -181,8 +181,8 @@ class FediverseTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_nothing_is_shared_of_a_hidden_now_page(): void {
-		remove_filter( 'now_pages_threadi_is_public', '__return_true' );
-		add_filter( 'now_pages_threadi_is_public', '__return_false' );
+		remove_filter( 'threadi_now_pages_is_public', '__return_true' );
+		add_filter( 'threadi_now_pages_is_public', '__return_false' );
 
 		$this->share( Fediverse::MODE_ENTRIES );
 		$this->create_entry( 'Wrote a test', HOUR_IN_SECONDS );
@@ -253,7 +253,7 @@ class FediverseTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_the_privacy_delay_holds_for_single_entries(): void {
-		update_option( 'now_pages_threadi_delay_hours', 6 );
+		update_option( 'threadi_now_pages_delay_hours', 6 );
 
 		$this->share( Fediverse::MODE_ENTRIES );
 
@@ -268,8 +268,8 @@ class FediverseTest extends NowPagesTestCase {
 		$this->assertStringContainsString( 'Old enough', $updates[0]->post_content );
 
 		// the delay of the fresh one is over.
-		update_option( 'now_pages_threadi_delay_hours', 1 );
-		\NowPagesThreadi\Digests\Digest_Builder::reset_cache();
+		update_option( 'threadi_now_pages_delay_hours', 1 );
+		\ThreadiNowPages\Digests\Digest_Builder::reset_cache();
 
 		$this->assertSame( 1, Fediverse::get_instance()->run() );
 		$this->assertCount( 2, $this->get_updates() );
@@ -330,7 +330,7 @@ class FediverseTest extends NowPagesTestCase {
 		// the oldest ones go first, so the order of the timeline is the order things happened.
 		$this->assertStringContainsString( 'Entry 1', $this->get_updates()[0]->post_content );
 
-		\NowPagesThreadi\Digests\Digest_Builder::reset_cache();
+		\ThreadiNowPages\Digests\Digest_Builder::reset_cache();
 
 		$this->assertSame( 3, Fediverse::get_instance()->run() );
 		$this->assertCount( 8, $this->get_updates() );
@@ -369,7 +369,7 @@ class FediverseTest extends NowPagesTestCase {
 		Fediverse::get_instance()->run();
 
 		$this->assertCount( 1, $this->get_updates() );
-		$this->assertSame( 1, \NowPagesThreadi\NowPages\Cleanup::get_instance()->delete_older_than( 1 ) );
+		$this->assertSame( 1, \ThreadiNowPages\NowPages\Cleanup::get_instance()->delete_older_than( 1 ) );
 		$this->assertNull( get_post( $entry_id ) );
 		$this->assertCount( 1, $this->get_updates() );
 
@@ -388,15 +388,15 @@ class FediverseTest extends NowPagesTestCase {
 
 		Fediverse::get_instance()->run();
 
-		$columns = apply_filters( 'manage_np_threadi_update_posts_columns', array( 'cb' => '', 'title' => 'Title', 'date' => 'Date' ) );
+		$columns = apply_filters( 'manage_threadi_np_update_posts_columns', array( 'cb' => '', 'title' => 'Title', 'date' => 'Date' ) );
 
 		$this->assertArrayNotHasKey( 'title', $columns );
-		$this->assertSame( array( 'cb', 'now_pages_threadi_update', 'date' ), array_keys( $columns ) );
-		$this->assertSame( 'now_pages_threadi_update', apply_filters( 'list_table_primary_column', 'title', 'edit-np_threadi_update' ) );
+		$this->assertSame( array( 'cb', 'threadi_now_pages_update', 'date' ), array_keys( $columns ) );
+		$this->assertSame( 'threadi_now_pages_update', apply_filters( 'list_table_primary_column', 'title', 'edit-threadi_np_update' ) );
 		$this->assertSame( 'title', apply_filters( 'list_table_primary_column', 'title', 'edit-post' ) );
 
 		ob_start();
-		do_action( 'manage_np_threadi_update_posts_custom_column', 'now_pages_threadi_update', $this->get_updates()[0]->ID );
+		do_action( 'manage_threadi_np_update_posts_custom_column', 'threadi_now_pages_update', $this->get_updates()[0]->ID );
 		$output = (string) ob_get_clean();
 
 		$this->assertStringContainsString( 'Released version 2 of the app', $output );
@@ -517,7 +517,7 @@ class FediverseTest extends NowPagesTestCase {
 
 			self::factory()->post->create(
 				array(
-					'post_type'     => 'np_threadi_entry',
+					'post_type'     => 'threadi_np_entry',
 					'post_status'   => 'publish',
 					'post_title'    => '',
 					'post_content'  => $text,
@@ -546,7 +546,7 @@ class FediverseTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_a_summary_waits_for_the_privacy_delay(): void {
-		update_option( 'now_pages_threadi_delay_hours', 48 );
+		update_option( 'threadi_now_pages_delay_hours', 48 );
 
 		$this->share( Fediverse::MODE_DIGEST, 5 );
 		$this->create_entry_of_yesterday( 'Something from yesterday' );
@@ -621,7 +621,7 @@ class FediverseTest extends NowPagesTestCase {
 	 * @return void
 	 */
 	public function test_an_update_is_not_a_page_of_the_website(): void {
-		$post_type = get_post_type_object( 'np_threadi_update' );
+		$post_type = get_post_type_object( 'threadi_np_update' );
 
 		$this->assertNotNull( $post_type );
 		$this->assertFalse( $post_type->public );
@@ -629,7 +629,7 @@ class FediverseTest extends NowPagesTestCase {
 		$this->assertTrue( $post_type->exclude_from_search );
 		$this->assertFalse( $post_type->has_archive );
 		$this->assertFalse( $post_type->show_in_rest );
-		$this->assertNotContains( 'np_threadi_update', get_post_types( array( 'public' => true ) ) );
+		$this->assertNotContains( 'threadi_np_update', get_post_types( array( 'public' => true ) ) );
 	}
 
 	/**

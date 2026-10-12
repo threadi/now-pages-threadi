@@ -2,17 +2,17 @@
 /**
  * This file contains the Steam preset.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Presets\Preset;
+namespace ThreadiNowPages\Presets\Preset;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Presets\Preset_Base;
+use ThreadiNowPages\Presets\Preset_Base;
 
 /**
  * Object for the Steam preset.
@@ -33,7 +33,7 @@ class Steam extends Preset_Base {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return __( 'Steam', 'now-pages-threadi' );
+		return __( 'Steam', 'threadi-now-pages' );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Steam extends Preset_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return __( 'What you play. Needs an API key and a public profile - Steam stays silent otherwise.', 'now-pages-threadi' );
+		return __( 'What you play. Needs an API key and a public profile - Steam stays silent otherwise.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -71,10 +71,10 @@ class Steam extends Preset_Base {
 	public function get_setup_fields(): array {
 		return array(
 			'steam_id' => array(
-				'label'       => __( 'SteamID64', 'now-pages-threadi' ),
+				'label'       => __( 'SteamID64', 'threadi-now-pages' ),
 				'type'        => 'text',
 				'required'    => true,
-				'description' => __( 'The 17 digit ID of your account, not the display name. You can look it up at steamid.io. Your profile and its game details have to be set to public.', 'now-pages-threadi' ),
+				'description' => __( 'The 17 digit ID of your account, not the display name. You can look it up at steamid.io. Your profile and its game details have to be set to public.', 'threadi-now-pages' ),
 				'placeholder' => '76561197960287930',
 			),
 		);

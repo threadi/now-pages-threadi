@@ -2,12 +2,12 @@
 /**
  * File to for the base-object for each email.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -18,8 +18,8 @@ use easySettingsForWordPress\Fields\MultiField;
 use easySettingsForWordPress\Fields\Text;
 use easySettingsForWordPress\Settings;
 use easySettingsForWordPress\Tab;
-use NowPagesThreadi\Helper\Format;
-use NowPagesThreadi\Helper\Plugin;
+use ThreadiNowPages\Helper\Format;
+use ThreadiNowPages\Helper\Plugin;
 
 /**
  * Object to handle email objects as a base-object.
@@ -87,7 +87,7 @@ class Email_Base {
 		// add a section.
 		$email_tab_main = $email_tab->add_section( 'settings_section_email_' . $this->get_name(), 10 );
 		/* translators: %1$s will be replaced by the email title. */
-		$email_tab_main->set_title( sprintf( __( 'Settings for %1$s', 'now-pages-threadi' ), $this->get_title() ) );
+		$email_tab_main->set_title( sprintf( __( 'Settings for %1$s', 'threadi-now-pages' ), $this->get_title() ) );
 		$email_tab_main->set_callback( array( $this, 'show_description' ) );
 		$email_tab_main->set_setting( $settings_obj );
 		if ( method_exists( $email_tab_main, 'set_collapsed' ) ) { // @phpstan-ignore function.alreadyNarrowedType
@@ -96,35 +96,35 @@ class Email_Base {
 		}
 
 		// add setting.
-		$enable_setting = $settings_obj->add_setting( 'now_pages_threadi_email_' . $this->get_name() );
+		$enable_setting = $settings_obj->add_setting( 'threadi_now_pages_email_' . $this->get_name() );
 		$enable_setting->set_section( $email_tab_main );
 		$enable_setting->set_default( $this->is_default_enabled() ? 1 : 0 );
 		$field = new Checkbox( $settings_obj );
-		$field->set_title( __( 'Enable', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Enable', 'threadi-now-pages' ) );
 		$field->set_description( $this->get_description() );
 		$enable_setting->set_field( $field );
 
 		// create the field description.
-		$description = __( 'Add one or more recipients for this email. One email pro field. Get more fields after saving the settings.', 'now-pages-threadi' ) . ' ';
+		$description = __( 'Add one or more recipients for this email. One email pro field. Get more fields after saving the settings.', 'threadi-now-pages' ) . ' ';
 		if ( '' !== $this->get_recipient_hint() ) {
 			$description .= $this->get_recipient_hint();
 		} elseif ( ! empty( $this->get_default_recipient() ) ) {
 			/* translators: %1$s will be replaced by the email address. */
-			$description .= sprintf( __( '<strong>If no email is set, we use the admin-email %1$s as the recipient.</strong> You can edit the admin-email of your WordPress <a href="%2$s">here</a>.', 'now-pages-threadi' ), '<code>' . $this->get_default_recipient() . '</code>', $wp_general_settings_url );
+			$description .= sprintf( __( '<strong>If no email is set, we use the admin-email %1$s as the recipient.</strong> You can edit the admin-email of your WordPress <a href="%2$s">here</a>.', 'threadi-now-pages' ), '<code>' . $this->get_default_recipient() . '</code>', $wp_general_settings_url );
 		} else {
-			$description .= '<strong>' . __( 'Without recipient this email will not be sent.', 'now-pages-threadi' ) . '</strong>';
+			$description .= '<strong>' . __( 'Without recipient this email will not be sent.', 'threadi-now-pages' ) . '</strong>';
 		}
 
 		// add setting.
-		$setting = $settings_obj->add_setting( 'now_pages_threadi_email_recipients_' . $this->get_name() );
+		$setting = $settings_obj->add_setting( 'threadi_now_pages_email_recipients_' . $this->get_name() );
 		$setting->set_section( $email_tab_main );
 		$setting->set_type( 'array' );
 		$setting->set_default( array() );
 		$field = new MultiField( $settings_obj );
-		$field->set_title( __( 'Add recipients', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Add recipients', 'threadi-now-pages' ) );
 		$field->set_description( $description );
 		$text_field = new Text( $settings_obj );
-		$text_field->set_title( __( 'Recipient', 'now-pages-threadi' ) );
+		$text_field->set_title( __( 'Recipient', 'threadi-now-pages' ) );
 		$text_field->set_placeholder( 'info@example.com' );
 		$text_field->add_depend( $enable_setting, 1 );
 		$field->set_field( $text_field );
@@ -133,53 +133,53 @@ class Email_Base {
 		$setting->set_field( $field );
 
 		// add setting.
-		$setting = $settings_obj->add_setting( 'now_pages_threadi_email_from_' . $this->get_name() );
+		$setting = $settings_obj->add_setting( 'threadi_now_pages_email_from_' . $this->get_name() );
 		$setting->set_section( $email_tab_main );
 		$setting->set_type( 'string' );
 		$setting->set_default( '' );
 		$setting->set_read_callback( array( $this, 'set_from' ) );
 		$field = new Text( $settings_obj );
-		$field->set_title( __( 'Sender Email', 'now-pages-threadi' ) );
-		$field->set_description( __( 'If no email is set, the default sender of WordPress is used. Use an address of the domain of your website, otherwise the email might be rejected.', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Sender Email', 'threadi-now-pages' ) );
+		$field->set_description( __( 'If no email is set, the default sender of WordPress is used. Use an address of the domain of your website, otherwise the email might be rejected.', 'threadi-now-pages' ) );
 		$field->set_placeholder( 'info@example.com' );
 		$field->add_depend( $enable_setting, 1 );
 		$setting->set_field( $field );
 
 		// create dialog before test email is sent.
 		$dialog = array(
-			'title'   => __( 'Send test email', 'now-pages-threadi' ),
+			'title'   => __( 'Send test email', 'threadi-now-pages' ),
 			'texts'   => array(
-				'<p><strong>' . __( 'Are you sure you want to send this test email?', 'now-pages-threadi' ) . '</strong></p>',
-				'<p>' . __( 'If the email does not reach the specified recipient, check whether your project will be able to send emails at all.', 'now-pages-threadi' ) . '</p>',
+				'<p><strong>' . __( 'Are you sure you want to send this test email?', 'threadi-now-pages' ) . '</strong></p>',
+				'<p>' . __( 'If the email does not reach the specified recipient, check whether your project will be able to send emails at all.', 'threadi-now-pages' ) . '</p>',
 			),
 			'buttons' => array(
 				array(
-					'action'  => 'now_pages_threadi_send_testmail( "' . $this->get_name() . '" );',
+					'action'  => 'threadi_now_pages_send_testmail( "' . $this->get_name() . '" );',
 					'variant' => 'primary',
-					'text'    => __( 'Send now', 'now-pages-threadi' ),
+					'text'    => __( 'Send now', 'threadi-now-pages' ),
 				),
 				array(
 					'action'  => 'closeDialog();',
 					'variant' => 'secondary',
-					'text'    => __( 'Cancel', 'now-pages-threadi' ),
+					'text'    => __( 'Cancel', 'threadi-now-pages' ),
 				),
 			),
 		);
 
 		// add setting.
-		$setting = $settings_obj->add_setting( 'now_pages_threadi_email_test_' . $this->get_name() );
+		$setting = $settings_obj->add_setting( 'threadi_now_pages_email_test_' . $this->get_name() );
 		$setting->set_section( $email_tab_main );
 		$setting->set_autoload( false );
 		$setting->prevent_export( true );
 		$field = new Button( $settings_obj );
-		$field->set_title( __( 'Test-Email', 'now-pages-threadi' ) );
-		$field->set_button_title( __( 'Send now', 'now-pages-threadi' ) );
+		$field->set_title( __( 'Test-Email', 'threadi-now-pages' ) );
+		$field->set_button_title( __( 'Send now', 'threadi-now-pages' ) );
 		$field->set_button_url(
 			add_query_arg(
 				array(
-					'action' => 'now_pages_threadi_email_test',
+					'action' => 'threadi_now_pages_email_test',
 					'object' => $this->get_name(),
-					'nonce'  => wp_create_nonce( 'now-pages-threadi-email-test' ),
+					'nonce'  => wp_create_nonce( 'threadi-now-pages-email-test' ),
 				),
 				get_admin_url() . 'admin.php'
 			)
@@ -215,7 +215,7 @@ class Email_Base {
 	 */
 	public function get_recipients(): array {
 		// get the setting and use only valid email addresses.
-		$recipients = self::get_valid_emails( (array) get_option( 'now_pages_threadi_email_recipients_' . $this->get_name(), array() ) );
+		$recipients = self::get_valid_emails( (array) get_option( 'threadi_now_pages_email_recipients_' . $this->get_name(), array() ) );
 
 		// if the setting is empty and if we are using the test mode, use the admin email.
 		if ( empty( $recipients ) && $this->is_test() ) {
@@ -298,16 +298,16 @@ class Email_Base {
 		}
 
 		// get the URL where the email configuration could be found.
-		$email_config_url = \NowPagesThreadi\Plugin\Settings::get_instance()->get_url( 'emails' );
+		$email_config_url = \ThreadiNowPages\Plugin\Settings::get_instance()->get_url( 'emails' );
 
 		// get the website domain.
 		$domain = get_option( 'siteurl' );
 
 		$support_part = '<div id="signature">---------------------------------------------------------';
 		/* translators: %1$s will be replaced by a URL. */
-		$support_part .= '<br><br>' . sprintf( __( 'This email was sent to you by the WordPress-plugin Now Pages that installed in your website under <a href="%1$s">%2$s</a>. You can disable this email <a href="%3$s">here</a>.', 'now-pages-threadi' ), esc_url( $domain ), esc_html( $domain ), esc_url( $email_config_url ) );
+		$support_part .= '<br><br>' . sprintf( __( 'This email was sent to you by the WordPress-plugin Now Pages that installed in your website under <a href="%1$s">%2$s</a>. You can disable this email <a href="%3$s">here</a>.', 'threadi-now-pages' ), esc_url( $domain ), esc_html( $domain ), esc_url( $email_config_url ) );
 		/* translators: %1$s will be replaced by a URL. */
-		$support_part .= '<br><br>' . sprintf( __( 'If you have any questions about the message, please feel free to contact us in <a href="%1$s">our support forum</a>.', 'now-pages-threadi' ), esc_url( Plugin::get_plugin_support_url() ) );
+		$support_part .= '<br><br>' . sprintf( __( 'If you have any questions about the message, please feel free to contact us in <a href="%1$s">our support forum</a>.', 'threadi-now-pages' ), esc_url( Plugin::get_plugin_support_url() ) );
 		$support_part .= '</div>';
 
 		/**
@@ -316,7 +316,7 @@ class Email_Base {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param string $support_part The text to use.
 		 */
-		$support_part = apply_filters( 'now_pages_threadi_import_error_support_hint', $support_part );
+		$support_part = apply_filters( 'threadi_now_pages_import_error_support_hint', $support_part );
 
 		// return the body with the footer.
 		return $body . $support_part;
@@ -348,21 +348,21 @@ class Email_Base {
 		// bail if no recipients are set.
 		if ( empty( $this->get_recipients() ) ) {
 			/* translators: %1$s will be replaced by the title of the email object. */
-			Log::get_instance()->add( sprintf( __( 'Recipients missing to sent email for %1$s!', 'now-pages-threadi' ), $this->get_title() ), 'error', 'emails' );
+			Log::get_instance()->add( sprintf( __( 'Recipients missing to sent email for %1$s!', 'threadi-now-pages' ), $this->get_title() ), 'error', 'emails' );
 			return false;
 		}
 
 		// bail if no subject is set.
 		if ( empty( $this->get_subject() ) ) {
 			/* translators: %1$s will be replaced by the title of the email object. */
-			Log::get_instance()->add( sprintf( __( 'Subject missing to sent email for %1$s!', 'now-pages-threadi' ), $this->get_title() ), 'error', 'emails' );
+			Log::get_instance()->add( sprintf( __( 'Subject missing to sent email for %1$s!', 'threadi-now-pages' ), $this->get_title() ), 'error', 'emails' );
 			return false;
 		}
 
 		// bail if body is not set.
 		if ( empty( $this->get_body() ) ) {
 			/* translators: %1$s will be replaced by the title of the email object. */
-			Log::get_instance()->add( sprintf( __( 'Body missing to sent email for %1$s!', 'now-pages-threadi' ), $this->get_title() ), 'error', 'emails' );
+			Log::get_instance()->add( sprintf( __( 'Body missing to sent email for %1$s!', 'threadi-now-pages' ), $this->get_title() ), 'error', 'emails' );
 			return false;
 		}
 
@@ -378,7 +378,7 @@ class Email_Base {
 		// send email.
 		if ( wp_mail( $this->get_recipients(), $this->get_subject(), $this->get_body(), $this->get_headers() ) ) {
 			// log this event.
-			Log::get_instance()->add( __( 'Sent email:', 'now-pages-threadi' ) . ' <code>' . $configuration_json . '</code>', 'info', 'emails' );
+			Log::get_instance()->add( __( 'Sent email:', 'threadi-now-pages' ) . ' <code>' . $configuration_json . '</code>', 'info', 'emails' );
 
 			// run individual tasks after a successful send, but not for a test.
 			if ( ! $this->is_test() ) {
@@ -388,7 +388,7 @@ class Email_Base {
 		}
 
 		// log that mail could not be sent.
-		Log::get_instance()->add( __( 'Email could not be sent:', 'now-pages-threadi' ) . ' <code>' . $configuration_json . '</code>', 'error', 'emails' );
+		Log::get_instance()->add( __( 'Email could not be sent:', 'threadi-now-pages' ) . ' <code>' . $configuration_json . '</code>', 'error', 'emails' );
 
 		// return that the email could not be sent.
 		return false;
@@ -444,7 +444,7 @@ class Email_Base {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param array<int,string> $headers List of headers.
 		 */
-		return apply_filters( 'now_pages_threadi_email_headers', $headers );
+		return apply_filters( 'threadi_now_pages_email_headers', $headers );
 	}
 
 	/**
@@ -479,7 +479,7 @@ class Email_Base {
 	 * @return bool
 	 */
 	public function is_enabled(): bool {
-		return 1 === absint( get_option( 'now_pages_threadi_email_' . $this->get_name(), $this->is_default_enabled() ? 1 : 0 ) );
+		return 1 === absint( get_option( 'threadi_now_pages_email_' . $this->get_name(), $this->is_default_enabled() ? 1 : 0 ) );
 	}
 
 	/**
@@ -552,7 +552,7 @@ class Email_Base {
 	 */
 	private function get_from(): string {
 		// get the configured email.
-		$from = sanitize_email( (string) get_option( 'now_pages_threadi_email_from_' . $this->get_name() ) );
+		$from = sanitize_email( (string) get_option( 'threadi_now_pages_email_from_' . $this->get_name() ) );
 
 		// return nothing if the configured one is not valid, WordPress uses its default sender then.
 		if ( ! is_email( $from ) ) {
@@ -595,7 +595,7 @@ class Email_Base {
 
 		// bail if the value is empty.
 		if ( empty( $value ) ) {
-			add_settings_error( $option, $option, __( 'An interval has to be set.', 'now-pages-threadi' ) );
+			add_settings_error( $option, $option, __( 'An interval has to be set.', 'threadi-now-pages' ) );
 
 			// return the old value.
 			return (string) get_option( $option );
@@ -605,7 +605,7 @@ class Email_Base {
 		$intervals = Intervals::get_instance()->get_intervals_for_settings();
 		if ( empty( $intervals[ $value ] ) ) {
 			/* translators: %1$s will be replaced by the name of the used interval */
-			add_settings_error( $option, $option, sprintf( __( 'The given interval %1$s does not exist.', 'now-pages-threadi' ), esc_html( $value ) ) );
+			add_settings_error( $option, $option, sprintf( __( 'The given interval %1$s does not exist.', 'threadi-now-pages' ), esc_html( $value ) ) );
 
 			// return the old value.
 			return (string) get_option( $option );

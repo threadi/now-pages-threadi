@@ -2,17 +2,17 @@
 /**
  * This file contains the support for classic widgets.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Singleton_Trait;
+use ThreadiNowPages\Helper\Singleton_Trait;
 
 /**
  * Registers and handles the support for classic widgets.
@@ -42,14 +42,14 @@ class Wp_Widget extends PageBuilder_Base {
 	 * @return void
 	 */
 	public function activate(): void {
-		register_widget( 'NowPagesThreadi\PageBuilder\WpWidgets\Digest' );
+		register_widget( 'ThreadiNowPages\PageBuilder\WpWidgets\Digest' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Classic WordPress Widget', 'now-pages-threadi' );
+		return __( 'Classic WordPress Widget', 'threadi-now-pages' );
 	}
 
 	/**

@@ -2,30 +2,30 @@
 /**
  * File to handle setup for this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Dependencies\easyTransientsForWordPress\Transient;
-use NowPagesThreadi\Dependencies\easyTransientsForWordPress\Transients;
-use NowPagesThreadi\Digests\Periods;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\NowPages\Frontend;
-use NowPagesThreadi\NowPages\Now_Page;
-use NowPagesThreadi\PageBuilder\PageBuilder_Base;
-use NowPagesThreadi\Presets\Preset_Interface;
-use NowPagesThreadi\Presets\Presets;
-use NowPagesThreadi\Providers\Provider_Interface;
-use NowPagesThreadi\Providers\Providers;
-use NowPagesThreadi\Sources\Advisor;
-use NowPagesThreadi\Sources\Source_Builder;
-use NowPagesThreadi\Sources\Sources;
+use ThreadiNowPages\Dependencies\easyTransientsForWordPress\Transient;
+use ThreadiNowPages\Dependencies\easyTransientsForWordPress\Transients;
+use ThreadiNowPages\Digests\Periods;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\NowPages\Frontend;
+use ThreadiNowPages\NowPages\Now_Page;
+use ThreadiNowPages\PageBuilder\PageBuilder_Base;
+use ThreadiNowPages\Presets\Preset_Interface;
+use ThreadiNowPages\Presets\Presets;
+use ThreadiNowPages\Providers\Provider_Interface;
+use ThreadiNowPages\Providers\Providers;
+use ThreadiNowPages\Sources\Advisor;
+use ThreadiNowPages\Sources\Source_Builder;
+use ThreadiNowPages\Sources\Sources;
 use WP_Post;
 use WP_REST_Request;
 
@@ -38,42 +38,42 @@ class Setup {
 	 *
 	 * @var string
 	 */
-	public const FIELD_PREFIX = 'now_pages_threadi_setup_';
+	public const FIELD_PREFIX = 'threadi_now_pages_setup_';
 
 	/**
 	 * The option holding the preset chosen in step 1.
 	 *
 	 * @var string
 	 */
-	public const OPTION_PRESET = 'now_pages_threadi_setup_preset';
+	public const OPTION_PRESET = 'threadi_now_pages_setup_preset';
 
 	/**
 	 * The option holding the choice whether a page should be created.
 	 *
 	 * @var string
 	 */
-	public const OPTION_CREATE_PAGE = 'now_pages_threadi_setup_create_page';
+	public const OPTION_CREATE_PAGE = 'threadi_now_pages_setup_create_page';
 
 	/**
 	 * The option holding what the user asked the advisor for.
 	 *
 	 * @var string
 	 */
-	public const OPTION_WISH = 'now_pages_threadi_setup_advisor_wish';
+	public const OPTION_WISH = 'threadi_now_pages_setup_advisor_wish';
 
 	/**
 	 * The option holding the proposal of the advisor the user chose.
 	 *
 	 * @var string
 	 */
-	public const OPTION_PROPOSAL = 'now_pages_threadi_setup_advisor_proposal';
+	public const OPTION_PROPOSAL = 'threadi_now_pages_setup_advisor_proposal';
 
 	/**
 	 * The prefix the answers to the questions of a proposal are stored under.
 	 *
 	 * @var string
 	 */
-	public const ANSWER_PREFIX = 'now_pages_threadi_setup_advisor_answer_';
+	public const ANSWER_PREFIX = 'threadi_now_pages_setup_advisor_answer_';
 
 	/**
 	 * Instance of this object.
@@ -176,13 +176,13 @@ class Setup {
 		$setup_obj->set_path( Plugin::get_plugin_path() );
 		$setup_obj->set_texts(
 			array(
-				'title_error' => __( 'Error', 'now-pages-threadi' ),
-				'txt_error_1' => __( 'The following error occurred:', 'now-pages-threadi' ),
+				'title_error' => __( 'Error', 'threadi-now-pages' ),
+				'txt_error_1' => __( 'The following error occurred:', 'threadi-now-pages' ),
 				/* translators: %1$s will be replaced with the URL of the plugin-forum on wp.org */
-				'txt_error_2' => sprintf( __( '<strong>If reason is unclear</strong> please contact our <a href="%1$s" target="_blank">support-forum (opens a new window)</a> with as much detail as possible.', 'now-pages-threadi' ), esc_url( Plugin::get_plugin_support_url() ) ),
+				'txt_error_2' => sprintf( __( '<strong>If reason is unclear</strong> please contact our <a href="%1$s" target="_blank">support-forum (opens a new window)</a> with as much detail as possible.', 'threadi-now-pages' ), esc_url( Plugin::get_plugin_support_url() ) ),
 			)
 		);
-		$setup_obj->set_display_hook( '_page_now_pages_threadi_settings' );
+		$setup_obj->set_display_hook( '_page_threadi_now_pages_settings' );
 
 		// set configuration for the setup.
 		$setup_obj->set_config( $this->get_config() );
@@ -228,7 +228,7 @@ class Setup {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param bool $completed True if setup has been completed.
 		 */
-		return apply_filters( 'now_pages_threadi_setup_is_completed', $completed );
+		return apply_filters( 'threadi_now_pages_setup_is_completed', $completed );
 	}
 
 	/**
@@ -237,7 +237,7 @@ class Setup {
 	 * @return string
 	 */
 	public function get_setup_link(): string {
-		return add_query_arg( array( 'page' => 'now_pages_threadi_settings-setup' ), admin_url() . 'options-general.php' );
+		return add_query_arg( array( 'page' => 'threadi_now_pages_settings-setup' ), admin_url() . 'options-general.php' );
 	}
 
 	/**
@@ -252,7 +252,7 @@ class Setup {
 		// check if setup should be run.
 		if ( ! $this->is_completed() ) {
 			// bail if the hint is already set.
-			if ( $transients_obj->get_transient_by_name( 'now_pages_threadi_start_setup_hint' )->is_set() ) {
+			if ( $transients_obj->get_transient_by_name( 'threadi_now_pages_start_setup_hint' )->is_set() ) {
 				return;
 			}
 
@@ -269,8 +269,8 @@ class Setup {
 
 			// add a hint to run setup.
 			$transient_obj = Transients::get_instance()->add();
-			$transient_obj->set_name( 'now_pages_threadi_start_setup_hint' );
-			$transient_obj->set_message( __( '<strong>You have installed Now Pages - nice, and thank you!</strong> Run the setup to create your own Now Page on your website.', 'now-pages-threadi' ) . '<br><br>' . sprintf( '<a href="%1$s" class="button button-primary">' . __( 'Start setup', 'now-pages-threadi' ) . '</a>', esc_url( $this->get_setup_link() ) ) );
+			$transient_obj->set_name( 'threadi_now_pages_start_setup_hint' );
+			$transient_obj->set_message( __( '<strong>You have installed Now Pages - nice, and thank you!</strong> Run the setup to create your own Now Page on your website.', 'threadi-now-pages' ) . '<br><br>' . sprintf( '<a href="%1$s" class="button button-primary">' . __( 'Start setup', 'threadi-now-pages' ) . '</a>', esc_url( $this->get_setup_link() ) ) );
 			$transient_obj->set_type( 'error' );
 			$transient_obj->set_dismissible_days( 2 );
 			$transient_obj->set_hide_on(
@@ -280,7 +280,7 @@ class Setup {
 			);
 			$transient_obj->save();
 		} elseif ( is_admin() ) {
-			$transients_obj->get_transient_by_name( 'now_pages_threadi_start_setup_hint' )->delete();
+			$transients_obj->get_transient_by_name( 'threadi_now_pages_start_setup_hint' )->delete();
 		}
 	}
 
@@ -305,7 +305,7 @@ class Setup {
 		 *
 		 * @param array<int,array<string,mixed>> $setup The setup-configuration.
 		 */
-		return apply_filters( 'now_pages_threadi_setup', $setup );
+		return apply_filters( 'threadi_now_pages_setup', $setup );
 	}
 
 	/**
@@ -315,7 +315,7 @@ class Setup {
 	 */
 	public function display(): void {
 		// create help in case of error during loading of the setup.
-		$error_help = '<div class="now-pages-threadi-transient notice notice-success"><h3>' . esc_html( Plugin::get_plugin_name() ) . '</h3><p><strong>' . __( 'Setup is loading', 'now-pages-threadi' ) . '</strong><br>' . __( 'Please wait while we load the setup.', 'now-pages-threadi' ) . '<br>' . __( 'However, you can also skip the setup and configure the plugin manually.', 'now-pages-threadi' ) . '</p><p><a href="' . esc_url( \easySetupForWordPress\Setup::get_instance()->get_skip_url( $this->get_setup_name(), Settings::get_instance()->get_url() ) ) . '" class="button button-primary">' . __( 'Skip setup', 'now-pages-threadi' ) . '</a></p></div>';
+		$error_help = '<div class="threadi-now-pages-transient notice notice-success"><h3>' . esc_html( Plugin::get_plugin_name() ) . '</h3><p><strong>' . __( 'Setup is loading', 'threadi-now-pages' ) . '</strong><br>' . __( 'Please wait while we load the setup.', 'threadi-now-pages' ) . '<br>' . __( 'However, you can also skip the setup and configure the plugin manually.', 'threadi-now-pages' ) . '</p><p><a href="' . esc_url( \easySetupForWordPress\Setup::get_instance()->get_skip_url( $this->get_setup_name(), Settings::get_instance()->get_url() ) ) . '" class="button button-primary">' . __( 'Skip setup', 'threadi-now-pages' ) . '</a></p></div>';
 
 		// add error text.
 		\easySetupForWordPress\Setup::get_instance()->set_error_help( $error_help );
@@ -334,8 +334,8 @@ class Setup {
 
 		// add setup entry as sub-menu.
 		$hook = add_options_page(
-			Plugin::get_plugin_name() . ' ' . __( 'Setup', 'now-pages-threadi' ),
-			__( 'Now Pages', 'now-pages-threadi' ),
+			Plugin::get_plugin_name() . ' ' . __( 'Setup', 'threadi-now-pages' ),
+			__( 'Now Pages', 'threadi-now-pages' ),
 			'manage_options',
 			$setup_slug,
 			array( $this, 'display' )
@@ -368,7 +368,7 @@ class Setup {
 	 * @return void
 	 */
 	public function set_page_title(): void {
-		$GLOBALS['title'] = Plugin::get_plugin_name() . ' ' . __( 'Setup', 'now-pages-threadi' );
+		$GLOBALS['title'] = Plugin::get_plugin_name() . ' ' . __( 'Setup', 'threadi-now-pages' );
 
 		// start with a clean slate: the answers are only transport between
 		// the steps, a previous run must not preselect anything.
@@ -395,16 +395,16 @@ class Setup {
 		// collect configuration for the setup.
 		$config = array(
 			'name'                  => $this->get_setup_name(),
-			'title'                 => __( 'Now Pages', 'now-pages-threadi' ) . ' ' . __( 'Setup', 'now-pages-threadi' ),
+			'title'                 => __( 'Now Pages', 'threadi-now-pages' ) . ' ' . __( 'Setup', 'threadi-now-pages' ),
 			'steps'                 => $setup,
 			'update_fields'         => true,
 			'user_values'           => true,
-			'back_button_label'     => __( 'Back', 'now-pages-threadi' ) . '<span class="dashicons dashicons-undo"></span>',
-			'continue_button_label' => __( 'Continue', 'now-pages-threadi' ) . '<span class="dashicons dashicons-controls-play"></span>',
-			'finish_button_label'   => __( 'Completed', 'now-pages-threadi' ) . '<span class="dashicons dashicons-saved"></span>',
-			'skip_button_label'     => __( 'Skip', 'now-pages-threadi' ) . '<span class="dashicons dashicons-undo"></span>',
+			'back_button_label'     => __( 'Back', 'threadi-now-pages' ) . '<span class="dashicons dashicons-undo"></span>',
+			'continue_button_label' => __( 'Continue', 'threadi-now-pages' ) . '<span class="dashicons dashicons-controls-play"></span>',
+			'finish_button_label'   => __( 'Completed', 'threadi-now-pages' ) . '<span class="dashicons dashicons-saved"></span>',
+			'skip_button_label'     => __( 'Skip', 'threadi-now-pages' ) . '<span class="dashicons dashicons-undo"></span>',
 			'skip_url'              => $skip_url,
-			'error_label'           => __( 'An error occurred. Received an incorrect response from the server. Please check your permalink settings.', 'now-pages-threadi' ),
+			'error_label'           => __( 'An error occurred. Received an incorrect response from the server. Please check your permalink settings.', 'threadi-now-pages' ),
 		);
 
 		/**
@@ -413,7 +413,7 @@ class Setup {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param array<string,array<int,mixed>|bool|string> $config List of configuration for the setup.
 		 */
-		return apply_filters( 'now_pages_threadi_setup_config', $config );
+		return apply_filters( 'threadi_now_pages_setup_config', $config );
 	}
 
 	/**
@@ -464,7 +464,7 @@ class Setup {
 		$this->setup[6] = array(
 			'runSetup' => array(
 				'type'  => 'ProgressBar',
-				'label' => __( 'Setup preparing your first source for entries in your "now page"', 'now-pages-threadi' ),
+				'label' => __( 'Setup preparing your first source for entries in your "now page"', 'threadi-now-pages' ),
 			),
 		);
 		$this->setup    = array_combine(
@@ -479,7 +479,7 @@ class Setup {
 	 * @return array<string,mixed>
 	 */
 	private function get_first_step(): array {
-		$slug     = (string) get_option( 'now_pages_threadi_slug', 'now' );
+		$slug     = (string) get_option( 'threadi_now_pages_slug', 'now' );
 		$conflict = Now_Page::get_instance()->has_conflict( $slug );
 
 		// the page is safe either way: WordPress gives it a free permalink
@@ -489,17 +489,17 @@ class Setup {
 		if ( $conflict ) {
 			$page_description .= ' ' . sprintf(
 				/* translators: %1$s will be replaced by an address. */
-				esc_html__( 'The address %1$s is already taken, so your page will get a free one of its own.', 'now-pages-threadi' ),
+				esc_html__( 'The address %1$s is already taken, so your page will get a free one of its own.', 'threadi-now-pages' ),
 				'/' . esc_html( $slug ) . '/'
 			);
 		}
 
-		$virtual_description = esc_html__( 'Configure how to present your entries.', 'now-pages-threadi' );
+		$virtual_description = esc_html__( 'Configure how to present your entries.', 'threadi-now-pages' );
 
 		if ( $conflict ) {
 			$virtual_description = sprintf(
 			/* translators: %1$s will be replaced by an address. */
-				esc_html__( 'Not recommended right now: the address %1$s is already used by something else, so your now page would not be reachable there.', 'now-pages-threadi' ),
+				esc_html__( 'Not recommended right now: the address %1$s is already used by something else, so your now page would not be reachable there.', 'threadi-now-pages' ),
 				'/' . esc_html( $slug ) . '/'
 			);
 		}
@@ -508,17 +508,17 @@ class Setup {
 		return array(
 			self::OPTION_CREATE_PAGE => array(
 				'type'     => 'RadioControl',
-				'label'    => __( 'How should your now page be built?', 'now-pages-threadi' ),
+				'label'    => __( 'How should your now page be built?', 'threadi-now-pages' ),
 				'options'  => array(
 					array(
-						'label'       => __( 'Create a page I can design myself', 'now-pages-threadi' ),
+						'label'       => __( 'Create a page I can design myself', 'threadi-now-pages' ),
 						'value'       => 'page',
 						'description' => $page_description,
 					),
 					array(
 						'label'       => sprintf(
 						/* translators: %1$s will be replaced by an address. */
-							__( 'Just the address %1$s, without a page', 'now-pages-threadi' ),
+							__( 'Just the address %1$s, without a page', 'threadi-now-pages' ),
 							'/' . $slug . '/'
 						),
 						'value'       => 'virtual',
@@ -554,9 +554,9 @@ class Setup {
 			array_unshift(
 				$presets,
 				array(
-					'label'       => __( 'Get advice', 'now-pages-threadi' ),
+					'label'       => __( 'Get advice', 'threadi-now-pages' ),
 					'value'       => Advisor::SLUG,
-					'description' => __( 'Describe what you would like to show. An AI model proposes matching sources, and each one is tried before it is offered to you.', 'now-pages-threadi' ),
+					'description' => __( 'Describe what you would like to show. An AI model proposes matching sources, and each one is tried before it is offered to you.', 'threadi-now-pages' ),
 					'icon'        => $this->get_advisor_icon(),
 				)
 			);
@@ -567,7 +567,7 @@ class Setup {
 			return array(
 				'help' => array(
 					'type' => 'Text',
-					'text' => '<p>' . esc_html__( 'No source can be offered right now, because every provider has been disabled in the settings.', 'now-pages-threadi' ) . '</p>',
+					'text' => '<p>' . esc_html__( 'No source can be offered right now, because every provider has been disabled in the settings.', 'threadi-now-pages' ) . '</p>',
 				),
 			);
 		}
@@ -577,7 +577,7 @@ class Setup {
 			self::OPTION_PRESET => array(
 				'type'     => 'CardControl',
 				'options'  => $presets,
-				'label'    => __( 'Which of your activities would you like to feature on your "now page"?', 'now-pages-threadi' ),
+				'label'    => __( 'Which of your activities would you like to feature on your "now page"?', 'threadi-now-pages' ),
 				'required' => true,
 			),
 		);
@@ -595,12 +595,12 @@ class Setup {
 		$preset['help1'] = array(
 			'type' => 'Text',
 			/* translators: %1$s will be replaced by our support-forum-URL. */
-			'text' => '<p><span class="dashicons dashicons-controls-skipforward"></span> ' . sprintf( __( '<strong>Unsure?</strong> Skip this setup and <a href="%1$s">add your source manually</a>. You can also add more sources at any time later.', 'now-pages-threadi' ), esc_url( get_admin_url() . 'post-new.php?post_type=' . Sources::get_instance()->get_slug() . '&now_pages_threadi_manual=1' ) ) . '</p>',
+			'text' => '<p><span class="dashicons dashicons-controls-skipforward"></span> ' . sprintf( __( '<strong>Unsure?</strong> Skip this setup and <a href="%1$s">add your source manually</a>. You can also add more sources at any time later.', 'threadi-now-pages' ), esc_url( get_admin_url() . 'post-new.php?post_type=' . Sources::get_instance()->get_slug() . '&threadi_now_pages_manual=1' ) ) . '</p>',
 		);
 		$preset['help2'] = array(
 			'type' => 'Text',
 			/* translators: %1$s will be replaced by our support-forum-URL. */
-			'text' => '<p><span class="dashicons dashicons-editor-help"></span> ' . sprintf( __( '<strong>Missing something?</strong> You can ask for more in <a href="%1$s" target="_blank">our forum%2$s</a>.', 'now-pages-threadi' ), esc_url( Plugin::get_plugin_support_url() ), Plugin::get_a11n_window_hint() ) . '</p>',
+			'text' => '<p><span class="dashicons dashicons-editor-help"></span> ' . sprintf( __( '<strong>Missing something?</strong> You can ask for more in <a href="%1$s" target="_blank">our forum%2$s</a>.', 'threadi-now-pages' ), esc_url( Plugin::get_plugin_support_url() ), Plugin::get_a11n_window_hint() ) . '</p>',
 		);
 
 		return $preset;
@@ -627,14 +627,14 @@ class Setup {
 	 */
 	private function get_headline( string $label, string $icon ): array {
 		if ( '' !== $icon ) {
-			$icon = '<span class="now-pages-threadi-setup-chosen__icon">' . $icon . '</span>';
+			$icon = '<span class="threadi-now-pages-setup-chosen__icon">' . $icon . '</span>';
 		}
 
 		return array(
 			'type' => 'Text',
-			'text' => '<div class="now-pages-threadi-setup-chosen">'
+			'text' => '<div class="threadi-now-pages-setup-chosen">'
 						. $icon
-						. '<span class="now-pages-threadi-setup-chosen__label">' . esc_html( $label ) . '</span>'
+						. '<span class="threadi-now-pages-setup-chosen__label">' . esc_html( $label ) . '</span>'
 						. '</div>',
 		);
 	}
@@ -656,7 +656,7 @@ class Setup {
 			return array(
 				'help' => array(
 					'type' => 'Text',
-					'text' => '<p>' . esc_html__( 'Please choose a preset on the first page of this setup.', 'now-pages-threadi' ) . '</p>',
+					'text' => '<p>' . esc_html__( 'Please choose a preset on the first page of this setup.', 'threadi-now-pages' ) . '</p>',
 				),
 			);
 		}
@@ -669,7 +669,7 @@ class Setup {
 					'type' => 'Text',
 					'text' => '<p>' . sprintf(
 						/* translators: %1$s will be replaced by the name of a service. */
-						esc_html__( '%1$s needs no further details. Continue to create the source.', 'now-pages-threadi' ),
+						esc_html__( '%1$s needs no further details. Continue to create the source.', 'threadi-now-pages' ),
 						esc_html( $preset->get_label() )
 					) . '</p>',
 				),
@@ -821,17 +821,17 @@ class Setup {
 	 */
 	private function get_advisor_wish_step(): array {
 		return array(
-			'chosen'          => $this->get_headline( __( 'Get advice', 'now-pages-threadi' ), $this->get_advisor_icon() ),
+			'chosen'          => $this->get_headline( __( 'Get advice', 'threadi-now-pages' ), $this->get_advisor_icon() ),
 			self::OPTION_WISH => array(
 				'type'        => 'TextControl',
-				'label'       => __( 'What would you like to show on your now page?', 'now-pages-threadi' ),
-				'help'        => esc_html__( 'Describe it in your own words and name the service you use for it. If you know your account name there, add it.', 'now-pages-threadi' ),
-				'placeholder' => __( 'The films I log on Letterboxd', 'now-pages-threadi' ),
+				'label'       => __( 'What would you like to show on your now page?', 'threadi-now-pages' ),
+				'help'        => esc_html__( 'Describe it in your own words and name the service you use for it. If you know your account name there, add it.', 'threadi-now-pages' ),
+				'placeholder' => __( 'The films I log on Letterboxd', 'threadi-now-pages' ),
 				'required'    => true,
 			),
 			'help'            => array(
 				'type' => 'Text',
-				'text' => '<p class="now-pages-threadi-advisor-wish"><span class="dashicons dashicons-info-outline"></span> ' . esc_html__( 'Your description and the list of source types this website offers are sent to the AI service connected to this website. Each proposal is then tried against the real service, so the next step can take up to a minute.', 'now-pages-threadi' ) . '</p>',
+				'text' => '<p class="threadi-now-pages-advisor-wish"><span class="dashicons dashicons-info-outline"></span> ' . esc_html__( 'Your description and the list of source types this website offers are sent to the AI service connected to this website. Each proposal is then tried against the real service, so the next step can take up to a minute.', 'threadi-now-pages' ) . '</p>',
 			),
 		);
 	}
@@ -849,17 +849,17 @@ class Setup {
 
 		// nothing to show yet, or the advisor failed.
 		if ( null === $advice ) {
-			$text = __( 'Please describe on the previous page what you would like to show.', 'now-pages-threadi' );
+			$text = __( 'Please describe on the previous page what you would like to show.', 'threadi-now-pages' );
 
 			if ( '' !== $this->advice_error ) {
 				/* translators: %1$s will be replaced by an error message. */
-				$text = sprintf( __( 'The advice could not be requested: %1$s', 'now-pages-threadi' ), $this->advice_error );
+				$text = sprintf( __( 'The advice could not be requested: %1$s', 'threadi-now-pages' ), $this->advice_error );
 			}
 
 			return array(
 				self::OPTION_PROPOSAL => array(
 					'type'     => 'CardControl',
-					'label'    => __( 'No proposals available', 'now-pages-threadi' ),
+					'label'    => __( 'No proposals available', 'threadi-now-pages' ),
 					'options'  => array(),
 					'help'     => '<p>' . esc_html( $text ) . '</p>' . $this->get_advisor_fallback_hint(),
 					'required' => true,
@@ -886,7 +886,7 @@ class Setup {
 		}
 
 		if ( ! empty( $advice['rejected'] ) ) {
-			$help .= '<p>' . esc_html__( 'Proposed, but not offered to you:', 'now-pages-threadi' ) . '</p><ul>';
+			$help .= '<p>' . esc_html__( 'Proposed, but not offered to you:', 'threadi-now-pages' ) . '</p><ul>';
 			foreach ( $advice['rejected'] as $rejected ) {
 				$help .= '<li>' . ( '' !== $rejected['title'] ? '<strong>' . esc_html( $rejected['title'] ) . '</strong>: ' : '' ) . esc_html( $rejected['message'] ) . '</li>';
 			}
@@ -901,7 +901,7 @@ class Setup {
 		return array(
 			self::OPTION_PROPOSAL => array(
 				'type'     => 'CardControl',
-				'label'    => empty( $options ) ? __( 'No matching source was found', 'now-pages-threadi' ) : __( 'These sources match your description', 'now-pages-threadi' ),
+				'label'    => empty( $options ) ? __( 'No matching source was found', 'threadi-now-pages' ) : __( 'These sources match your description', 'threadi-now-pages' ),
 				'options'  => $options,
 				'help'     => $help,
 				'required' => true,
@@ -922,7 +922,7 @@ class Setup {
 			return array(
 				'help' => array(
 					'type' => 'Text',
-					'text' => '<p>' . esc_html__( 'Please choose a proposal on the previous page.', 'now-pages-threadi' ) . '</p>',
+					'text' => '<p>' . esc_html__( 'Please choose a proposal on the previous page.', 'threadi-now-pages' ) . '</p>',
 				),
 			);
 		}
@@ -940,7 +940,7 @@ class Setup {
 
 			$fields['samples'] = array(
 				'type' => 'Text',
-				'text' => '<p>' . esc_html__( 'This source has been tried just now. Its latest entries:', 'now-pages-threadi' ) . '</p><ul class="now-pages-threadi-advisor-samples">' . $list . '</ul>',
+				'text' => '<p>' . esc_html__( 'This source has been tried just now. Its latest entries:', 'threadi-now-pages' ) . '</p><ul class="threadi-now-pages-advisor-samples">' . $list . '</ul>',
 			);
 		}
 
@@ -960,14 +960,14 @@ class Setup {
 				'type' => 'Text',
 				'text' => '<p>' . sprintf(
 					/* translators: %1$s will be replaced by the name of a service. */
-					esc_html__( '%1$s needs no further details. Continue to create the source.', 'now-pages-threadi' ),
+					esc_html__( '%1$s needs no further details. Continue to create the source.', 'threadi-now-pages' ),
 					esc_html( (string) $proposal['title'] )
 				) . '</p>',
 			);
 		} else {
 			$fields['help'] = array(
 				'type' => 'Text',
-				'text' => '<p>' . esc_html__( 'The source is tried with your details when it is created. If it cannot be read, it is saved as a draft for you to correct.', 'now-pages-threadi' ) . '</p>',
+				'text' => '<p>' . esc_html__( 'The source is tried with your details when it is created. If it cannot be read, it is saved as a draft for you to correct.', 'threadi-now-pages' ) . '</p>',
 			);
 		}
 
@@ -977,7 +977,7 @@ class Setup {
 				'type' => 'Text',
 				'text' => '<p><span class="dashicons dashicons-admin-network"></span> ' . sprintf(
 					/* translators: %1$s will be replaced by a list of field names. */
-					esc_html__( 'This source also needs: %1$s. You enter this in the source itself after it has been created. Until then it is saved as a draft.', 'now-pages-threadi' ),
+					esc_html__( 'This source also needs: %1$s. You enter this in the source itself after it has been created. Until then it is saved as a draft.', 'threadi-now-pages' ),
 					esc_html( implode( ', ', array_map( 'strval', $proposal['secrets'] ) ) )
 				) . '</p>',
 			);
@@ -995,11 +995,11 @@ class Setup {
 	 */
 	private function get_proposal_state( array $proposal ): string {
 		if ( Advisor::get_instance()->has_open_questions( $proposal ) ) {
-			return __( 'Needs a detail from you, it is tried afterwards.', 'now-pages-threadi' );
+			return __( 'Needs a detail from you, it is tried afterwards.', 'threadi-now-pages' );
 		}
 
 		if ( ! empty( $proposal['secrets'] ) ) {
-			return __( 'Needs a key, which you enter in the source afterwards.', 'now-pages-threadi' );
+			return __( 'Needs a key, which you enter in the source afterwards.', 'threadi-now-pages' );
 		}
 
 		return (string) ( $proposal['check']['message'] ?? '' );
@@ -1037,8 +1037,8 @@ class Setup {
 	private function get_advisor_fallback_hint(): string {
 		return '<p>' . sprintf(
 			/* translators: %1$s will be replaced by a URL, %2$s by the URL of our forum, %3$s by a hint that a new window opens. */
-			__( 'Go back to describe it differently or to choose a service from the list. You can also <a href="%1$s">add a source manually</a>, or ask for a service in <a href="%2$s" target="_blank">our forum%3$s</a>.', 'now-pages-threadi' ),
-			esc_url( get_admin_url() . 'post-new.php?post_type=' . Sources::get_instance()->get_slug() . '&now_pages_threadi_manual=1' ),
+			__( 'Go back to describe it differently or to choose a service from the list. You can also <a href="%1$s">add a source manually</a>, or ask for a service in <a href="%2$s" target="_blank">our forum%3$s</a>.', 'threadi-now-pages' ),
+			esc_url( get_admin_url() . 'post-new.php?post_type=' . Sources::get_instance()->get_slug() . '&threadi_now_pages_manual=1' ),
 			esc_url( Plugin::get_plugin_support_url() ),
 			Plugin::get_a11n_window_hint()
 		) . '</p>';
@@ -1116,7 +1116,7 @@ class Setup {
 
 		// bail if the proposal is gone, e.g. because the setup stayed open for too long.
 		if ( null === $proposal ) {
-			$this->process_result = __( 'The proposals are no longer available, so no source was created. Please start again.', 'now-pages-threadi' );
+			$this->process_result = __( 'The proposals are no longer available, so no source was created. Please start again.', 'threadi-now-pages' );
 
 			return;
 		}
@@ -1141,7 +1141,7 @@ class Setup {
 		// bail if nothing was created.
 		if ( is_wp_error( $created ) ) {
 			/* translators: %1$s will be replaced by a reason. */
-			$this->process_result = sprintf( __( 'No source was created. %1$s', 'now-pages-threadi' ), esc_html( $created->get_error_message() ) );
+			$this->process_result = sprintf( __( 'No source was created. %1$s', 'threadi-now-pages' ), esc_html( $created->get_error_message() ) );
 
 			return;
 		}
@@ -1157,7 +1157,7 @@ class Setup {
 		if ( ! empty( $created['secrets'] ) ) {
 			$this->process_result = sprintf(
 				/* translators: %1$s will be replaced by a link to a source, %2$s by a list of field names. */
-				__( 'The source %1$s has been saved as a draft, because it still needs: %2$s. Enter it there and publish the source, it is imported from then on.', 'now-pages-threadi' ),
+				__( 'The source %1$s has been saved as a draft, because it still needs: %2$s. Enter it there and publish the source, it is imported from then on.', 'threadi-now-pages' ),
 				$link,
 				esc_html( implode( ', ', $created['secrets'] ) )
 			);
@@ -1167,7 +1167,7 @@ class Setup {
 
 		$this->process_result = sprintf(
 			/* translators: %1$s will be replaced by a link to a source, %2$s by an error message. */
-			__( 'The source %1$s has been saved as a draft, because it could not be read: %2$s Correct its settings there and publish it, it is imported from then on.', 'now-pages-threadi' ),
+			__( 'The source %1$s has been saved as a draft, because it could not be read: %2$s Correct its settings there and publish it, it is imported from then on.', 'threadi-now-pages' ),
 			$link,
 			'<code>' . esc_html( (string) $created['check']['message'] ) . '</code>'
 		);
@@ -1234,7 +1234,7 @@ class Setup {
 		$this->update_max_step( 4 );
 
 		// step 1: add the source.
-		$this->set_process_label( __( 'Adding the source.', 'now-pages-threadi' ) );
+		$this->set_process_label( __( 'Adding the source.', 'threadi-now-pages' ) );
 
 		// get the preset.
 		$preset = $this->get_chosen_preset();
@@ -1248,23 +1248,23 @@ class Setup {
 		$this->update_process_step();
 
 		// step 2: import the entries.
-		$this->set_process_label( __( 'Importing the entries.', 'now-pages-threadi' ) );
+		$this->set_process_label( __( 'Importing the entries.', 'threadi-now-pages' ) );
 		Sources::get_instance()->import();
 		$this->update_process_step();
 
 		// step 3: calculate the optimal period.
-		$this->set_process_label( __( 'Calculate the minimum period.', 'now-pages-threadi' ) );
+		$this->set_process_label( __( 'Calculate the minimum period.', 'threadi-now-pages' ) );
 
 		// get and save the slug of the period with the first entries, but only on the first run.
 		// a later run adds a further source, the period chosen by the user must stay as it is.
 		if ( ! $this->is_completed() ) {
 			$period_slug = Periods::get_instance()->get_smallest_period_with_entries();
-			update_option( 'now_pages_threadi_frontend_period', $period_slug );
+			update_option( 'threadi_now_pages_frontend_period', $period_slug );
 		}
 		$this->update_process_step();
 
 		// step 4: create the page, if the user asked for one.
-		$this->set_process_label( __( 'Creating the page.', 'now-pages-threadi' ) );
+		$this->set_process_label( __( 'Creating the page.', 'threadi-now-pages' ) );
 		$this->maybe_create_page();
 		$this->update_process_step();
 
@@ -1299,7 +1299,7 @@ class Setup {
 			if ( $duplicate > 0 ) {
 				$this->process_result = sprintf(
 					/* translators: %1$s will be replaced by the name of a service, %2$s by a link to the existing source. */
-					__( 'A source for %1$s with these settings already exists, so nothing was created. You can edit %2$s instead.', 'now-pages-threadi' ),
+					__( 'A source for %1$s with these settings already exists, so nothing was created. You can edit %2$s instead.', 'threadi-now-pages' ),
 					esc_html( $preset->get_label() ),
 					'<a href="' . esc_url( (string) get_edit_post_link( $duplicate, '' ) ) . '">' . esc_html( get_the_title( $duplicate ) ) . '</a>'
 				);
@@ -1322,7 +1322,7 @@ class Setup {
 
 		// bail if the source could not be created.
 		if ( is_wp_error( $post_id ) ) {
-			Log::get_instance()->add( __( 'The source could not be created during setup.', 'now-pages-threadi' ), 'error', 'system' );
+			Log::get_instance()->add( __( 'The source could not be created during setup.', 'threadi-now-pages' ), 'error', 'system' );
 
 			return;
 		}
@@ -1335,7 +1335,7 @@ class Setup {
 		 * @param int              $post_id The ID of the new source.
 		 * @param Preset_Interface $preset  The used preset.
 		 */
-		do_action( 'now_pages_threadi_setup_source_created', absint( $post_id ), $preset );
+		do_action( 'threadi_now_pages_setup_source_created', absint( $post_id ), $preset );
 	}
 
 	/**
@@ -1351,7 +1351,7 @@ class Setup {
 			return;
 		}
 
-		$completed_text = __( 'Setup has been run. Your source has been added, and their entries has been retrieved. Click on "Completed" to view them.', 'now-pages-threadi' );
+		$completed_text = __( 'Setup has been run. Your source has been added, and their entries has been retrieved. Click on "Completed" to view them.', 'threadi-now-pages' );
 
 		// a step of the process had something to say, that wins.
 		if ( '' !== $this->process_result ) {
@@ -1365,7 +1365,7 @@ class Setup {
 		 * @param string $completed_text The text to show.
 		 * @param string $config_name The name of the setup-configuration used.
 		 */
-		$this->set_process_label( apply_filters( 'now_pages_threadi_setup_process_completed_text', $completed_text, $config_name ) );
+		$this->set_process_label( apply_filters( 'threadi_now_pages_setup_process_completed_text', $completed_text, $config_name ) );
 
 		// set steps to max steps.
 		$this->update_process_step( $this->get_max_step() );
@@ -1397,7 +1397,7 @@ class Setup {
 		 *
 		 * @since 1.0.0 Available since 1.0.0.
 		 */
-		do_action( 'now_pages_threadi_setup_completed' );
+		do_action( 'threadi_now_pages_setup_completed' );
 
 		// return JSON with forward-URL.
 		wp_send_json(
@@ -1413,7 +1413,7 @@ class Setup {
 	 * @return string
 	 */
 	public function get_setup_name(): string {
-		return 'now-pages-threadi';
+		return 'threadi-now-pages';
 	}
 
 	/**
@@ -1479,13 +1479,13 @@ class Setup {
 
 		// bail if something else already occupies our address. creating the
 		// page would not help - it would simply never be reachable.
-		$slug     = (string) get_option( 'now_pages_threadi_slug', 'now' );
+		$slug     = (string) get_option( 'threadi_now_pages_slug', 'now' );
 		$conflict = Now_Page::get_instance()->get_conflicting_post( $slug );
 
 		if ( $conflict instanceof WP_Post ) {
 			$this->process_result = $this->get_process_result_prefix() . sprintf(
 			/* translators: %1$s will be replaced by an address, %2$s by a link to the conflicting entry. */
-				__( 'The address %1$s is already used by %2$s, so no page was created. Give that entry another address, or change the address of your now page in the permalink settings. Click on "Complete" to view your prepared Now Page.', 'now-pages-threadi' ),
+				__( 'The address %1$s is already used by %2$s, so no page was created. Give that entry another address, or change the address of your now page in the permalink settings. Click on "Complete" to view your prepared Now Page.', 'threadi-now-pages' ),
 				'<code>/' . esc_html( $slug ) . '/</code>',
 				'<a href="' . esc_url( (string) get_edit_post_link( $conflict->ID, '' ) ) . '">' . esc_html( get_the_title( $conflict ) ) . '</a>'
 			);
@@ -1503,7 +1503,7 @@ class Setup {
 
 		$this->process_result = $this->get_process_result_prefix() . sprintf(
 		/* translators: %1$s will be replaced by a link to the new page. */
-			__( 'Your now page has been created. You can design the page %1$s with your page builder. Click "Complete" to view your Now Page.', 'now-pages-threadi' ),
+			__( 'Your now page has been created. You can design the page %1$s with your page builder. Click "Complete" to view your Now Page.', 'threadi-now-pages' ),
 			'<a href="' . esc_url( (string) get_edit_post_link( $page_id, '' ) ) . '">' . esc_html( get_the_title( $page_id ) ) . '</a>'
 		);
 	}
@@ -1518,12 +1518,12 @@ class Setup {
 
 		// bail if nothing is active, the shortcode is the fallback.
 		if ( ! $page_builder_obj instanceof PageBuilder_Base ) {
-			return __( 'The page will contain the shortcode, which works in every editor.', 'now-pages-threadi' );
+			return __( 'The page will contain the shortcode, which works in every editor.', 'threadi-now-pages' );
 		}
 
 		return sprintf(
 			/* translators: %1$s will be replaced by the name of a page builder. */
-			esc_html__( 'The page will be prepared for %1$s, with our widget already on it.', 'now-pages-threadi' ),
+			esc_html__( 'The page will be prepared for %1$s, with our widget already on it.', 'threadi-now-pages' ),
 			esc_html( $page_builder_obj->get_label() )
 		);
 	}

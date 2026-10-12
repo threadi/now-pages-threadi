@@ -2,18 +2,18 @@
 /**
  * File to handle Divi Extension.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder\Divi4;
+namespace ThreadiNowPages\PageBuilder\Divi4;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
 use DiviExtension;
-use NowPagesThreadi\Helper\Plugin;
+use ThreadiNowPages\Helper\Plugin;
 
 /**
  * Extend the DiviExtension to create our own extension for Divi.
@@ -27,7 +27,7 @@ class Extend_Divi extends DiviExtension {
 	 *
 	 * @var string
 	 */
-	public $gettext_domain = 'now-pages-threadi';
+	public $gettext_domain = 'threadi-now-pages';
 
 	/**
 	 * The extension's WP Plugin name.
@@ -36,7 +36,7 @@ class Extend_Divi extends DiviExtension {
 	 *
 	 * @var string
 	 */
-	public $name = 'now-pages-threadi';
+	public $name = 'threadi-now-pages';
 
 	/**
 	 * The extension's version
@@ -53,7 +53,7 @@ class Extend_Divi extends DiviExtension {
 	 * @param string $name Internal name for the extension.
 	 * @param array  $args Arguments for the call.
 	 */
-	public function __construct( $name = 'now-pages-threadi', $args = array() ) {
+	public function __construct( $name = 'threadi-now-pages', $args = array() ) {
 		$this->plugin_dir     = Plugin::get_plugin_path() . 'legacy-classes/Divi4/includes/';
 		$this->plugin_dir_url = Plugin::get_plugin_url() . 'legacy-classes/Divi4/';
 

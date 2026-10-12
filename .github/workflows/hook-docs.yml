@@ -35,7 +35,7 @@ jobs:
         run: composer install --no-interaction --no-progress
 
       - name: Generate hook documentation
-        run: vendor/bin/wp-documentor parse app --format=markdown --output=docs/hooks.md --prefix=now_pages_threadi_ --exclude=Transients.php
+        run: vendor/bin/wp-documentor parse app --format=markdown --output=docs/hooks.md --prefix=threadi_now_pages_ --exclude=Transients.php
 
       - name: Commit the documentation if it changed
         env:

@@ -2,19 +2,19 @@
 /**
  * This file contains the support for Avia (Enfold).
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder;
+namespace ThreadiNowPages\PageBuilder;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\Plugin\Post_Types;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\Plugin\Post_Types;
 use WP_Post;
 
 /**
@@ -76,7 +76,7 @@ class Avia extends PageBuilder_Base {
 	 */
 	public function get_page_content(): string {
 		return "<!-- wp:shortcode -->
-[avia_now_pages_threadi_digest period='" . get_option( 'now_pages_threadi_frontend_period', 'live' ) . "' format='verbatim' override_display='yes' show_time='yes' show_source='no' link_source='no' show_period='yes' group_by_category='yes' av_uid='av-jisd9a' sc_version='1.0'][/avia_now_pages_threadi_digest]
+[avia_threadi_now_pages_digest period='" . get_option( 'threadi_now_pages_frontend_period', 'live' ) . "' format='verbatim' override_display='yes' show_time='yes' show_source='no' link_source='no' show_period='yes' group_by_category='yes' av_uid='av-jisd9a' sc_version='1.0'][/avia_threadi_now_pages_digest]
 <!-- /wp:shortcode -->";
 	}
 
@@ -121,7 +121,7 @@ class Avia extends PageBuilder_Base {
 	 * {@inheritDoc}
 	 */
 	public function get_label(): string {
-		return __( 'Enfold', 'now-pages-threadi' );
+		return __( 'Enfold', 'threadi-now-pages' );
 	}
 
 	/**

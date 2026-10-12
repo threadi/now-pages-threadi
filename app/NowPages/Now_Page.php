@@ -7,23 +7,23 @@
  * conditions that need a post object. Backing the route with a real page
  * makes /now a normal page for WordPress - and therefore for any pagebuilder.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\NowPages;
+namespace ThreadiNowPages\NowPages;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Dependencies\easyTransientsForWordPress\Transients;
-use NowPagesThreadi\Helper\Singleton_Interface;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\PageBuilder\PageBuilder_Base;
-use NowPagesThreadi\PageBuilder\Page_Builders;
-use NowPagesThreadi\Plugin\Init;
-use NowPagesThreadi\Plugin\Log;
+use ThreadiNowPages\Dependencies\easyTransientsForWordPress\Transients;
+use ThreadiNowPages\Helper\Singleton_Interface;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\PageBuilder\PageBuilder_Base;
+use ThreadiNowPages\PageBuilder\Page_Builders;
+use ThreadiNowPages\Plugin\Init;
+use ThreadiNowPages\Plugin\Log;
 use WP_Post;
 use WP_Post_Type;
 use WP_Query;
@@ -39,7 +39,7 @@ class Now_Page implements Singleton_Interface {
 	 *
 	 * @var string
 	 */
-	public const OPTION = 'now_pages_threadi_frontend_page';
+	public const OPTION = 'threadi_now_pages_frontend_page';
 
 	/**
 	 * Constructor, not used as this a Singleton object.
@@ -148,7 +148,7 @@ class Now_Page implements Singleton_Interface {
 	 * @return int Zero if the slug is free.
 	 */
 	private function get_conflicting_post_id( string $slug ): int {
-		$cache_key = 'now_pages_threadi_slug_conflict_' . md5( $slug );
+		$cache_key = 'threadi_now_pages_slug_conflict_' . md5( $slug );
 		$cached    = get_transient( $cache_key );
 
 		// a stored value is either an ID or a zero for "nothing found".
@@ -194,7 +194,7 @@ class Now_Page implements Singleton_Interface {
 		}
 
 		// get the configured slug.
-		$slug = (string) get_option( 'now_pages_threadi_slug', 'now' );
+		$slug = (string) get_option( 'threadi_now_pages_slug', 'now' );
 
 		// bail if no conflict is detected.
 		if ( ! $this->has_conflict( $slug ) ) {
@@ -203,7 +203,7 @@ class Now_Page implements Singleton_Interface {
 
 		// bail if the hint is already set, so it is not written again on every page view.
 		// it is removed when the slug or the page for the now route changes.
-		if ( Transients::get_instance()->get_transient_by_name( 'now_pages_threadi_slug_warning' )->is_set() ) {
+		if ( Transients::get_instance()->get_transient_by_name( 'threadi_now_pages_slug_warning' )->is_set() ) {
 			return;
 		}
 
@@ -223,15 +223,15 @@ class Now_Page implements Singleton_Interface {
 		}
 
 		$transient_obj = Transients::get_instance()->add();
-		$transient_obj->set_name( 'now_pages_threadi_slug_warning' );
+		$transient_obj->set_name( 'threadi_now_pages_slug_warning' );
 		$transient_obj->set_message(
 			sprintf(
 			/* translators: %1$s will be replaced by a URL, %2$s by a post type name, %3$s by a link to the conflicting entry, %4$s by a link to the settings. */
-				esc_html__( 'The address %1$s is already used by the %2$s %3$s. Your now page is not reachable there. Either give that entry another address, or change the address of your now page in the %4$s.', 'now-pages-threadi' ),
+				esc_html__( 'The address %1$s is already used by the %2$s %3$s. Your now page is not reachable there. Either give that entry another address, or change the address of your now page in the %4$s.', 'threadi-now-pages' ),
 				'<code>/' . esc_html( $slug ) . '/</code>',
 				esc_html( $type_name ),
 				'<a href="' . esc_url( (string) get_edit_post_link( $post->ID, '' ) ) . '">' . esc_html( get_the_title( $post ) ) . '</a>',
-				'<a href="' . esc_url( admin_url( 'options-permalink.php' ) ) . '">' . esc_html__( 'permalink settings', 'now-pages-threadi' ) . '</a>'
+				'<a href="' . esc_url( admin_url( 'options-permalink.php' ) ) . '">' . esc_html__( 'permalink settings', 'threadi-now-pages' ) . '</a>'
 			)
 		);
 		$transient_obj->set_type( 'success' );
@@ -255,7 +255,7 @@ class Now_Page implements Singleton_Interface {
 		}
 
 		if ( '' === $title ) {
-			$title = __( 'Now', 'now-pages-threadi' );
+			$title = __( 'Now', 'threadi-now-pages' );
 		}
 
 		$page_id = wp_insert_post(
@@ -272,7 +272,7 @@ class Now_Page implements Singleton_Interface {
 
 		// bail if the page could not be created.
 		if ( is_wp_error( $page_id ) ) {
-			Log::get_instance()->add( __( 'The page for the now route could not be created.', 'now-pages-threadi' ), 'error', 'system' );
+			Log::get_instance()->add( __( 'The page for the now route could not be created.', 'threadi-now-pages' ), 'error', 'system' );
 
 			return 0;
 		}
@@ -288,7 +288,7 @@ class Now_Page implements Singleton_Interface {
 		// save the slug this page is using.
 		$post = get_post( $page_id );
 		if ( $post instanceof WP_Post ) {
-			update_option( 'now_pages_threadi_slug', $post->post_name );
+			update_option( 'threadi_now_pages_slug', $post->post_name );
 		}
 
 		// the route now points at a page, so the rules have to be rebuilt.
@@ -366,7 +366,7 @@ class Now_Page implements Singleton_Interface {
 		 *
 		 * @param PageBuilder_Base|null $active The chosen page builder.
 		 */
-		return apply_filters( 'now_pages_threadi_page_builder_for_page', $active );
+		return apply_filters( 'threadi_now_pages_page_builder_for_page', $active );
 	}
 
 	/**
@@ -382,7 +382,7 @@ class Now_Page implements Singleton_Interface {
 		}
 
 		// the shortcode works everywhere, so it is the fallback.
-		return '[now_pages_threadi_digest]';
+		return '[threadi_now_pages_digest]';
 	}
 
 	/**

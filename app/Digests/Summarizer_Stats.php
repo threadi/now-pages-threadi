@@ -2,12 +2,12 @@
 /**
  * This file contains the statistics about summarizer requests.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Digests;
+namespace ThreadiNowPages\Digests;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -21,7 +21,7 @@ class Summarizer_Stats {
 	 *
 	 * @var string
 	 */
-	public const OPTION = 'now_pages_threadi_summarizer_stats';
+	public const OPTION = 'threadi_now_pages_summarizer_stats';
 
 	/**
 	 * Number of days to keep.
@@ -35,7 +35,7 @@ class Summarizer_Stats {
 	 *
 	 * @var string
 	 */
-	private const CACHE_HITS_THROTTLE = 'now_pages_threadi_summarizer_stats_saved';
+	private const CACHE_HITS_THROTTLE = 'threadi_now_pages_summarizer_stats_saved';
 
 	/**
 	 * Minimal interval between two saves, which only contain requests served from cache, in seconds.
@@ -99,7 +99,7 @@ class Summarizer_Stats {
 	 */
 	public function init(): void {
 		// use hooks.
-		add_action( 'now_pages_threadi_summarizer_request', array( $this, 'record' ) );
+		add_action( 'threadi_now_pages_summarizer_request', array( $this, 'record' ) );
 	}
 
 	/**
@@ -228,7 +228,7 @@ class Summarizer_Stats {
 
 		// show a hint if nothing has been recorded yet.
 		if ( empty( $stats ) ) {
-			echo '<p>' . esc_html__( 'No summarizer requests recorded yet.', 'now-pages-threadi' ) . '</p>';
+			echo '<p>' . esc_html__( 'No summarizer requests recorded yet.', 'threadi-now-pages' ) . '</p>';
 
 			return;
 		}
@@ -240,13 +240,13 @@ class Summarizer_Stats {
 		<table class="widefat striped">
 			<thead>
 			<tr>
-				<th><?php esc_html_e( 'Day', 'now-pages-threadi' ); ?></th>
-				<th><?php esc_html_e( 'Summarizer', 'now-pages-threadi' ); ?></th>
-				<th><?php esc_html_e( 'Requests', 'now-pages-threadi' ); ?></th>
-				<th><?php esc_html_e( 'From cache', 'now-pages-threadi' ); ?></th>
-				<th><?php esc_html_e( 'Errors', 'now-pages-threadi' ); ?></th>
-				<th><?php esc_html_e( 'Ø duration', 'now-pages-threadi' ); ?></th>
-				<th><?php esc_html_e( 'Characters in / out', 'now-pages-threadi' ); ?></th>
+				<th><?php esc_html_e( 'Day', 'threadi-now-pages' ); ?></th>
+				<th><?php esc_html_e( 'Summarizer', 'threadi-now-pages' ); ?></th>
+				<th><?php esc_html_e( 'Requests', 'threadi-now-pages' ); ?></th>
+				<th><?php esc_html_e( 'From cache', 'threadi-now-pages' ); ?></th>
+				<th><?php esc_html_e( 'Errors', 'threadi-now-pages' ); ?></th>
+				<th><?php esc_html_e( 'Ø duration', 'threadi-now-pages' ); ?></th>
+				<th><?php esc_html_e( 'Characters in / out', 'threadi-now-pages' ); ?></th>
 			</tr>
 			</thead>
 			<tbody>
@@ -271,8 +271,8 @@ class Summarizer_Stats {
 			</tbody>
 		</table>
 		<p class="description">
-			<?php esc_html_e( 'Character counts are a rough volume indicator, not a token count - they are not comparable across models.', 'now-pages-threadi' ); ?>
-			<?php esc_html_e( 'Requests served from cache are counted approximately, to prevent a database write on every page view.', 'now-pages-threadi' ); ?>
+			<?php esc_html_e( 'Character counts are a rough volume indicator, not a token count - they are not comparable across models.', 'threadi-now-pages' ); ?>
+			<?php esc_html_e( 'Requests served from cache are counted approximately, to prevent a database write on every page view.', 'threadi-now-pages' ); ?>
 		</p>
 		<?php
 	}

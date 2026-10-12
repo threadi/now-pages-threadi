@@ -1,5 +1,5 @@
 {
-    "name": "@now-pages-threadi/now-pages-threadi",
+    "name": "@threadi-now-pages/threadi-now-pages",
     "version": "1.0.0",
     "description": "Provides Blocks for Now Pages.",
     "author": "Thomas Zwirner",
@@ -11,7 +11,7 @@
         "packages-update": "wp-scripts packages-update",
         "start:digest": "wp-scripts start blocks/digest/src/index.js --output-path=blocks/digest/build/",
         "build:digest": "wp-scripts build blocks/digest/src/index.js --output-path=blocks/digest/build/",
-        "make-pot": "wp i18n make-pot . languages/now-pages-threadi.pot --exclude=blocks/digest/src/,svn/",
+        "make-pot": "wp i18n make-pot . languages/threadi-now-pages.pot --exclude=blocks/digest/src/,svn/",
         "make-json": "wp i18n make-json languages",
         "copy:driver": "mkdir -p admin/driver && cp node_modules/driver.js/dist/driver.js.iife.js node_modules/driver.js/dist/driver.css admin/driver/ && cp node_modules/driver.js/license admin/driver/"
     },

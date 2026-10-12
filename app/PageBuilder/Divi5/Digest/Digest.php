@@ -2,12 +2,12 @@
 /**
  * File for the object to handle the now pages entries module in Divi 5.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\PageBuilder\Divi5\Digest;
+namespace ThreadiNowPages\PageBuilder\Divi5\Digest;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
@@ -20,10 +20,10 @@ use ET\Builder\Packages\Module\Options\Element\ElementClassnames;
 use ET\Builder\Packages\Module\Options\Text\TextClassnames;
 use ET\Builder\Packages\Module\Options\Text\TextStyle;
 use ET\Builder\Packages\ModuleLibrary\ModuleRegistration;
-use NowPagesThreadi\Digests\Digest_Builder;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Plugin\Log;
+use ThreadiNowPages\Digests\Digest_Builder;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Plugin\Log;
 use WP_Block;
 
 /**
@@ -125,13 +125,13 @@ class Digest implements DependencyInterface {
 					),
 					TextStyle::style(
 						array(
-							'selector'          => "{$args['orderClass']} .now-pages-threadi-content",
+							'selector'          => "{$args['orderClass']} .threadi-now-pages-content",
 							'attr'              => $attrs['module']['advanced']['text'] ?? array(),
 							'propertySelectors' => array(
 								'textShadow' => array(
 									'desktop' => array(
 										'value' => array(
-											'text-shadow' => "{$args['orderClass']} .now-pages-threadi-content",
+											'text-shadow' => "{$args['orderClass']} .threadi-now-pages-content",
 										),
 									),
 								),
@@ -246,7 +246,7 @@ class Digest implements DependencyInterface {
 			);
 		} catch ( \Exception $e ) {
 			// log this event.
-			Log::get_instance()->add( __( 'Error while loading Divi 5 module:', 'now-pages-threadi' ) . ' <code>' . $e->getMessage() . '</code>', 'error', 'pagebuilder' );
+			Log::get_instance()->add( __( 'Error while loading Divi 5 module:', 'threadi-now-pages' ) . ' <code>' . $e->getMessage() . '</code>', 'error', 'pagebuilder' );
 		}
 	}
 }

@@ -4,11 +4,11 @@
 
 This repository provides the features of the WordPress plugin _Now Pages_. The repository is used as a basis for deploying the plugin to the WordPress repository. It is not intended to run as a plugin as it is, even if that is possible for development.
 
-[**Start demo in playground**](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/threadi/now-pages-threadi/master/.github/blueprints/blueprint.json)
+[**Start demo in playground**](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/threadi/threadi-now-pages/master/.github/blueprints/blueprint.json)
 
 ### Do you want to use the plugin in your project?
 
-Please install and activate the plugin [from the WordPress repository](https://wordpress.org/plugins/now-pages-threadi).
+Please install and activate the plugin [from the WordPress repository](https://wordpress.org/plugins/threadi-now-pages).
 
 ## AI / Agent Skills
 
@@ -17,14 +17,14 @@ This project ships an [Agent Skill](https://agentskills.io) so coding agents
 
 | File                              | Audience |
 |-----------------------------------|----------|
-| `skills/now-pages-threadi-usage/SKILL.md` | … (e.g. site operators / integrators) |
+| `skills/threadi-now-pages-usage/SKILL.md` | … (e.g. site operators / integrators) |
 
 ### Install the skill into your agent project
 
 ```bash
 # from the plugin or package root (adjust path)
 mkdir -p .agents/skills
-cp -r skills/now-pages-threadi-usage .agents/skills/
+cp -r skills/threadi-now-pages-usage .agents/skills/
 ```
 
 ## Usage for human developers
@@ -61,7 +61,7 @@ Run the following commands in this order:
 4. `vendor/bin/phpstan analyse`
 5. `vendor/bin/phpcbf .`
 6. `vendor/bin/phpcs .`
-7. Set version nummer in _readme.txt_ and _now-pages-threadi.php_.
+7. Set version nummer in _readme.txt_ and _threadi-now-pages.php_.
 8. Create the release ZIP with all necessary folders and files.
 
 ### From local environment with ant
@@ -82,7 +82,7 @@ Run the following commands in this order:
 
 ## Translations
 
-I recommend translating this plugin in the [WordPress Translating tool](https://translate.wordpress.org/projects/wp-plugins/now-pages-threadi/).
+I recommend translating this plugin in the [WordPress Translating tool](https://translate.wordpress.org/projects/wp-plugins/threadi-now-pages/).
 
 For manual translation I recommend to use [PoEdit](https://poedit.net/) to translate texts for this plugin.
 
@@ -90,7 +90,7 @@ For manual translation I recommend to use [PoEdit](https://poedit.net/) to trans
 
 Run in the main directory:
 
-`wp i18n make-pot . languages/now-pages-threadi.pot --exclude=svn/`
+`wp i18n make-pot . languages/threadi-now-pages.pot --exclude=svn/`
 
 ### Update translation-file
 
@@ -120,7 +120,7 @@ Run in the main directory:
 
 ## Generate documentation
 
-`vendor/bin/wp-documentor parse app --format=markdown --output=docs/hooks.md --prefix=now_pages_threadi_ --exclude=Transients.php`
+`vendor/bin/wp-documentor parse app --format=markdown --output=docs/hooks.md --prefix=threadi_now_pages_ --exclude=Transients.php`
 
 ## Check for WordPress VIP Coding Standards
 
@@ -140,7 +140,7 @@ Hint: this check runs against the VIP-GO-platform, not our target for this plugi
 
 ## Check with the plugin "Plugin Check"
 
-`wp plugin check --error-severity=7 --warning-severity=6 --include-low-severity-errors --categories=plugin_repo --format=json --slug=now-pages-threadi .`
+`wp plugin check --error-severity=7 --warning-severity=6 --include-low-severity-errors --categories=plugin_repo --format=json --slug=threadi-now-pages .`
 
 ## PHP Unit tests
 

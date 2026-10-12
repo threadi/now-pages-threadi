@@ -5,16 +5,16 @@
  * With these an assistant can do what the setup does: find out what a
  * source can be created from, try one and create it.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\NowPages\Abilities;
-use NowPagesThreadi\Sources\Source_Builder;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\NowPages\Abilities;
+use ThreadiNowPages\Sources\Source_Builder;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 use WP_Error;
 
 /**
@@ -46,9 +46,9 @@ class AbilitiesSourcesTest extends NowPagesTestCase {
 			$this->markTestSkipped( 'The Abilities API is not available.' );
 		}
 
-		$this->assertTrue( wp_has_ability( 'now-pages-threadi/list-providers' ) );
-		$this->assertTrue( wp_has_ability( 'now-pages-threadi/check-source' ) );
-		$this->assertTrue( wp_has_ability( 'now-pages-threadi/create-source' ) );
+		$this->assertTrue( wp_has_ability( 'threadi-now-pages/list-providers' ) );
+		$this->assertTrue( wp_has_ability( 'threadi-now-pages/check-source' ) );
+		$this->assertTrue( wp_has_ability( 'threadi-now-pages/create-source' ) );
 	}
 
 	/**
@@ -64,7 +64,7 @@ class AbilitiesSourcesTest extends NowPagesTestCase {
 			$this->markTestSkipped( 'The Abilities API is not available.' );
 		}
 
-		$list = wp_get_ability( 'now-pages-threadi/list-providers' )->execute();
+		$list = wp_get_ability( 'threadi-now-pages/list-providers' )->execute();
 
 		$this->assertIsArray( $list, is_wp_error( $list ) ? $list->get_error_message() : '' );
 
@@ -73,23 +73,23 @@ class AbilitiesSourcesTest extends NowPagesTestCase {
 			'values' => array( 'github_username' => self::$github_user ),
 		);
 
-		$check = wp_get_ability( 'now-pages-threadi/check-source' )->execute( $input );
+		$check = wp_get_ability( 'threadi-now-pages/check-source' )->execute( $input );
 
 		$this->assertIsArray( $check, is_wp_error( $check ) ? $check->get_error_message() : '' );
 		$this->assertSame( Source_Builder::CHECK_OK, $check['status'] );
 
-		$created = wp_get_ability( 'now-pages-threadi/create-source' )->execute( $input );
+		$created = wp_get_ability( 'threadi-now-pages/create-source' )->execute( $input );
 
 		$this->assertIsArray( $created, is_wp_error( $created ) ? $created->get_error_message() : '' );
 		$this->assertTrue( $created['created'] );
 
 		// the refusals have to fit the schema as well.
-		$duplicate = wp_get_ability( 'now-pages-threadi/create-source' )->execute( $input );
+		$duplicate = wp_get_ability( 'threadi-now-pages/create-source' )->execute( $input );
 
 		$this->assertIsArray( $duplicate, is_wp_error( $duplicate ) ? $duplicate->get_error_message() : '' );
 		$this->assertSame( 'duplicate', $duplicate['reason'] );
 
-		$incomplete = wp_get_ability( 'now-pages-threadi/create-source' )->execute( array( 'preset' => 'mastodon' ) );
+		$incomplete = wp_get_ability( 'threadi-now-pages/create-source' )->execute( array( 'preset' => 'mastodon' ) );
 
 		$this->assertIsArray( $incomplete, is_wp_error( $incomplete ) ? $incomplete->get_error_message() : '' );
 		$this->assertSame( 'missing_values', $incomplete['reason'] );
@@ -162,7 +162,7 @@ class AbilitiesSourcesTest extends NowPagesTestCase {
 		$check = Abilities::get_instance()->check_source( array( 'values' => array( 'feed_url' => 'https://example.com/feed/' ) ) );
 
 		$this->assertInstanceOf( WP_Error::class, $check );
-		$this->assertSame( 'now_pages_threadi_missing_provider', $check->get_error_code() );
+		$this->assertSame( 'threadi_now_pages_missing_provider', $check->get_error_code() );
 	}
 
 	/**
@@ -280,7 +280,7 @@ class AbilitiesSourcesTest extends NowPagesTestCase {
 		$check = Abilities::get_instance()->check_source( array( 'source_id' => $post_id ) );
 
 		$this->assertInstanceOf( WP_Error::class, $check );
-		$this->assertSame( 'now_pages_threadi_not_found', $check->get_error_code() );
+		$this->assertSame( 'threadi_now_pages_not_found', $check->get_error_code() );
 	}
 
 	/**
@@ -372,6 +372,6 @@ class AbilitiesSourcesTest extends NowPagesTestCase {
 		);
 
 		$this->assertInstanceOf( WP_Error::class, $created );
-		$this->assertSame( 'now_pages_threadi_invalid_category', $created->get_error_code() );
+		$this->assertSame( 'threadi_now_pages_invalid_category', $created->get_error_code() );
 	}
 }

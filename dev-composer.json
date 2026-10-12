@@ -1,5 +1,5 @@
 {
-    "name": "threadi/now-pages-threadi",
+    "name": "threadi/threadi-now-pages",
     "version": "1.0.0",
     "scripts": {
         "post-install-cmd": [
@@ -16,10 +16,10 @@
     },
     "extra": {
         "mozart": {
-            "dep_namespace": "NowPagesThreadi\\Dependencies\\",
+            "dep_namespace": "ThreadiNowPages\\Dependencies\\",
             "dep_directory": "/app/Dependencies/",
             "classmap_directory": "/libs/classes/dependencies/",
-            "classmap_prefix": "NowPagesThreadi",
+            "classmap_prefix": "ThreadiNowPages",
             "packages": [
                 "threadi/easy-transients-for-wordpress"
             ]
@@ -38,12 +38,12 @@
     },
     "autoload": {
         "psr-4": {
-            "NowPagesThreadi\\": "app/"
+            "ThreadiNowPages\\": "app/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "NowPagesThreadi\\Tests\\": "tests/"
+            "ThreadiNowPages\\Tests\\": "tests/"
         }
     },
     "require-dev": {

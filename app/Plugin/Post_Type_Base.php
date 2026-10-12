@@ -2,19 +2,19 @@
 /**
  * File to handle basic cpt-function.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Interface;
-use NowPagesThreadi\Helper\Singleton_Trait;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Interface;
+use ThreadiNowPages\Helper\Singleton_Trait;
 use WP_Query;
 use WP_REST_Posts_Controller;
 use WP_Screen;
@@ -54,7 +54,7 @@ abstract class Post_Type_Base implements Singleton_Interface {
 		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
 		add_filter( 'wp_count_posts', array( $this, 'wp_count_posts' ), 10, 3 );
 		add_filter( 'admin_footer_text', array( $this, 'show_plugin_hint_in_footer' ), 0 );
-		add_filter( 'now_pages_threadi_show_help', array( $this, 'show_help' ), 10, 2 );
+		add_filter( 'threadi_now_pages_show_help', array( $this, 'show_help' ), 10, 2 );
 	}
 
 	/**
@@ -349,7 +349,7 @@ abstract class Post_Type_Base implements Singleton_Interface {
 
 		// show hint for our plugin.
 		/* translators: %1$s will be replaced by the plugin name. */
-		return $content . ' ' . sprintf( __( 'This page is provided by the plugin %1$s.', 'now-pages-threadi' ), '<em>' . Plugin::get_plugin_name() . '</em>' );
+		return $content . ' ' . sprintf( __( 'This page is provided by the plugin %1$s.', 'threadi-now-pages' ), '<em>' . Plugin::get_plugin_name() . '</em>' );
 	}
 
 	/**

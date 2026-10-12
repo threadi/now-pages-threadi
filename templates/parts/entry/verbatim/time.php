@@ -6,7 +6,7 @@
  * @param string $time_to_show The time to show for user.
  *
  * @version: 1.0.0
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
@@ -14,4 +14,4 @@ declare(strict_types=1);
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-echo '<time class="now-pages-threadi-digest-time" datetime="' . esc_attr( $datetime ) . '">' . esc_html( $time_to_show ) . '</time> ';
+echo '<time class="threadi-now-pages-digest-time" datetime="' . esc_attr( $datetime ) . '">' . esc_html( $time_to_show ) . '</time> ';

@@ -2,29 +2,29 @@
 /**
  * This file contains the registry for all presets.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Presets;
+namespace ThreadiNowPages\Presets;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Singleton_Interface;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\Presets\Preset\Discord;
-use NowPagesThreadi\Presets\Preset\GitHub;
-use NowPagesThreadi\Presets\Preset\Goodreads;
-use NowPagesThreadi\Presets\Preset\LastFm;
-use NowPagesThreadi\Presets\Preset\Mastodon;
-use NowPagesThreadi\Presets\Preset\Meetups;
-use NowPagesThreadi\Presets\Preset\Own_Website;
-use NowPagesThreadi\Presets\Preset\Routine;
-use NowPagesThreadi\Presets\Preset\Steam;
-use NowPagesThreadi\Presets\Preset\WordCamps;
-use NowPagesThreadi\Presets\Preset\WordPress_Org;
+use ThreadiNowPages\Helper\Singleton_Interface;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\Presets\Preset\Discord;
+use ThreadiNowPages\Presets\Preset\GitHub;
+use ThreadiNowPages\Presets\Preset\Goodreads;
+use ThreadiNowPages\Presets\Preset\LastFm;
+use ThreadiNowPages\Presets\Preset\Mastodon;
+use ThreadiNowPages\Presets\Preset\Meetups;
+use ThreadiNowPages\Presets\Preset\Own_Website;
+use ThreadiNowPages\Presets\Preset\Routine;
+use ThreadiNowPages\Presets\Preset\Steam;
+use ThreadiNowPages\Presets\Preset\WordCamps;
+use ThreadiNowPages\Presets\Preset\WordPress_Org;
 
 /**
  * Object which holds all known presets.
@@ -37,7 +37,7 @@ class Presets implements Singleton_Interface {
 	 *
 	 * @var string
 	 */
-	public const REQUEST_PARAM = 'now_pages_threadi_preset';
+	public const REQUEST_PARAM = 'threadi_now_pages_preset';
 
 	/**
 	 * The post meta remembering which preset created a source.
@@ -81,7 +81,7 @@ class Presets implements Singleton_Interface {
 		 * source is created.
 		 *
 		 * Example:
-		 * add_action( 'now_pages_threadi_register_presets', function( $presets ) {
+		 * add_action( 'threadi_now_pages_register_presets', function( $presets ) {
 		 *     $presets->register_preset( new My_Preset() );
 		 * } );
 		 *
@@ -89,7 +89,7 @@ class Presets implements Singleton_Interface {
 		 *
 		 * @param Presets $interface The presets object.
 		 */
-		do_action( 'now_pages_threadi_register_presets', $interface );
+		do_action( 'threadi_now_pages_register_presets', $interface );
 	}
 
 	/**
@@ -153,12 +153,12 @@ class Presets implements Singleton_Interface {
 	 */
 	public function get_groups(): array {
 		$groups = array(
-			'own'      => __( 'Your own website', 'now-pages-threadi' ),
-			'social'   => __( 'Social', 'now-pages-threadi' ),
-			'code'     => __( 'Code', 'now-pages-threadi' ),
-			'media'    => __( 'Music, film and games', 'now-pages-threadi' ),
-			'calendar' => __( 'Calendar and events', 'now-pages-threadi' ),
-			'other'    => __( 'Other', 'now-pages-threadi' ),
+			'own'      => __( 'Your own website', 'threadi-now-pages' ),
+			'social'   => __( 'Social', 'threadi-now-pages' ),
+			'code'     => __( 'Code', 'threadi-now-pages' ),
+			'media'    => __( 'Music, film and games', 'threadi-now-pages' ),
+			'calendar' => __( 'Calendar and events', 'threadi-now-pages' ),
+			'other'    => __( 'Other', 'threadi-now-pages' ),
 		);
 
 		/**
@@ -168,6 +168,6 @@ class Presets implements Singleton_Interface {
 		 *
 		 * @param array<string,string> $groups Map of key => label.
 		 */
-		return apply_filters( 'now_pages_threadi_preset_groups', $groups );
+		return apply_filters( 'threadi_now_pages_preset_groups', $groups );
 	}
 }

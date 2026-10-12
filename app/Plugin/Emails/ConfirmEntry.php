@@ -2,18 +2,18 @@
 /**
  * File for the email asking the user to confirm an entry.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin\Emails;
+namespace ThreadiNowPages\Plugin\Emails;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\NowPages\Confirmation;
-use NowPagesThreadi\Plugin\Email_Base;
+use ThreadiNowPages\NowPages\Confirmation;
+use ThreadiNowPages\Plugin\Email_Base;
 use WP_User;
 
 /**
@@ -77,7 +77,7 @@ class ConfirmEntry extends Email_Base {
 	 * @return string
 	 */
 	protected function get_title(): string {
-		return __( 'Confirm an entry', 'now-pages-threadi' );
+		return __( 'Confirm an entry', 'threadi-now-pages' );
 	}
 
 	/**
@@ -86,7 +86,7 @@ class ConfirmEntry extends Email_Base {
 	 * @return string
 	 */
 	protected function get_description(): string {
-		return __( 'If activated, an email is sent whenever an entry waits for your confirmation. It contains a link to confirm the entry and a link to discard it.', 'now-pages-threadi' );
+		return __( 'If activated, an email is sent whenever an entry waits for your confirmation. It contains a link to confirm the entry and a link to discard it.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -95,7 +95,7 @@ class ConfirmEntry extends Email_Base {
 	 * @return void
 	 */
 	public function show_description(): void {
-		echo esc_html__( 'A source can ask you before its entries are shown, e.g. a recurring entry. This email is how you hear about it. Without recipients set, it goes to the owner of the source.', 'now-pages-threadi' );
+		echo esc_html__( 'A source can ask you before its entries are shown, e.g. a recurring entry. This email is how you hear about it. Without recipients set, it goes to the owner of the source.', 'threadi-now-pages' );
 	}
 
 	/**
@@ -122,7 +122,7 @@ class ConfirmEntry extends Email_Base {
 	public function get_subject(): string {
 		$this->subject = '[' . wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) . '] ' . sprintf(
 			/* translators: %1$s will be replaced by the text of an entry. */
-			__( 'Please confirm: %1$s', 'now-pages-threadi' ),
+			__( 'Please confirm: %1$s', 'threadi-now-pages' ),
 			wp_trim_words( $this->text, 10, '…' )
 		);
 
@@ -148,23 +148,23 @@ class ConfirmEntry extends Email_Base {
 
 		$source = $this->entry_id > 0 ? get_the_title( absint( wp_get_post_parent_id( $this->entry_id ) ) ) : '';
 
-		$this->body = '<p>' . esc_html__( 'This entry is waiting for your confirmation before it is shown on your now page:', 'now-pages-threadi' ) . '</p>';
+		$this->body = '<p>' . esc_html__( 'This entry is waiting for your confirmation before it is shown on your now page:', 'threadi-now-pages' ) . '</p>';
 
 		$this->body .= '<p><strong>' . esc_html( $this->text ) . '</strong></p>';
 
 		if ( '' !== $source ) {
 			/* translators: %1$s will be replaced by the title of a source. */
-			$this->body .= '<p>' . esc_html( sprintf( __( 'Source: %1$s', 'now-pages-threadi' ), $source ) ) . '</p>';
+			$this->body .= '<p>' . esc_html( sprintf( __( 'Source: %1$s', 'threadi-now-pages' ), $source ) ) . '</p>';
 		}
 
-		$this->body .= '<p><a href="' . esc_url( $this->confirm_url ) . '"><strong>' . esc_html__( 'Yes, show this entry', 'now-pages-threadi' ) . '</strong></a></p>';
-		$this->body .= '<p><a href="' . esc_url( $this->discard_url ) . '">' . esc_html__( 'No, discard it', 'now-pages-threadi' ) . '</a></p>';
+		$this->body .= '<p><a href="' . esc_url( $this->confirm_url ) . '"><strong>' . esc_html__( 'Yes, show this entry', 'threadi-now-pages' ) . '</strong></a></p>';
+		$this->body .= '<p><a href="' . esc_url( $this->discard_url ) . '">' . esc_html__( 'No, discard it', 'threadi-now-pages' ) . '</a></p>';
 
-		$this->body .= '<p>' . esc_html__( 'Both links open a page where you confirm your choice with a button. If you do nothing, the entry stays hidden and is discarded as soon as the next one is due.', 'now-pages-threadi' ) . '</p>';
+		$this->body .= '<p>' . esc_html__( 'Both links open a page where you confirm your choice with a button. If you do nothing, the entry stays hidden and is discarded as soon as the next one is due.', 'threadi-now-pages' ) . '</p>';
 
 		$this->body .= '<p>' . sprintf(
 			/* translators: %1$s will be replaced by a URL. */
-			__( 'You can also decide in the <a href="%1$s">list of your entries</a>.', 'now-pages-threadi' ),
+			__( 'You can also decide in the <a href="%1$s">list of your entries</a>.', 'threadi-now-pages' ),
 			esc_url( Confirmation::get_instance()->get_list_url() )
 		) . '</p>';
 
@@ -178,7 +178,7 @@ class ConfirmEntry extends Email_Base {
 	 * @return string
 	 */
 	protected function get_recipient_hint(): string {
-		return '<strong>' . __( 'If no email is set, the email goes to the owner of the source, the administrator as fallback.', 'now-pages-threadi' ) . '</strong>';
+		return '<strong>' . __( 'If no email is set, the email goes to the owner of the source, the administrator as fallback.', 'threadi-now-pages' ) . '</strong>';
 	}
 
 	/**
@@ -209,7 +209,7 @@ class ConfirmEntry extends Email_Base {
 	 */
 	protected function prepare_for_test(): void {
 		$this->entry_id    = 0;
-		$this->text        = __( 'This is what an entry waiting for your confirmation looks like.', 'now-pages-threadi' );
+		$this->text        = __( 'This is what an entry waiting for your confirmation looks like.', 'threadi-now-pages' );
 		$this->confirm_url = Confirmation::get_instance()->get_list_url();
 		$this->discard_url = Confirmation::get_instance()->get_list_url();
 	}

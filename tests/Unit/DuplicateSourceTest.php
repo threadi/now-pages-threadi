@@ -7,23 +7,23 @@
  * identify anything, and a provider without an identity never reports a
  * duplicate.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Providers\Providers;
-use NowPagesThreadi\Providers\Webhook_Provider;
-use NowPagesThreadi\Sources\Field_Base;
-use NowPagesThreadi\Sources\Fields;
-use NowPagesThreadi\Sources\Sources;
-use NowPagesThreadi\Tests\NowPagesTestCase;
-use NowPagesThreadi\Tests\Unit\Stubs\Stub_Combined_Provider;
-use NowPagesThreadi\Tests\Unit\Stubs\Stub_Identified_Provider;
-use NowPagesThreadi\Tests\Unit\Stubs\Stub_Provider;
-use NowPagesThreadi\Tests\Unit\Stubs\Stub_Unique_Provider;
+use ThreadiNowPages\Providers\Providers;
+use ThreadiNowPages\Providers\Webhook_Provider;
+use ThreadiNowPages\Sources\Field_Base;
+use ThreadiNowPages\Sources\Fields;
+use ThreadiNowPages\Sources\Sources;
+use ThreadiNowPages\Tests\NowPagesTestCase;
+use ThreadiNowPages\Tests\Unit\Stubs\Stub_Combined_Provider;
+use ThreadiNowPages\Tests\Unit\Stubs\Stub_Identified_Provider;
+use ThreadiNowPages\Tests\Unit\Stubs\Stub_Provider;
+use ThreadiNowPages\Tests\Unit\Stubs\Stub_Unique_Provider;
 
 /**
  * Object to test Sources::get_duplicate().
@@ -57,7 +57,7 @@ class DuplicateSourceTest extends NowPagesTestCase {
 	private function create_source( string $provider_slug, array $config = array(), string $post_status = 'publish' ): int {
 		$source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => $post_status,
 				'post_title'  => 'Test source',
 			)

@@ -2,17 +2,17 @@
 /**
  * File to handle the report-schedule.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin\Schedules;
+namespace ThreadiNowPages\Plugin\Schedules;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Plugin\Schedules_Base;
+use ThreadiNowPages\Plugin\Schedules_Base;
 
 /**
  * Object for this schedule.
@@ -24,28 +24,28 @@ class Report extends Schedules_Base {
 	 *
 	 * @var string
 	 */
-	protected string $name = 'now_pages_threadi_schedule_report';
+	protected string $name = 'threadi_now_pages_schedule_report';
 
 	/**
 	 * Name of the option used to enable this event.
 	 *
 	 * @var string
 	 */
-	protected string $option_name = 'now_pages_threadi_email_report';
+	protected string $option_name = 'threadi_now_pages_email_report';
 
 	/**
 	 * Name of the option used for the interval of this event.
 	 *
 	 * @var string
 	 */
-	protected string $interval_option_name = 'now_pages_threadi_email_interval_report';
+	protected string $interval_option_name = 'threadi_now_pages_email_interval_report';
 
 	/**
 	 * Define the default interval.
 	 *
 	 * @var string
 	 */
-	protected string $default_interval = 'now_pages_threadi_weekly';
+	protected string $default_interval = 'threadi_now_pages_weekly';
 
 	/**
 	 * Send the first email one interval after the event has been created, not directly.
@@ -86,7 +86,7 @@ class Report extends Schedules_Base {
 		}
 
 		// send the report.
-		$report_mail_object = new \NowPagesThreadi\Plugin\Emails\Report();
+		$report_mail_object = new \ThreadiNowPages\Plugin\Emails\Report();
 		$report_mail_object->send();
 	}
 

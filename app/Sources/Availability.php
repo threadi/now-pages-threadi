@@ -2,22 +2,22 @@
 /**
  * This file contains the availability check for sources.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Sources;
+namespace ThreadiNowPages\Sources;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Helper\Plugin;
-use NowPagesThreadi\Helper\Singleton_Interface;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\Helper\Url;
-use NowPagesThreadi\Providers\Provider_Interface;
-use NowPagesThreadi\Providers\Providers;
+use ThreadiNowPages\Helper\Plugin;
+use ThreadiNowPages\Helper\Singleton_Interface;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\Helper\Url;
+use ThreadiNowPages\Providers\Provider_Interface;
+use ThreadiNowPages\Providers\Providers;
 use TcpAnalyzer\TcpAnalyzer;
 use WP_Post;
 
@@ -50,7 +50,7 @@ class Availability implements Singleton_Interface {
 	 */
 	public function init(): void {
 		add_action( 'admin_enqueue_scripts', array( $this, 'add_scripts' ) );
-		add_action( 'wp_ajax_now_pages_threadi_check_source', array( $this, 'check_source_via_ajax' ) );
+		add_action( 'wp_ajax_threadi_now_pages_check_source', array( $this, 'check_source_via_ajax' ) );
 	}
 
 	/**
@@ -73,7 +73,7 @@ class Availability implements Singleton_Interface {
 
 		// embed our own JS script.
 		wp_enqueue_script(
-			'now-pages-threadi-check-source',
+			'threadi-now-pages-check-source',
 			Plugin::get_plugin_url() . 'admin/check-source.js',
 			array( 'easy-dialog-for-wordpress' ),
 			Plugin::get_file_version( Plugin::get_plugin_path() . 'admin/check-source.js' ),
@@ -82,16 +82,16 @@ class Availability implements Singleton_Interface {
 
 		// add php-vars to our js-script.
 		wp_localize_script(
-			'now-pages-threadi-check-source',
-			'nowPagesThreadiCheckVars',
+			'threadi-now-pages-check-source',
+			'threadiNowPagesCheckVars',
 			array(
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
-				'nonce'    => wp_create_nonce( 'now-pages-threadi-check-source' ),
-				'title'    => __( 'Availability', 'now-pages-threadi' ),
-				'running'  => __( 'Checking whether your website can reach this service …', 'now-pages-threadi' ),
-				'cancel'   => __( 'Cancel', 'now-pages-threadi' ),
-				'ok'       => __( 'OK', 'now-pages-threadi' ),
-				'error'    => __( 'The check could not be run. Please try again.', 'now-pages-threadi' ),
+				'nonce'    => wp_create_nonce( 'threadi-now-pages-check-source' ),
+				'title'    => __( 'Availability', 'threadi-now-pages' ),
+				'running'  => __( 'Checking whether your website can reach this service …', 'threadi-now-pages' ),
+				'cancel'   => __( 'Cancel', 'threadi-now-pages' ),
+				'ok'       => __( 'OK', 'threadi-now-pages' ),
+				'error'    => __( 'The check could not be run. Please try again.', 'threadi-now-pages' ),
 			)
 		);
 	}
@@ -103,7 +103,7 @@ class Availability implements Singleton_Interface {
 	 */
 	public function check_source_via_ajax(): void {
 		// check the nonce.
-		check_ajax_referer( 'now-pages-threadi-check-source', 'nonce' );
+		check_ajax_referer( 'threadi-now-pages-check-source', 'nonce' );
 
 		// get the requested source.
 		$source_id = absint( filter_input( INPUT_POST, 'source', FILTER_SANITIZE_NUMBER_INT ) );
@@ -128,7 +128,7 @@ class Availability implements Singleton_Interface {
 
 		// bail if the source is gone.
 		if ( ! $post instanceof WP_Post || Sources::get_instance()->get_slug() !== $post->post_type ) {
-			return $this->get_dialog( array( '<p>' . esc_html__( 'This source could not be found.', 'now-pages-threadi' ) . '</p>' ) );
+			return $this->get_dialog( array( '<p>' . esc_html__( 'This source could not be found.', 'threadi-now-pages' ) . '</p>' ) );
 		}
 
 		$url = $this->get_url_for_source( $source_id );
@@ -138,7 +138,7 @@ class Availability implements Singleton_Interface {
 		if ( '' === $url ) {
 			return $this->get_dialog(
 				array(
-					'<p>' . esc_html__( 'This source does not call any external service, so there is nothing to check.', 'now-pages-threadi' ) . '</p>',
+					'<p>' . esc_html__( 'This source does not call any external service, so there is nothing to check.', 'threadi-now-pages' ) . '</p>',
 				)
 			);
 		}
@@ -151,7 +151,7 @@ class Availability implements Singleton_Interface {
 		if ( ! Url::is_safe_remote( $url ) ) {
 			return $this->get_dialog(
 				array(
-					'<p>' . esc_html__( 'This address points to a local or private network or uses a port that is not allowed. For security reasons it is neither checked nor imported.', 'now-pages-threadi' ) . '</p>',
+					'<p>' . esc_html__( 'This address points to a local or private network or uses a port that is not allowed. For security reasons it is neither checked nor imported.', 'threadi-now-pages' ) . '</p>',
 				)
 			);
 		}
@@ -197,7 +197,7 @@ class Availability implements Singleton_Interface {
 	 * @return array<string,array<string,mixed>>
 	 */
 	private function get_results( int $source_id, string $url ): array {
-		$cache_key = 'now_pages_threadi_availability_' . $source_id;
+		$cache_key = 'threadi_now_pages_availability_' . $source_id;
 		$cached    = get_transient( $cache_key );
 
 		// return a cached result, if there is one.
@@ -277,7 +277,7 @@ class Availability implements Singleton_Interface {
 		 * @param array<string,array<string,mixed>> $tests The tests with their configuration.
 		 * @param string                            $url   The URL being checked.
 		 */
-		$tests = apply_filters( 'now_pages_threadi_availability_tests', $tests, $url );
+		$tests = apply_filters( 'threadi_now_pages_availability_tests', $tests, $url );
 
 		$tcp_analyzer = new TcpAnalyzer();
 		$tcp_analyzer->set_tests( $tests );
@@ -393,13 +393,13 @@ class Availability implements Singleton_Interface {
 	private function get_texts( string $url, array $results ): array {
 		// bail if nothing could be checked.
 		if ( empty( $results ) ) {
-			return array( '<p>' . esc_html__( 'This source has no usable address, so nothing could be checked.', 'now-pages-threadi' ) . '</p>' );
+			return array( '<p>' . esc_html__( 'This source has no usable address, so nothing could be checked.', 'threadi-now-pages' ) . '</p>' );
 		}
 
 		$texts = array(
 			sprintf(
 				/* translators: %1$s will be replaced by a URL. */
-				'<p>' . esc_html__( 'Checked: %1$s', 'now-pages-threadi' ) . '</p>',
+				'<p>' . esc_html__( 'Checked: %1$s', 'threadi-now-pages' ) . '</p>',
 				'<code>' . esc_html( Url::redact( $url ) ) . '</code>'
 			),
 		);
@@ -426,9 +426,9 @@ class Availability implements Singleton_Interface {
 		}
 
 		if ( empty( $problems ) ) {
-			$texts[] = '<p><strong>' . esc_html__( 'Your website can reach this service.', 'now-pages-threadi' ) . '</strong></p>';
+			$texts[] = '<p><strong>' . esc_html__( 'Your website can reach this service.', 'threadi-now-pages' ) . '</strong></p>';
 		} else {
-			$texts[] = '<p><strong>' . esc_html__( 'Your website cannot reach this service.', 'now-pages-threadi' ) . '</strong></p>';
+			$texts[] = '<p><strong>' . esc_html__( 'Your website cannot reach this service.', 'threadi-now-pages' ) . '</strong></p>';
 
 			foreach ( $problems as $problem ) {
 				$texts[] = '<p>' . wp_kses_post( $problem ) . '</p>';
@@ -461,7 +461,7 @@ class Availability implements Singleton_Interface {
 			);
 		}
 
-		return '<details><summary>' . esc_html__( 'Details', 'now-pages-threadi' ) . '</summary><ul>' . $rows . '</ul></details>';
+		return '<details><summary>' . esc_html__( 'Details', 'threadi-now-pages' ) . '</summary><ul>' . $rows . '</ul></details>';
 	}
 
 	/**
@@ -473,13 +473,13 @@ class Availability implements Singleton_Interface {
 	 */
 	private function get_dialog( array $texts ): array {
 		return array(
-			'title'   => __( 'Availability', 'now-pages-threadi' ),
+			'title'   => __( 'Availability', 'threadi-now-pages' ),
 			'texts'   => $texts,
 			'buttons' => array(
 				array(
 					'action'  => 'closeDialog();',
 					'variant' => 'primary',
-					'text'    => __( 'OK', 'now-pages-threadi' ),
+					'text'    => __( 'OK', 'threadi-now-pages' ),
 				),
 			),
 		);
@@ -498,18 +498,18 @@ class Availability implements Singleton_Interface {
 	 */
 	private function get_error_text( string $error_code ): string {
 		$texts = array(
-			'dns_resolution_failed'   => __( 'The address of this service could not be resolved. Check the address for a typo, and ask your hosting provider whether name resolution works on this server.', 'now-pages-threadi' ),
-			'tcp_connect_timeout'     => __( 'The service did not answer within the time limit. This usually means your hosting provider blocks outgoing connections, or the service is unreachable right now.', 'now-pages-threadi' ),
-			'tcp_connect_refused'     => __( 'The service refused the connection right away. It may be down, or it may not accept connections on this port.', 'now-pages-threadi' ),
-			'http_request_failed'     => __( 'The request to this service failed. Ask your hosting provider whether outgoing HTTP requests are allowed.', 'now-pages-threadi' ),
-			'http_status_not_ok'      => __( 'The service answered, but not with a usable response. Check whether the address is still correct - a feed or an account may have moved.', 'now-pages-threadi' ),
-			'request_failed'          => __( 'The request to this service failed. Ask your hosting provider whether outgoing HTTP requests are allowed.', 'now-pages-threadi' ),
-			'timeout'                 => __( 'The service did not answer within the time limit.', 'now-pages-threadi' ),
-			'sockets_unavailable'     => __( 'This website cannot open network connections, so the service cannot be reached. Ask your hosting provider about it.', 'now-pages-threadi' ),
-			'missing_config'          => __( 'This source is not configured completely, so there was nothing to check.', 'now-pages-threadi' ),
-			'invalid_config'          => __( 'The address configured on this source cannot be used.', 'now-pages-threadi' ),
-			'external_ip_unavailable' => __( 'The outgoing IP address of this website could not be determined.', 'now-pages-threadi' ),
-			'private_address'         => __( 'This address points to a local or private network. For security reasons it is neither checked nor imported.', 'now-pages-threadi' ),
+			'dns_resolution_failed'   => __( 'The address of this service could not be resolved. Check the address for a typo, and ask your hosting provider whether name resolution works on this server.', 'threadi-now-pages' ),
+			'tcp_connect_timeout'     => __( 'The service did not answer within the time limit. This usually means your hosting provider blocks outgoing connections, or the service is unreachable right now.', 'threadi-now-pages' ),
+			'tcp_connect_refused'     => __( 'The service refused the connection right away. It may be down, or it may not accept connections on this port.', 'threadi-now-pages' ),
+			'http_request_failed'     => __( 'The request to this service failed. Ask your hosting provider whether outgoing HTTP requests are allowed.', 'threadi-now-pages' ),
+			'http_status_not_ok'      => __( 'The service answered, but not with a usable response. Check whether the address is still correct - a feed or an account may have moved.', 'threadi-now-pages' ),
+			'request_failed'          => __( 'The request to this service failed. Ask your hosting provider whether outgoing HTTP requests are allowed.', 'threadi-now-pages' ),
+			'timeout'                 => __( 'The service did not answer within the time limit.', 'threadi-now-pages' ),
+			'sockets_unavailable'     => __( 'This website cannot open network connections, so the service cannot be reached. Ask your hosting provider about it.', 'threadi-now-pages' ),
+			'missing_config'          => __( 'This source is not configured completely, so there was nothing to check.', 'threadi-now-pages' ),
+			'invalid_config'          => __( 'The address configured on this source cannot be used.', 'threadi-now-pages' ),
+			'external_ip_unavailable' => __( 'The outgoing IP address of this website could not be determined.', 'threadi-now-pages' ),
+			'private_address'         => __( 'This address points to a local or private network. For security reasons it is neither checked nor imported.', 'threadi-now-pages' ),
 		);
 
 		/**
@@ -520,7 +520,7 @@ class Availability implements Singleton_Interface {
 		 * @param array<string,string> $texts      The texts, keyed by error code.
 		 * @param string               $error_code The code being explained.
 		 */
-		$texts = apply_filters( 'now_pages_threadi_availability_error_texts', $texts, $error_code );
+		$texts = apply_filters( 'threadi_now_pages_availability_error_texts', $texts, $error_code );
 
 		// a curl error carries it's number, which is of no use to the user.
 		if ( str_starts_with( $error_code, 'curl_errno_' ) ) {
@@ -534,7 +534,7 @@ class Availability implements Singleton_Interface {
 		}
 
 		if ( ! isset( $texts[ $error_code ] ) ) {
-			return __( 'The service could not be reached, and the reason is unclear. The details below may help in a support request.', 'now-pages-threadi' );
+			return __( 'The service could not be reached, and the reason is unclear. The details below may help in a support request.', 'threadi-now-pages' );
 		}
 
 		return $texts[ $error_code ];

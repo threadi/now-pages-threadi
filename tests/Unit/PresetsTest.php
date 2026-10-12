@@ -6,18 +6,18 @@
  * configuration. That makes it cheap to test and easy to break — a
  * misplaced slash in an assembled URL is invisible until an import fails.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\Presets\Preset_Interface;
-use NowPagesThreadi\Presets\Presets;
-use NowPagesThreadi\Providers\Provider_Interface;
-use NowPagesThreadi\Providers\Providers;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\Presets\Preset_Interface;
+use ThreadiNowPages\Presets\Presets;
+use ThreadiNowPages\Providers\Provider_Interface;
+use ThreadiNowPages\Providers\Providers;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 
 /**
  * Object to test the presets.

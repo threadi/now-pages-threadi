@@ -1,31 +1,31 @@
 /**
  * Initiate the import of new entries.
  */
-function now_pages_threadi_import( process_id ) {
-  now_pages_threadi_start_ajax_process( {
-    'start_action': 'now_pages_threadi_import',
-    'start_nonce': nowPagesThreadiProgressHandlerJsVars.start_nonce,
-    'info_action': 'now_pages_threadi_process_info',
-    'info_nonce': nowPagesThreadiProgressHandlerJsVars.process_info_nonce,
-    'process_title': nowPagesThreadiProgressHandlerJsVars.title,
+function threadi_now_pages_import( process_id ) {
+  threadi_now_pages_start_ajax_process( {
+    'start_action': 'threadi_now_pages_import',
+    'start_nonce': threadiNowPagesProgressHandlerJsVars.start_nonce,
+    'info_action': 'threadi_now_pages_process_info',
+    'info_nonce': threadiNowPagesProgressHandlerJsVars.process_info_nonce,
+    'process_title': threadiNowPagesProgressHandlerJsVars.title,
     'process_id': process_id
   });
 }
 
-let now_pages_threadi_import_running = false;
+let threadi_now_pages_import_running = false;
 // marker for a failed start request: stops the polling.
-let now_pages_threadi_import_failed = false;
+let threadi_now_pages_import_failed = false;
 // marker for progress timeout.
-let now_pages_threadi_progress_timeout = false;
+let threadi_now_pages_progress_timeout = false;
 
 /**
  * Function to handle any AJAX process.
  */
-function now_pages_threadi_start_ajax_process( config ) {
+function threadi_now_pages_start_ajax_process( config ) {
   // start the process.
   jQuery.ajax({
     type: "POST",
-    url: nowPagesThreadiProgressHandlerJsVars.ajax_url,
+    url: threadiNowPagesProgressHandlerJsVars.ajax_url,
     data: {
       'action': config.start_action,
       'nonce': config.start_nonce,
@@ -46,34 +46,34 @@ function now_pages_threadi_start_ajax_process( config ) {
           },
         }
       }
-      now_pages_threadi_create_dialog( dialog_config );
+      threadi_now_pages_create_dialog( dialog_config );
 
       // mark in JS as running.
-      now_pages_threadi_import_running = true;
-      now_pages_threadi_import_failed = false;
+      threadi_now_pages_import_running = true;
+      threadi_now_pages_import_failed = false;
 
       // get info about progress.
-      now_pages_threadi_progress_timeout = setTimeout(function() { now_pages_threadi_ajax_process( config ) }, 1000 );
+      threadi_now_pages_progress_timeout = setTimeout(function() { threadi_now_pages_ajax_process( config ) }, 1000 );
     },
     success: function( response ) {
       if( response && response.load_more ) {
-        clearTimeout(now_pages_threadi_progress_timeout);
-        now_pages_threadi_start_ajax_process( config );
+        clearTimeout(threadi_now_pages_progress_timeout);
+        threadi_now_pages_start_ajax_process( config );
         return;
       }
 
       // mark import as not running.
-      now_pages_threadi_import_running = false;
+      threadi_now_pages_import_running = false;
 
       // stop if the server did not accept the request (e.g. "0", "-1" or success = false).
       if( ! response || typeof response !== 'object' || false === response.success ) {
-        now_pages_threadi_stop_with_error( '' );
+        threadi_now_pages_stop_with_error( '' );
       }
     },
     error: function( jqXHR, textStatus, errorThrown ) {
       // mark import as not running and stop the polling.
-      now_pages_threadi_import_running = false;
-      now_pages_threadi_stop_with_error( errorThrown );
+      threadi_now_pages_import_running = false;
+      threadi_now_pages_stop_with_error( errorThrown );
     }
   });
 }
@@ -81,46 +81,46 @@ function now_pages_threadi_start_ajax_process( config ) {
 /**
  * Stop the polling and show an error.
  */
-function now_pages_threadi_stop_with_error( errortext ) {
+function threadi_now_pages_stop_with_error( errortext ) {
   // bail if this has already been done.
-  if( now_pages_threadi_import_failed ) {
+  if( threadi_now_pages_import_failed ) {
     return;
   }
 
-  now_pages_threadi_import_failed = true;
-  clearTimeout( now_pages_threadi_progress_timeout );
-  now_pages_threadi_ajax_error_dialog( errortext );
+  threadi_now_pages_import_failed = true;
+  clearTimeout( threadi_now_pages_progress_timeout );
+  threadi_now_pages_ajax_error_dialog( errortext );
 }
 
 /**
  * Get info until import is done.
  */
-function now_pages_threadi_ajax_process( config ) {
+function threadi_now_pages_ajax_process( config ) {
   // bail if the start request failed.
-  if( now_pages_threadi_import_failed ) {
+  if( threadi_now_pages_import_failed ) {
     return;
   }
 
   jQuery.ajax( {
     type: "POST",
-    url: nowPagesThreadiProgressHandlerJsVars.ajax_url,
+    url: threadiNowPagesProgressHandlerJsVars.ajax_url,
     data: {
       'action': config.info_action,
       'nonce': config.info_nonce,
       'process_id': config.process_id
     },
     error: function( jqXHR, textStatus, errorThrown ) {
-      now_pages_threadi_stop_with_error( errorThrown );
+      threadi_now_pages_stop_with_error( errorThrown );
     },
     success: function (data) {
       // bail if the start request failed meanwhile.
-      if( now_pages_threadi_import_failed ) {
+      if( threadi_now_pages_import_failed ) {
         return;
       }
 
       // bail on an unexpected answer (e.g. "0", "-1" or success = false).
       if( ! Array.isArray( data ) || data.length < 5 ) {
-        now_pages_threadi_stop_with_error( '' );
+        threadi_now_pages_stop_with_error( '' );
         return;
       }
 
@@ -147,14 +147,14 @@ function now_pages_threadi_ajax_process( config ) {
        * If import is not running and error occurred, show the error.
        * If import is not running and no error occurred, show ok-message.
        */
-      if (running >= 1 || now_pages_threadi_import_running) {
-        now_pages_threadi_progress_timeout = setTimeout( function () {
-          now_pages_threadi_ajax_process( config )
+      if (running >= 1 || threadi_now_pages_import_running) {
+        threadi_now_pages_progress_timeout = setTimeout( function () {
+          threadi_now_pages_ajax_process( config )
         }, 500 );
       } else if( dialog_config && dialog_config.detail ) {
-        now_pages_threadi_create_dialog( dialog_config );
+        threadi_now_pages_create_dialog( dialog_config );
       } else {
-        now_pages_threadi_stop_with_error( '' );
+        threadi_now_pages_stop_with_error( '' );
       }
     }
   } )

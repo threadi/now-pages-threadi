@@ -11,7 +11,7 @@
       "step": "installPlugin",
       "pluginData": {
         "resource": "url",
-        "url": "https://github.com/threadi/now-pages-threadi/releases/latest/download/now-pages-threadi.zip"
+        "url": "https://github.com/threadi/threadi-now-pages/releases/latest/download/threadi-now-pages.zip"
       },
       "options": { "activate": true }
     }

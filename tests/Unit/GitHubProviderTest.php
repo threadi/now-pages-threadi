@@ -4,17 +4,17 @@
  *
  * Every request is answered locally, see NowPagesTestCase::add_url_filter().
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Providers\GitHub_Provider;
-use NowPagesThreadi\Providers\Provider_Context;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Providers\GitHub_Provider;
+use ThreadiNowPages\Providers\Provider_Context;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 use ReflectionMethod;
 
 /**
@@ -38,7 +38,7 @@ class GitHubProviderTest extends NowPagesTestCase {
 
 		$this->source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'Test account',
 			)
@@ -113,11 +113,11 @@ class GitHubProviderTest extends NowPagesTestCase {
 			++$errors;
 		};
 
-		add_action( 'now_pages_threadi_provider_error', $handler );
+		add_action( 'threadi_now_pages_provider_error', $handler );
 
 		$entries = $this->fetch( array( 'github_username' => self::$github_error_user ) );
 
-		remove_action( 'now_pages_threadi_provider_error', $handler );
+		remove_action( 'threadi_now_pages_provider_error', $handler );
 
 		$this->assertSame( array(), $entries );
 		$this->assertSame( 1, $errors );
@@ -130,7 +130,7 @@ class GitHubProviderTest extends NowPagesTestCase {
 	 */
 	public function test_push_is_described_with_its_commits(): void {
 		// the fixture holds one push with two commits.
-		$this->assertStringContainsString( 'Pushed 2 commits to octocat/now-pages-threadi', $this->get_texts( $this->fetch() ) );
+		$this->assertStringContainsString( 'Pushed 2 commits to octocat/threadi-now-pages', $this->get_texts( $this->fetch() ) );
 	}
 
 	/**
@@ -142,7 +142,7 @@ class GitHubProviderTest extends NowPagesTestCase {
 		$entries = $this->fetch();
 
 		$this->assertSame(
-			'https://github.com/octocat/now-pages-threadi/commit/aaaabbbbccccddddeeeeffff0000111122223333',
+			'https://github.com/octocat/threadi-now-pages/commit/aaaabbbbccccddddeeeeffff0000111122223333',
 			$entries[0]->source_url
 		);
 	}
@@ -191,7 +191,7 @@ class GitHubProviderTest extends NowPagesTestCase {
 	public function test_issue_links_to_the_issue(): void {
 		$urls = array_map( static fn ( Entry $entry ): ?string => $entry->source_url, $this->fetch() );
 
-		$this->assertContains( 'https://github.com/octocat/now-pages-threadi/issues/17', $urls );
+		$this->assertContains( 'https://github.com/octocat/threadi-now-pages/issues/17', $urls );
 	}
 
 	/**
@@ -212,11 +212,11 @@ class GitHubProviderTest extends NowPagesTestCase {
 	public function test_event_text_can_be_filtered(): void {
 		$filter = static fn ( string $text, string $type ): string => 'MemberEvent' === $type ? 'Added a collaborator' : $text;
 
-		add_filter( 'now_pages_threadi_github_event_text', $filter, 10, 2 );
+		add_filter( 'threadi_now_pages_github_event_text', $filter, 10, 2 );
 
 		$texts = $this->get_texts( $this->fetch() );
 
-		remove_filter( 'now_pages_threadi_github_event_text', $filter, 10 );
+		remove_filter( 'threadi_now_pages_github_event_text', $filter, 10 );
 
 		$this->assertStringContainsString( 'Added a collaborator', $texts );
 	}
@@ -311,7 +311,7 @@ class GitHubProviderTest extends NowPagesTestCase {
 		$event = array(
 			'id'      => '1',
 			'type'    => array( 'PushEvent' ),
-			'repo'    => array( 'name' => array( 'octocat/now-pages-threadi' ) ),
+			'repo'    => array( 'name' => array( 'octocat/threadi-now-pages' ) ),
 			'payload' => 'not an array',
 		);
 

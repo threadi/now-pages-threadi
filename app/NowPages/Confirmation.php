@@ -16,21 +16,21 @@
  * What is not confirmed stays invisible, and is discarded as soon as the
  * same source lets the next entry wait.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\NowPages;
+namespace ThreadiNowPages\NowPages;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Dependencies\easyTransientsForWordPress\Transients;
-use NowPagesThreadi\Helper\Format;
-use NowPagesThreadi\Helper\Singleton_Interface;
-use NowPagesThreadi\Helper\Singleton_Trait;
-use NowPagesThreadi\Plugin\Emails\ConfirmEntry;
+use ThreadiNowPages\Dependencies\easyTransientsForWordPress\Transients;
+use ThreadiNowPages\Helper\Format;
+use ThreadiNowPages\Helper\Singleton_Interface;
+use ThreadiNowPages\Helper\Singleton_Trait;
+use ThreadiNowPages\Plugin\Emails\ConfirmEntry;
 use WP_Post;
 use WP_Query;
 
@@ -87,7 +87,7 @@ class Confirmation implements Singleton_Interface {
 	 *
 	 * @var string
 	 */
-	private const QUERY_ENTRY = 'now_pages_threadi_confirm';
+	private const QUERY_ENTRY = 'threadi_now_pages_confirm';
 
 	/**
 	 * Constructor, not used as this a Singleton object.
@@ -101,14 +101,14 @@ class Confirmation implements Singleton_Interface {
 	 */
 	public function init(): void {
 		// use our own hooks.
-		add_action( 'now_pages_threadi_entry_added', array( $this, 'entry_added' ), 10, 3 );
+		add_action( 'threadi_now_pages_entry_added', array( $this, 'entry_added' ), 10, 3 );
 
 		// use hooks.
 		add_filter( 'post_row_actions', array( $this, 'add_row_actions' ), 10, 2 );
 		add_filter( 'display_post_states', array( $this, 'set_post_state' ), 10, 2 );
 		add_action( 'admin_menu', array( $this, 'add_menu_count' ), PHP_INT_MAX );
-		add_action( 'admin_action_now_pages_threadi_' . self::CONFIRM . '_entry', array( $this, 'decide_by_request' ) );
-		add_action( 'admin_action_now_pages_threadi_' . self::DISCARD . '_entry', array( $this, 'decide_by_request' ) );
+		add_action( 'admin_action_threadi_now_pages_' . self::CONFIRM . '_entry', array( $this, 'decide_by_request' ) );
+		add_action( 'admin_action_threadi_now_pages_' . self::DISCARD . '_entry', array( $this, 'decide_by_request' ) );
 		add_action( 'template_redirect', array( $this, 'show_decision_page' ), 0 );
 	}
 
@@ -175,7 +175,7 @@ class Confirmation implements Singleton_Interface {
 		 *
 		 * @param int $entry_id The ID of the entry.
 		 */
-		do_action( 'now_pages_threadi_entry_confirmed', $entry_id );
+		do_action( 'threadi_now_pages_entry_confirmed', $entry_id );
 
 		return true;
 	}
@@ -211,7 +211,7 @@ class Confirmation implements Singleton_Interface {
 		 *
 		 * @param int $entry_id The ID of the entry.
 		 */
-		do_action( 'now_pages_threadi_entry_discarded', $entry_id );
+		do_action( 'threadi_now_pages_entry_discarded', $entry_id );
 
 		return true;
 	}
@@ -395,12 +395,12 @@ class Confirmation implements Singleton_Interface {
 		return wp_nonce_url(
 			add_query_arg(
 				array(
-					'action' => 'now_pages_threadi_' . $decision . '_entry',
+					'action' => 'threadi_now_pages_' . $decision . '_entry',
 					'entry'  => $entry_id,
 				),
 				admin_url( 'admin.php' )
 			),
-			'now-pages-threadi-' . $decision . '-entry-' . $entry_id
+			'threadi-now-pages-' . $decision . '-entry-' . $entry_id
 		);
 	}
 
@@ -421,11 +421,11 @@ class Confirmation implements Singleton_Interface {
 		$own = array();
 
 		if ( current_user_can( 'edit_post', $post->ID ) ) {
-			$own[ 'now_pages_threadi_' . self::CONFIRM ] = '<a href="' . esc_url( $this->get_action_url( $post->ID, self::CONFIRM ) ) . '">' . esc_html__( 'Confirm', 'now-pages-threadi' ) . '</a>';
+			$own[ 'threadi_now_pages_' . self::CONFIRM ] = '<a href="' . esc_url( $this->get_action_url( $post->ID, self::CONFIRM ) ) . '">' . esc_html__( 'Confirm', 'threadi-now-pages' ) . '</a>';
 		}
 
 		if ( current_user_can( 'delete_post', $post->ID ) ) {
-			$own[ 'now_pages_threadi_' . self::DISCARD ] = '<a href="' . esc_url( $this->get_action_url( $post->ID, self::DISCARD ) ) . '">' . esc_html__( 'Discard', 'now-pages-threadi' ) . '</a>';
+			$own[ 'threadi_now_pages_' . self::DISCARD ] = '<a href="' . esc_url( $this->get_action_url( $post->ID, self::DISCARD ) ) . '">' . esc_html__( 'Discard', 'threadi-now-pages' ) . '</a>';
 		}
 
 		// the two decisions are what this row is about, so they come first.
@@ -440,14 +440,14 @@ class Confirmation implements Singleton_Interface {
 	public function decide_by_request(): void {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- the ID is part of the nonce action, which is checked right below.
 		$entry_id = isset( $_GET['entry'] ) ? absint( wp_unslash( $_GET['entry'] ) ) : 0;
-		$decision = 'admin_action_now_pages_threadi_' . self::DISCARD . '_entry' === current_action() ? self::DISCARD : self::CONFIRM;
+		$decision = 'admin_action_threadi_now_pages_' . self::DISCARD . '_entry' === current_action() ? self::DISCARD : self::CONFIRM;
 
 		// check nonce.
-		check_admin_referer( 'now-pages-threadi-' . $decision . '-entry-' . $entry_id );
+		check_admin_referer( 'threadi-now-pages-' . $decision . '-entry-' . $entry_id );
 
 		// bail if the user is not allowed to decide about this entry.
 		if ( ! current_user_can( self::DISCARD === $decision ? 'delete_post' : 'edit_post', $entry_id ) ) {
-			wp_die( esc_html__( 'You are not allowed to decide about this entry.', 'now-pages-threadi' ), '', array( 'response' => 403 ) );
+			wp_die( esc_html__( 'You are not allowed to decide about this entry.', 'threadi-now-pages' ), '', array( 'response' => 403 ) );
 		}
 
 		$this->decide( $entry_id, $decision );
@@ -473,7 +473,7 @@ class Confirmation implements Singleton_Interface {
 
 		// say what happened, once: no dismissible time, it is gone after the next page.
 		$transient_obj = Transients::get_instance()->add();
-		$transient_obj->set_name( 'now_pages_threadi_entry_decision' );
+		$transient_obj->set_name( 'threadi_now_pages_entry_decision' );
 		$transient_obj->set_type( $decided ? 'success' : 'error' );
 		$transient_obj->set_message( esc_html( $this->get_result_text( $decision, $decided, $text ) ) );
 		$transient_obj->save();
@@ -510,16 +510,16 @@ class Confirmation implements Singleton_Interface {
 	 */
 	private function get_result_text( string $decision, bool $decided, string $text ): string {
 		if ( ! $decided ) {
-			return __( 'This entry is not waiting for a confirmation anymore. It has probably been confirmed or discarded already.', 'now-pages-threadi' );
+			return __( 'This entry is not waiting for a confirmation anymore. It has probably been confirmed or discarded already.', 'threadi-now-pages' );
 		}
 
 		if ( self::DISCARD === $decision ) {
 			/* translators: %1$s will be replaced by the text of an entry. */
-			return sprintf( __( 'The entry "%1$s" has been discarded. It will not be shown.', 'now-pages-threadi' ), $text );
+			return sprintf( __( 'The entry "%1$s" has been discarded. It will not be shown.', 'threadi-now-pages' ), $text );
 		}
 
 		/* translators: %1$s will be replaced by the text of an entry. */
-		return sprintf( __( 'The entry "%1$s" has been confirmed. It is shown on your now page as soon as its delay has passed.', 'now-pages-threadi' ), $text );
+		return sprintf( __( 'The entry "%1$s" has been confirmed. It is shown on your now page as soon as its delay has passed.', 'threadi-now-pages' ), $text );
 	}
 
 	/**
@@ -536,7 +536,7 @@ class Confirmation implements Singleton_Interface {
 			return $post_states;
 		}
 
-		$post_states[ self::STATUS ] = __( 'Waiting for your confirmation', 'now-pages-threadi' );
+		$post_states[ self::STATUS ] = __( 'Waiting for your confirmation', 'threadi-now-pages' );
 
 		return $post_states;
 	}
@@ -571,7 +571,7 @@ class Confirmation implements Singleton_Interface {
 
 			$hint = sprintf(
 				/* translators: %1$d will be replaced by a number. */
-				_n( '%1$d entry waits for your confirmation', '%1$d entries wait for your confirmation', $count, 'now-pages-threadi' ),
+				_n( '%1$d entry waits for your confirmation', '%1$d entries wait for your confirmation', $count, 'threadi-now-pages' ),
 				$count
 			);
 
@@ -603,10 +603,10 @@ class Confirmation implements Singleton_Interface {
 
 		$token    = isset( $_REQUEST['token'] ) && is_scalar( $_REQUEST['token'] ) ? sanitize_text_field( wp_unslash( (string) $_REQUEST['token'] ) ) : '';
 		$decision = isset( $_REQUEST['decision'] ) && self::DISCARD === $_REQUEST['decision'] ? self::DISCARD : self::CONFIRM;
-		$is_post  = isset( $_SERVER['REQUEST_METHOD'] ) && 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['now_pages_threadi_decide'] );
+		$is_post  = isset( $_SERVER['REQUEST_METHOD'] ) && 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['threadi_now_pages_decide'] );
 		// phpcs:enable
 
-		$title = __( 'Entry for your now page', 'now-pages-threadi' );
+		$title = __( 'Entry for your now page', 'threadi-now-pages' );
 
 		// bail if the link does not belong to an entry which waits. The same answer for every reason: nothing to learn from it.
 		if ( ! $this->is_valid_token( $entry_id, $token ) ) {
@@ -629,14 +629,14 @@ class Confirmation implements Singleton_Interface {
 		// show the entry with the button for this decision, and a way to the other one.
 		$other = self::DISCARD === $decision ? self::CONFIRM : self::DISCARD;
 
-		$html  = '<p>' . esc_html__( 'This entry is waiting for your confirmation:', 'now-pages-threadi' ) . '</p>';
+		$html  = '<p>' . esc_html__( 'This entry is waiting for your confirmation:', 'threadi-now-pages' ) . '</p>';
 		$html .= '<blockquote><p><strong>' . esc_html( $text ) . '</strong></p></blockquote>';
 		$html .= '<form method="post" action="' . esc_url( $this->get_link( $entry_id, $token, $decision ) ) . '">';
 		$html .= '<input type="hidden" name="token" value="' . esc_attr( $token ) . '">';
 		$html .= '<input type="hidden" name="decision" value="' . esc_attr( $decision ) . '">';
-		$html .= '<p><button type="submit" name="now_pages_threadi_decide" value="1" class="button button-large">' . esc_html( self::DISCARD === $decision ? __( 'Discard this entry', 'now-pages-threadi' ) : __( 'Confirm this entry', 'now-pages-threadi' ) ) . '</button></p>';
+		$html .= '<p><button type="submit" name="threadi_now_pages_decide" value="1" class="button button-large">' . esc_html( self::DISCARD === $decision ? __( 'Discard this entry', 'threadi-now-pages' ) : __( 'Confirm this entry', 'threadi-now-pages' ) ) . '</button></p>';
 		$html .= '</form>';
-		$html .= '<p><a href="' . esc_url( $this->get_link( $entry_id, $token, $other ) ) . '">' . esc_html( self::DISCARD === $other ? __( 'I would rather discard it', 'now-pages-threadi' ) : __( 'I would rather confirm it', 'now-pages-threadi' ) ) . '</a></p>';
+		$html .= '<p><a href="' . esc_url( $this->get_link( $entry_id, $token, $other ) ) . '">' . esc_html( self::DISCARD === $other ? __( 'I would rather discard it', 'threadi-now-pages' ) : __( 'I would rather confirm it', 'threadi-now-pages' ) ) . '</a></p>';
 
 		$this->show_page( $html, $title, 200 );
 	}

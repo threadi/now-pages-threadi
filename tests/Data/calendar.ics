@@ -1,6 +1,6 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//now-pages-threadi//tests//EN
+PRODID:-//threadi-now-pages//tests//EN
 BEGIN:VEVENT
 UID:running-multi-day
 DTSTAMP:{{DATETIME-48}}

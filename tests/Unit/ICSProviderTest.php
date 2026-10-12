@@ -4,17 +4,17 @@
  *
  * Every request is answered locally, see NowPagesTestCase::add_url_filter().
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Tests\Unit;
+namespace ThreadiNowPages\Tests\Unit;
 
-use NowPagesThreadi\NowPages\Entry;
-use NowPagesThreadi\Providers\ICS_Provider;
-use NowPagesThreadi\Providers\Provider_Context;
-use NowPagesThreadi\Tests\NowPagesTestCase;
+use ThreadiNowPages\NowPages\Entry;
+use ThreadiNowPages\Providers\ICS_Provider;
+use ThreadiNowPages\Providers\Provider_Context;
+use ThreadiNowPages\Tests\NowPagesTestCase;
 use ReflectionMethod;
 
 /**
@@ -38,7 +38,7 @@ class ICSProviderTest extends NowPagesTestCase {
 
 		$this->source_id = self::factory()->post->create(
 			array(
-				'post_type'   => 'np_threadi_source',
+				'post_type'   => 'threadi_np_source',
 				'post_status' => 'publish',
 				'post_title'  => 'Test calendar',
 			)
@@ -107,11 +107,11 @@ class ICSProviderTest extends NowPagesTestCase {
 			++$errors;
 		};
 
-		add_action( 'now_pages_threadi_provider_error', $handler );
+		add_action( 'threadi_now_pages_provider_error', $handler );
 
 		$entries = $this->fetch( array( 'ics_url' => self::$ics_error_url ) );
 
-		remove_action( 'now_pages_threadi_provider_error', $handler );
+		remove_action( 'threadi_now_pages_provider_error', $handler );
 
 		$this->assertSame( array(), $entries );
 		$this->assertSame( 1, $errors );

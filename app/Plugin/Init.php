@@ -2,36 +2,36 @@
 /**
  * This file contains the main initialization object for this plugin.
  *
- * @package now-pages-threadi
+ * @package threadi-now-pages
  */
 
 declare(strict_types=1);
 
-namespace NowPagesThreadi\Plugin;
+namespace ThreadiNowPages\Plugin;
 
 // prevent direct access.
 defined( 'ABSPATH' ) || exit;
 
-use NowPagesThreadi\Dependencies\easyTransientsForWordPress\Transients;
-use NowPagesThreadi\Digests\Diagnostics;
-use NowPagesThreadi\Digests\Digests;
-use NowPagesThreadi\Digests\Summarizer_Stats;
-use NowPagesThreadi\Digests\Summarizers;
-use NowPagesThreadi\Digests\Summarizers\Ai_Summarizer;
-use NowPagesThreadi\Fediverse\Fediverse;
-use NowPagesThreadi\NowPages\Abilities;
-use NowPagesThreadi\NowPages\Categories;
-use NowPagesThreadi\NowPages\Cleanup;
-use NowPagesThreadi\NowPages\Confirmation;
-use NowPagesThreadi\NowPages\Content_Filters;
-use NowPagesThreadi\NowPages\Frontend;
-use NowPagesThreadi\NowPages\Now_Page;
-use NowPagesThreadi\PageBuilder\Page_Builders;
-use NowPagesThreadi\Plugin\Admin\Admin;
-use NowPagesThreadi\Presets\Presets;
-use NowPagesThreadi\Providers\Providers;
-use NowPagesThreadi\Sources\Advisor;
-use NowPagesThreadi\Sources\Availability;
+use ThreadiNowPages\Dependencies\easyTransientsForWordPress\Transients;
+use ThreadiNowPages\Digests\Diagnostics;
+use ThreadiNowPages\Digests\Digests;
+use ThreadiNowPages\Digests\Summarizer_Stats;
+use ThreadiNowPages\Digests\Summarizers;
+use ThreadiNowPages\Digests\Summarizers\Ai_Summarizer;
+use ThreadiNowPages\Fediverse\Fediverse;
+use ThreadiNowPages\NowPages\Abilities;
+use ThreadiNowPages\NowPages\Categories;
+use ThreadiNowPages\NowPages\Cleanup;
+use ThreadiNowPages\NowPages\Confirmation;
+use ThreadiNowPages\NowPages\Content_Filters;
+use ThreadiNowPages\NowPages\Frontend;
+use ThreadiNowPages\NowPages\Now_Page;
+use ThreadiNowPages\PageBuilder\Page_Builders;
+use ThreadiNowPages\Plugin\Admin\Admin;
+use ThreadiNowPages\Presets\Presets;
+use ThreadiNowPages\Providers\Providers;
+use ThreadiNowPages\Sources\Advisor;
+use ThreadiNowPages\Sources\Availability;
 use WP_Post;
 use WP_Post_Type;
 
@@ -173,7 +173,7 @@ class Init {
 		add_action( 'wp_initialize_site', array( Activation::get_instance(), 'initialize_site' ), 200 );
 
 		// remember the display settings for the AI summarizer and clean its cache.
-		add_filter( 'now_pages_threadi_digest_query_args', array( Ai_Summarizer::class, 'remember_digest_args' ), 10, 2 );
+		add_filter( 'threadi_now_pages_digest_query_args', array( Ai_Summarizer::class, 'remember_digest_args' ), 10, 2 );
 		add_action( 'before_delete_post', array( Ai_Summarizer::class, 'delete_cached_summaries' ), 10, 2 );
 
 		// clean up things.
@@ -215,7 +215,7 @@ class Init {
 	 * @return void
 	 */
 	public function cli(): void {
-		\WP_CLI::add_command( 'now-pages-threadi', 'NowPagesThreadi\Plugin\Cli' );
+		\WP_CLI::add_command( 'threadi-now-pages', 'ThreadiNowPages\Plugin\Cli' );
 	}
 
 	/**
@@ -227,7 +227,7 @@ class Init {
 	 */
 	public function install_db_tables(): void {
 		$objects = array(
-			'\NowPagesThreadi\Plugin\Log',
+			'\ThreadiNowPages\Plugin\Log',
 		);
 		/**
 		 * Add additional objects for this plugin, which use custom tables.
@@ -235,7 +235,7 @@ class Init {
 		 * @since 1.0.0 Available since 1.0.0.
 		 * @param array<int,string> $objects List of objects.
 		 */
-		foreach ( apply_filters( 'now_pages_threadi_objects_with_db_tables', $objects ) as $obj_name ) {
+		foreach ( apply_filters( 'threadi_now_pages_objects_with_db_tables', $objects ) as $obj_name ) {
 			// bail if class does not exist.
 			if ( ! class_exists( $obj_name ) ) {
 				continue;
@@ -298,10 +298,10 @@ class Init {
 	 * @return void
 	 */
 	public function delete_option_caches(): void {
-		delete_transient( 'now_pages_threadi_wp_users' );
-		delete_transient( 'now_pages_threadi_wp_pages' );
-		delete_transient( 'now_pages_threadi_slug_conflict_' . md5( (string) get_option( 'now_pages_threadi_slug', 'now' ) ) );
-		Transients::get_instance()->get_transient_by_name( 'now_pages_threadi_slug_warning' )->delete();
+		delete_transient( 'threadi_now_pages_wp_users' );
+		delete_transient( 'threadi_now_pages_wp_pages' );
+		delete_transient( 'threadi_now_pages_slug_conflict_' . md5( (string) get_option( 'threadi_now_pages_slug', 'now' ) ) );
+		Transients::get_instance()->get_transient_by_name( 'threadi_now_pages_slug_warning' )->delete();
 	}
 
 	/**

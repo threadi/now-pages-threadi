@@ -2,7 +2,7 @@
 
 "Now Pages" entries can also be displayed using a shortcode:
 
-`[now_pages_threadi_digest]`
+`[threadi_now_pages_digest]`
 
 The output can be further customized using shortcode parameters. If none are specified, the settings defined in the plugin are used. ## Parameters
 
@@ -18,7 +18,7 @@ The output can be further customized using shortcode parameters. If none are spe
   - 6month
   - week
 
-Example: `[now_pages_threadi_digest period="day"]`
+Example: `[threadi_now_pages_digest period="day"]`
 
 ### format
 
@@ -27,7 +27,7 @@ Example: `[now_pages_threadi_digest period="day"]`
   - verbatim
   - narrative
 
-Example: `[now_pages_threadi_digest format="verbatim"]`
+Example: `[threadi_now_pages_digest format="verbatim"]`
 
 ### show_time
 
@@ -36,7 +36,7 @@ Example: `[now_pages_threadi_digest format="verbatim"]`
   - true
   - false
 
-Example: `[now_pages_threadi_digest show_time="true"]`
+Example: `[threadi_now_pages_digest show_time="true"]`
 
 ### delay_hours
 
@@ -45,7 +45,7 @@ Example: `[now_pages_threadi_digest show_time="true"]`
 - Specified in hours
 - Can only raise the configured delay (global setting or user setting), never lower it
 
-Example: `[now_pages_threadi_digest delay_hours="24"]`
+Example: `[threadi_now_pages_digest delay_hours="24"]`
 
 ### group_by_category
 
@@ -54,7 +54,7 @@ Example: `[now_pages_threadi_digest delay_hours="24"]`
   - true
   - false
 
-Example: `[now_pages_threadi_digest group_by_category="true"]`
+Example: `[threadi_now_pages_digest group_by_category="true"]`
 
 ### show_source
 
@@ -63,7 +63,7 @@ Example: `[now_pages_threadi_digest group_by_category="true"]`
   - true
   - false
 
-Example: `[now_pages_threadi_digest show_source="true"]`
+Example: `[threadi_now_pages_digest show_source="true"]`
 
 ### link_source
 
@@ -73,11 +73,11 @@ Example: `[now_pages_threadi_digest show_source="true"]`
   - true
   - false
 
-Example: `[now_pages_threadi_digest link_source="true"]`
+Example: `[threadi_now_pages_digest link_source="true"]`
 
 ### category
 
 - Specifies the category for which entries should be displayed
 - Possible values correspond to the `term_id`s defined in the project categories
 
-Example: `[now_pages_threadi_digest category="42"]`
+Example: `[threadi_now_pages_digest category="42"]`
