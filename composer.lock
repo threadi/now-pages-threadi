@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9fead23ec6695ae3938881cad27e30d8",
+    "content-hash": "07696c53b3fa2d235d683d98e423e430",
     "packages": [
         {
             "name": "threadi/crypt-for-wordpress",
